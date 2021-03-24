@@ -1,0 +1,4 @@
+@font-face {
+    font-family: 'SourceSansPro';
+    src: local('SourceSansPro'), url(assets/fonts/SourceSansPro.ttf) format('truetype');
+  }
