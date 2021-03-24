@@ -7,13 +7,23 @@ import Dashboard from '../pages/dashboards';
 import AlarmScreen from '../pages/alarm';
 import DeviceScreen from '../pages/devices';
 import DetailScreen from '../pages/devices/detail/Details';
-import PRCalculationSreen from '../pages/PRCalculation';
-import SystemInfoScreen from '../pages/SystemInfo';
-import AppRoute from "./AppRoute"
+import PRCalculationSreen from '../pages/prcalc/index';
+import SystemInfoScreen from '../pages/system';
 import MainLayout from '../common/layouts/MainLayout';
 import DefaultLayout from '../common/layouts/DefaultLayout';
 import NotFound from "../pages/NotFound"
-import TrendScreen from '../pages/Trend';
+import TrendScreen from '../pages/trend';
+import PrivateRoute from './PrivateRouter';
+
+
+
+
+const routers = [
+  {}
+]
+
+
+
 
 export default function AppRouter(props) {
   return (
@@ -22,39 +32,58 @@ export default function AppRouter(props) {
 
       <Switch>
 
-        {/* <DefaultLayout> */}
-          <Route exact path="/login" component={LoginScreen} />
-        {/* </DefaultLayout> */}
-
-
-        <Route exact path='/device/:id?'>
-          <Switch>
-            <MainLayout>
-              <Route path="/device" exact component={DeviceScreen} />
-              <Route path="/device/:id" component={DetailScreen} />
-            </MainLayout>
-          </Switch>
+        <Route exact path="/login">
+          <DefaultLayout>
+            <Route exact path="/login" component={LoginScreen} />
+          </DefaultLayout>
         </Route>
 
 
 
-
-        <Route>
+        <Route exact path='/admin/device/:id?'>
           <Switch>
             <MainLayout>
-              <Route exact path='/' component={Dashboard} />
-              <Route path='/alarm' component={AlarmScreen} />
-              <Route path='/trend' component={TrendScreen} />
-              <Route path='/prcalculation' component={PRCalculationSreen} />
-              <Route path='/systeminfor' component={SystemInfoScreen} />
+              <PrivateRoute path="/admin/device" exact component={DeviceScreen} />
+              <PrivateRoute path="/admin/device/:id" component={DetailScreen} />
             </MainLayout>
           </Switch>
         </Route>
 
-        <Route path="*" exact={true} component={NotFound} />
+        <Route path="/admin/" exact>
+          <MainLayout>
+            <PrivateRoute exact path='/admin' component={Dashboard} />
+          </MainLayout>
+        </Route>
+
+        <Route path="/admin/alarm" exact>
+          <MainLayout>
+            <PrivateRoute path='/admin/alarm' component={AlarmScreen} />
+          </MainLayout>
+        </Route>
+
+        <Route path="/admin/trend" exact>
+          <MainLayout>
+            <PrivateRoute path='/admin/trend' component={TrendScreen} />
+          </MainLayout>
+        </Route>
+
+        <Route path="/admin/prcalculation" exact>
+          <MainLayout>
+            <PrivateRoute path='/admin/prcalculation' component={PRCalculationSreen} />
+          </MainLayout>
+        </Route>
+
+        <Route path="/admin/systeminfor" exact>
+          <MainLayout>
+            <PrivateRoute path='/admin/systeminfor' component={SystemInfoScreen} />
+          </MainLayout>
+        </Route>
+
+
+
+        <Route path="*" component={NotFound} />
 
       </Switch>
-
     </Router>
 
   )

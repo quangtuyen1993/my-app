@@ -32,7 +32,7 @@ const CardLayout = (props) => {
 
     return (
         <>
-            <Card  variant="outlined">
+            <Card variant="outlined" >
                 <CardHeader
                     component={() => (
                         <div>
@@ -51,7 +51,7 @@ const CardLayout = (props) => {
                 />
                 <Divider />
 
-                <CardContent>
+                <CardContent {...props}>
                     {props.children}
                 </CardContent>
             </Card>

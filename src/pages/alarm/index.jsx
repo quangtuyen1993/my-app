@@ -1,18 +1,45 @@
-import { Box, Container, Grid, TextField } from "@material-ui/core";
-import { useState } from "react";
+import { Box, Container, Grid, Paper, TextField, useTheme } from "@material-ui/core";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import CardLayout from "../../common/layouts/CardLayout";
-import AppDatePicker from "../../components/AppDatePicker";
+import MDatePicker from "../../components/MDatePicker";
 import TableApp from "../../components/TableApp";
+import SearchBar from "../../components/SearchBar";
 
 export default function AlarmScreen() {
-    const [selectedFrom, handleDateFromChange] = useState(new Date())
-    const [selectedTo, handleDateToChange] = useState(new Date())
-    const onPickerFromChange = (e) => {
-        console.log(JSON.stringify(e))
-        var datePicker = new Date(e.toString());
-        console.log(datePicker)
-        handleDateFromChange(e)
+    const theme = useTheme()
+    const boundTable = useRef(null)
+    const [state, setState] = useState({
+        fromDate: null,
+        toDate: null,
+        heightTable: 100
+    })
+
+
+    useEffect(() => {
+        var newHeight = boundTable.current.getBoundingClientRect()
+        if (state.heightTable !== newHeight.height + theme.spacing(2) * 2)
+            setState(pre => {
+                return {
+                    ...pre,
+                    heightTable: newHeight.height + theme.spacing(2) * 2
+                }
+            })
+
+    }, [state.heightTable])
+
+
+    const handleRangeDateChange = (from, to) => {
+        console.log(from, to)
+        setState(pre => {
+            return {
+                ...pre,
+                fromDate: from,
+                toDate: to
+            }
+        })
     }
+
+
 
     return (
         <>
@@ -21,35 +48,59 @@ export default function AlarmScreen() {
                 direction="row"
                 maxWidth={false}
             >
+                {console.log("Alarm is loading")}
                 <Grid container
-                    maxWidth={false}
                     spacing={2}
                 >
                     <Grid item sm={12} lg={12}>
-
                         <CardLayout>
-                            <Box m={2}>
-                                <AppDatePicker label="From" value={selectedFrom} onChange={onPickerFromChange} />
+                            <Grid container spacing={2} >
+                                <Grid item sm={12}>
+                                    <Grid container justify="flex-start" spacing={2}>
+                                        <Grid item xs={12} sm={12} md={6} lg={6} >
+                                            <MDatePicker
+                                                isSignleDate={false}
+                                                onRangeDateChange={handleRangeDateChange} />
+                                        </Grid>
+                                        <Grid item sm={12} xs={12} md={6} lg={6}>
+                                            <Grid container justify="flex-end">
+                                                <Grid item xs={12} sm={12} md={6} lg={6}>
+                                                    <SearchBar  />
+                                                </Grid>
 
-                            </Box>
-                            <Box m={2}>
-                                <AppDatePicker label="To" value={selectedTo} onChange={handleDateToChange} />
-
-                            </Box>
-                            <Box m={2}>
-                                <TextField
-                                    placeholder="search" />
-                            </Box>
+                                            </Grid>
 
 
-                            <Grid item sm={12} lg={12}>
-                                <TableApp
-                                    data={historycal}
-                                    field={["Action", "State", "Name", "Incomming Time", "Alarm Text", "Value", "Limit", "Compare Mode", "Outgoing Time", "Ack Time"]}
-                                    chipField={["Action"]}
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item sm={12} xs={12} style={{
+                                    overflow: "auto",
+                                    whiteSpace: 'nowrap',
+                                    position: "relative",
+                                    height: state.heightTable,
+                                    display: "inline-block",
+                                }}>
+                                    <div style={{
+                                        whiteSpace: 'wrap',
+                                        position: "absolute",
+                                        left: 0,
+                                        top: 0,
+                                        bottom: 0,
+                                        right: 0
+                                    }}>
+                                        <TableApp
+                                            ref={boundTable}
+                                            onChipClick={(i, f) => console.log(i, f)}
+                                            data={historycal}
+                                            field={["Action", "State", "Name", "Incomming Time", "Alarm Text", "Value", "Limit", "Compare Mode", "Outgoing Time", "Ack Time"]}
+                                            chipField={["Action"]}
+                                        />
+                                    </div>
 
-                                />
+                                </Grid>
                             </Grid>
+
 
                         </CardLayout>
                     </Grid>

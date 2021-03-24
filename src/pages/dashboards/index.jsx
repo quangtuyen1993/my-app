@@ -7,13 +7,14 @@ import PowerTrend from "./components/PowerTrend.jsx";
 var list = [
     OverView,
     Weather,
-    PowerTrend, 
+    PowerTrend,
     EnergyTrend,
 ]
 
 function Dashboard(props) {
     return (
         <Container
+   
             disableGutters
             maxWidth={false}>
             {

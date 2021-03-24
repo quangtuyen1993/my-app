@@ -1,6 +1,6 @@
 
 import { Chip, } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ColorsApp from '../common/colors';
 import PropTypes from 'prop-types';
@@ -14,7 +14,7 @@ const useStyles = makeStyles((themes) => ({
 }));
 
 
-export default function TableApp(props) {
+const TableApp = forwardRef((props, ref) => {
   const classes = useStyles()
   const [state, setState] = useState({
     data: [],
@@ -51,79 +51,88 @@ export default function TableApp(props) {
       listHeader = state.fieldTitle
     }
 
-    return (
-      <tr style={{ color: "white", background: themes.palette.primary.main }}>
-        {
-          (state.index) ? <th className={classes.cell}>#</th> : null
-
-        }
-
-        {
-          listHeader.map((f, index) => (
-            <th key={f} scope={state.col} className={classes.cell}>{f}</th>
-          ))
-        }
-      </tr>
-    )
+    if (listHeader !== undefined && listHeader.length !== 0)
+      return (
+        <tr style={{ color: "white", background: themes.palette.primary.main }}>
+          {
+            (state.index) ? (<th className={classes.cell}>#</th>) : (null)
+          }
+          {
+            listHeader.map((f, index) => (
+              <th key={f} scope={state.col} className={classes.cell}>{f}</th>
+            ))
+          }
+        </tr>
+      )
+    return null
   }
 
+
+  const renderBody = () => {
+    if (state.data !== undefined && state.data.length !== 0)
+
+      return state.data.map((item, index) => (
+        <tr key={index}>
+          {(state.index) ? (<th>{index+1}</th>):null}
+          {
+            state.field.map((f) =>
+              <th className={classes.cell} key={f}>{
+                renderRow(item, f)
+              }
+              </th>
+            )
+          }
+          {/* redenr link */}
+          {
+            (props.link) ?
+              <th className={classes.cell}>
+                <Link key={item.id} to={props.path + "/" + item.id}>See Detail</Link>
+              </th>
+              : null
+          }
+        </tr>
+      ))
+    return null
+  }
   const themes = useTheme()
 
-  const getRow = (item, f) => {
+  const renderRow = (item, f) => {
     if (state.chipField === undefined || !state.chipField.includes(f)) {
       return item[f]
     } else {
-      return <ChipTag name={item[f]} />
+      return <ChipTag name={item[f]} onClick={(e) => props.onChipClick ? props.onChipClick(item, f) : console.log("chip click")} />
     }
   }
 
   return (
-    <>
-      <table className="table table-bordered table-hover ">
+    <div id="">
+      <table ref={ref} id="table_container" className="table table-bordered table-hover ">
         <thead>
           {renderHeader()}
         </thead>
         <tbody>
-          {
-            state.data.map((item, index) => (
-              <tr key={index}>
-                {(state.index) ? <th className={classes.cell} >{index}</th> : null}
-                {
-                  state.field.map((f, index) =>
-                    <th className={classes.cell} key={f}>{
-                      getRow(item, f)
-                    }
-                    </th>
-                  )
-                }
-                {
-                  (props.link) ?
-                    <th className={classes.cell}>
-                      <Link key={item.id} to={props.path + "/" + item.id}>See Detail</Link>
-                    </th>
-                    : null
-                }
-              </tr>
-            ))}
+          {renderBody()}
         </tbody>
       </table>
 
-    </>
+    </div>
   );
 
   function ChipTag(props) {
     return (
       <Chip
+        {...props}
         label={props.name}
         style={{ backgroundColor: ColorsApp.ENEGRY, color: "white" }} />
     )
   }
-}
+})
 TableApp.propTypes = {
   field: PropTypes.array,
   data: PropTypes.array,
   chipField: PropTypes.array,
   fieldTitle: PropTypes.array,
   link: PropTypes.bool,
-
+  onChipClick: PropTypes.func
 }
+export default TableApp

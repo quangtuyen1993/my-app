@@ -5,7 +5,6 @@ import {
 import {
     deepPurple,
     indigo,
-    amber,
     grey,
     blueGrey,
 } from '@material-ui/core/colors';
@@ -62,3 +61,5 @@ export const theme = createMuiTheme({
     },
 
 });
+
+export default theme

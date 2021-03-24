@@ -49,20 +49,15 @@ export default function DialogApp(props) {
     return (
         <>
             <Box mr={2}>
-
                 <Button style={{ backgroundColor: theme.palette.secondary.main }} onClick={handleClickOpen}>
                     <Box mr={2}>
                         <FontAwesomeIcon icon={IconApp.BROADCAST_TOWER} color="white" size="2x" />
-
                     </Box>
                     <Box >
                         <Typography variant="h6">
                             Device {device}
                         </Typography>
                     </Box>
-
-
-
                 </Button>
             </Box>
 
@@ -74,8 +69,8 @@ export default function DialogApp(props) {
             >
                 <DialogTitle 
                 
-                disableTypography
-                style={{ backgroundColor: theme.palette.primary.main }} id="max-width-dialog-title">
+                    disableTypography
+                    style={{ backgroundColor: theme.palette.primary.main }} id="max-width-dialog-title">
                     <Typography variant="h5">
                         Station
                     </Typography>
@@ -98,9 +93,14 @@ export default function DialogApp(props) {
                     </form>
                 </DialogContent>
                 <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                        Open
+                    </Button>
+
                     <Button onClick={handleClose} color="primary">
                         Close
                     </Button>
+                  
                 </DialogActions>
             </Dialog>
         </>

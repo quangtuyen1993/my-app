@@ -10,7 +10,6 @@ import ColorsApp from "../../../common/colors";
 
 const useStyles = makeStyles((themes) => ({
     root: {
-        background: "yellow"
     },
     cardPrimary: {
     },

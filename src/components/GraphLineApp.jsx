@@ -1,75 +1,56 @@
 import { fade } from '@material-ui/core';
 import { indigo, purple } from '@material-ui/core/colors';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
+import { LISTCOLOR } from '../common/colors';
 
 
 const initialState = {
     yAxisLabel: [],
-    labelA: [],
-    labelB: [],
-}
-const random = (min, max) => {
-    return min + Math.random() * (max - min);
+    dataSet: []
 }
 
-export default function DatePickerApp(props) {
+const DatePickerApp=(props) =>{
     const [state, setState] = useState(initialState)
-
-    
-
     useEffect(() => {
-        if(props.type==="HourInDate"){
+        let label = []
+        let dataSet = []
+        props.data.forEach((item, index) => {
 
-        }
-    
-        let yLabels = []
-        let aValues = []
-        let bValues = []
-        for (var i = 0; i < 24; i++) {
-            var labelValue = `${i}:00`
-            yLabels.push(labelValue)
-            var aValue = random(0, 2000)
-            aValues.push(aValue)
-            var bValue = random(0, 2000)
-            bValues.push(bValue)
-        }
+            var value = []
+            item.data.forEach((da, i) => {
+
+                if (index === 0) {
+                    label.push(da.date)
+                }
+                value.push(da.value)
+            })
+
+            dataSet.push({
+                label: item.name,
+                lineTension: 0.5,
+                fill: true,
+                borderColor: LISTCOLOR[index],
+                backgroundColor: fade(LISTCOLOR[index], 0.1),
+                borderWidth: 2,
+                data: value,
+            })
+        })
         setState(pre => {
             return {
-                yAxisLabel: yLabels,
-                labelA: aValues,
-                labelB: bValues
+                yAxisLabel: label,
+                dataSet: dataSet
             }
 
         })
-    }, [props])
+    }, [props.data])
     return (
         <div style={{ minHeight: "30vh", position: "relative", margin: "auto", width: "75vw" }}>
             <Line
                 data={{
                     labels: state.yAxisLabel,
-                    datasets: [
-                        {
-                            label: "A",
-                            lineTension: 0.5,
-                            fill: true,
-                            borderColor: indigo[500],
-                            backgroundColor: fade(indigo[500], 0.2),
-                            borderWidth: 2,
-                            data: state.labelA,
-                        },
-                        {
-
-                            label: "B",
-                            fill: true,
-                            lineTension: 0.5,
-                            borderColor: purple[500],
-                            backgroundColor: fade(purple[500], 0.2),
-                            borderWidth: 2,
-                            data: state.labelB
-                        },
-
-                    ]
+                    datasets: state.dataSet
                 }}
                 options={
                     {
@@ -85,7 +66,7 @@ export default function DatePickerApp(props) {
                             }
                         },
                         hover: {
-                            animationDuration: 0 
+                            animationDuration: 0
                         },
                         responsiveAnimationDuration: 0,
                         maintainAspectRatio: false,
@@ -98,21 +79,35 @@ export default function DatePickerApp(props) {
                         offset: true,
                         scales: {
                             xAxes: [{
+                                type: "time",
+                                time: {
+                                    displayFormats: {
+                                        hour: 'HH:mm'
+                                    },
+                                    min: moment(new Date(props.data[0].data[0].date)).startOf('day'),
+                                    max: moment(new Date(props.data[0].data[0].date)).endOf('day'),
 
+                                },
                                 gridLines: {
                                     display: true,
                                 },
-                                distribution: 'linear',
+                                distribution: 'series',
                                 bounds: 'ticks',
-                            
+                                tick: {
+                                    scaleOverride: true,
+
+                                }
+
                             }],
                             yAxes: [{
 
                                 gridLines: {
                                     display: true,
                                 },
+                                bounds: 'ticks',
                                 ticks: {
                                     beginAtZero: true,
+                                    suggestedMax: 1500
                                 },
                             }]
                         },
@@ -122,3 +117,5 @@ export default function DatePickerApp(props) {
         </div>
     );
 }
+
+export default React.memo(DatePickerApp)

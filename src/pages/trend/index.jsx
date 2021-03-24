@@ -1,5 +1,5 @@
 import { Container, Box, Grid } from "@material-ui/core";
-import Table from "./dashboards/components/PowerTrend";
+import Table from "../dashboards/components/PowerTrend";
 export default function TreendScreen() {
     var list = [
         <Table/>,

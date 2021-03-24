@@ -18,7 +18,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { red } from '@material-ui/core/colors';
 import DialogApp from '../../feature/DialogApp';
 import { Badge, Box } from '@material-ui/core';
-import {  } from '@material-ui/icons';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -100,13 +99,13 @@ const useStyles = makeStyles((theme) => ({
 
 
 const routes = [
-    { id: 1, iconItem: IconApp.DASHBOARD, name: "Overview", linkTo: "/" },
-    { id: 2, iconItem: IconApp.DEVICE, name: "Devices", linkTo: "/device" },
-    { id: 3, iconItem: IconApp.ALARM, name: "Alarms", linkTo: "/alarm" },
-    { id: 7, iconItem: IconApp.TRENT, name: "Alarms", linkTo: "/trend" },
-    { id: 4, iconItem: IconApp.CACL, name: "PR Calculation", linkTo: "/prcalculation" },
-    { id: 5, iconItem: IconApp.INFO, name: "System info", linkTo: "/systeminfor" },
-    { id: 6, iconItem: IconApp.SIGN_OUT, name: "Log Out", linkTo: "/" },
+    { id: 1, iconItem: IconApp.DASHBOARD, name: "Overview", linkTo: "/admin" },
+    { id: 2, iconItem: IconApp.DEVICE, name: "Devices", linkTo: "/admin/device" },
+    { id: 3, iconItem: IconApp.ALARM, name: "Alarms", linkTo: "/admin/alarm" },
+    { id: 7, iconItem: IconApp.TRENT, name: "Alarms", linkTo: "/admin/trend" },
+    { id: 4, iconItem: IconApp.CACL, name: "PR Calculation", linkTo: "/admin/prcalculation" },
+    { id: 5, iconItem: IconApp.INFO, name: "System info", linkTo: "/admin/systeminfor" },
+    { id: 6, iconItem: IconApp.SIGN_OUT, name: "Log Out", linkTo: "/login" },
 ]
 
 
@@ -219,5 +218,5 @@ export default function MainLayout(props) {
             </div>
 
         </div >
-    );
+    )
 }

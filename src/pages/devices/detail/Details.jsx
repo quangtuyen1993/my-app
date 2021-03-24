@@ -155,6 +155,7 @@ export default function DetailScreen(props) {
 
                                 <CardLayout title="DC OutPut">
                                     <TableApp
+                                
                                         data={dcOutPut}
                                         field={["AC", "Voltage", "Current"]}
                                     />
