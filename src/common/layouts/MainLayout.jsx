@@ -15,9 +15,9 @@ import ColorsApp from '../colors';
 import IconApp, { PUBLIC_ICON_ISOLAR, PUBLIC_ICON_LIGHT } from "../icons/index"
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { red } from '@material-ui/core/colors';
-import DialogApp from '../../feature/DialogApp';
+import DialogApp from '../../components/DialogApp';
 import { Badge, Box } from '@material-ui/core';
+import { red } from '@material-ui/core/colors';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({

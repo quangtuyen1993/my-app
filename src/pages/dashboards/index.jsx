@@ -4,31 +4,18 @@ import Weather from "./components/Weather.jsx";
 import EnergyTrend from "./components/EnergyTrend.jsx";
 import PowerTrend from "./components/PowerTrend.jsx";
 
-var list = [
-    OverView,
-    Weather,
-    PowerTrend,
-    EnergyTrend,
-]
+var list = [OverView, Weather, PowerTrend, EnergyTrend];
 
-function Dashboard(props) {
-    return (
-        <Container
-   
-            disableGutters
-            maxWidth={false}>
-            {
-                list.map((item, index) =>
-                    <Box mb={2} key={index}>
-                        {
-                            item.call()
-                        }
-                    </Box>
-                )
-            }
-
-        </Container>
-    )
+function DashBoard(props) {
+  return (
+    <Container disableGutters maxWidth={false}>
+      {list.map((item, index) => (
+        <Box mb={2} key={index}>
+          {item.call()}
+        </Box>
+      ))}
+    </Container>
+  );
 }
 
-export default Dashboard
+export default DashBoard
