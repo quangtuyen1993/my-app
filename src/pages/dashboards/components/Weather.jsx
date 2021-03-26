@@ -57,7 +57,7 @@ export default function Weather(props) {
             case `Wind`:
                 return IconApp.WIND
             case `Radiation`:
-                return IconApp.RATATION
+                return IconApp.RADIATION
             default:
                 return IconApp.TEMP
         }

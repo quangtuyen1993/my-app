@@ -88,7 +88,7 @@ export const RouterList = [
   },
   {
     id: 5,
-    iconItem: IconApp.CACL,
+    iconItem: IconApp.CALC,
     name: "PR Calculation",
     linkTo: "/prcalculation",
     path: "/prcalculation/:path?",

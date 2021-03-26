@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Avatar, Grid, makeStyles, Tooltip } from "@material-ui/core";
 import { red } from "@material-ui/core/colors";
 import React from "react";
-import IconApp from "../common/icons";
+import IconApp from "../../common/icons";
 const useStyles = makeStyles((theme) => ({
   chip: {
     backgroundColor: theme.palette.secondary.main,

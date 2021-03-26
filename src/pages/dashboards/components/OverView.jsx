@@ -100,7 +100,7 @@ export default function Overview() {
     const getIconBackground = (type) => {
         switch (type) {
             case "Energy":
-                return new ItemCard(IconApp.ENEGRY, ColorsApp.ENEGRY_GRADIENT)
+                return new ItemCard(IconApp.ENERGY, ColorsApp.ENEGRY_GRADIENT)
             case "Running":
                 return new ItemCard(IconApp.RUNNING, ColorsApp.RUNNING_GRADIENT)
             case "Power":

@@ -16,6 +16,7 @@ import IconApp, { PUBLIC_ICON_ISOLAR, PUBLIC_ICON_LIGHT } from "../../icons";
 import clsx from "clsx";
 import ColorsApp from "../../colors";
 import DialogApp from "../../../components/DialogApp";
+import AppBadge from "../../../redux/feature/AppBadge";
 
 export default function Header({ drawerWidth, onToggleDrawer, open }) {
   const useStyle = makeStyles((theme) => ({
@@ -87,11 +88,7 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
             <DialogApp />
           </Box>
           <Box mr={2}>
-            <Avatar>
-              <Badge badgeContent={4} classes={{ badge: classes.customBadge }}>
-                <FontAwesomeIcon icon={IconApp.ALARM} />
-              </Badge>
-            </Avatar>
+            <AppBadge/>
           </Box>
 
           <Box>

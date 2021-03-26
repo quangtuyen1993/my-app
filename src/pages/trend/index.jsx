@@ -31,7 +31,7 @@ export default function TreendScreen() {
       <Container disableGutters direction="row" maxWidth={false}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <CardLayout icon={IconApp.POWERTREND} title="Power Trend">
+            <CardLayout icon={IconApp.POWER_TREND} title="Power Trend">
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <AppDatePicker
@@ -46,7 +46,7 @@ export default function TreendScreen() {
             </CardLayout>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <CardLayout icon={IconApp.POWERTREND} title="Radiation">
+            <CardLayout icon={IconApp.POWER_TREND} title="Radiation">
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <AppDatePicker
@@ -61,7 +61,7 @@ export default function TreendScreen() {
             </CardLayout>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <CardLayout icon={IconApp.POWERTREND} title="Cell Temperature ">
+            <CardLayout icon={IconApp.POWER_TREND} title="Cell Temperature ">
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <AppDatePicker
@@ -76,7 +76,7 @@ export default function TreendScreen() {
             </CardLayout>
           </Grid>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <CardLayout icon={IconApp.POWERTREND} title="Cell Temperature ">
+            <CardLayout icon={IconApp.POWER_TREND} title="Cell Temperature ">
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <MYearMonthPicker

@@ -97,7 +97,7 @@ export default function AlarmScreen() {
                                         <TableApp
                                             ref={boundTable}
                                             onChipClick={(i, f) => console.log(i, f)}
-                                            data={historycal}
+                                            data={historical}
                                             field={["Action", "State", "Name", "Incomming Time", "Alarm Text", "Value", "Limit", "Compare Mode", "Outgoing Time", "Ack Time"]}
                                             chipField={["Action"]}
                                         />
@@ -115,7 +115,7 @@ export default function AlarmScreen() {
         </>
     )
 }
-const historycal = [
+const historical = [
     {
         "Action": "Done",
         "State": "Ack",

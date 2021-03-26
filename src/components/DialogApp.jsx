@@ -10,7 +10,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import React from "react";
-import IconNotify from "./IconNotify";
+import IconNotify from "../redux/feature/IconNotify";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
