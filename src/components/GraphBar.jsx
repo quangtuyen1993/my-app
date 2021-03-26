@@ -1,120 +1,140 @@
-import { fade } from '@material-ui/core';
-import {purple } from '@material-ui/core/colors';
-import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
-import ColorsApp from '../common/colors';
+import { fade } from "@material-ui/core";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import { LIST_COLOR } from "../common/colors";
+
+export const MONTH_IN_YEAR = "month";
+export const DAY_IN_MONTH = "day";
 
 
-
-const initialState = {
-    yAxisLabel: [],
-    labelA: [],
-    labelB: [],
-}
-const random = (min, max) => {
-    return min + Math.random() * (max - min);
-}
+const dataSetPattern = {
+  lineTension: 0.5,
+  fill: true,
+  borderWidth: 2,
+};
 
 export default function GraphBar(props) {
-    const [state, setState] = useState(initialState)
-
-    
-
-    useEffect(() => {
-        let yLabels = []
-        let aValues = []
-        let bValues = []
-        for (var i = 0; i < 24; i++) {
-            var labelValue = `${i}:00`
-            yLabels.push(labelValue)
-            var aValue = random(0, 2000)
-            aValues.push(aValue)
-            var bValue = random(0, 2000)
-            bValues.push(bValue)
+	const initialState = {
+		yAxisLabel: [],
+		dataSet: [],
+		typeView: DAY_IN_MONTH,
+	};
+	
+  const [state, setState] = useState(initialState);
+  const convertDataToDataGraph = (data) => {
+    let label = [];
+    let dataSet = [];
+    data.forEach((item, index) => {
+      var value = [];
+      item.data.forEach((da) => {
+        if (index === 0) {
+          var date = moment(da.date).valueOf();
+          label.push(date);
         }
-        setState(pre => {
-            return {
-                yAxisLabel: yLabels,
-                labelA: aValues,
-                labelB: bValues
-            }
+        value.push(da.value);
+      });
 
-        })
-    }, [props])
-    return (
-        <div style={{ minHeight: "30vh", position: "relative", margin: "auto", width: "75vw" }}>
-            <Bar
-                data={{
-                    labels: state.yAxisLabel,
-                    datasets: [
-                        {
-                            label: "A",
-                            lineTension: 0.5,
-                            fill: true,
-                            borderColor: ColorsApp.ENEGRY,
-                            backgroundColor: fade(ColorsApp.ENEGRY, 0.5),
-                            borderWidth: 2,
-                            data: state.labelA,
-                        },
-                        {
+      dataSet.push({
+        ...dataSetPattern,
+        label: item.name,
+        borderColor: LIST_COLOR[index],
+        backgroundColor: fade(LIST_COLOR[index], 0.1),
+        data: value,
+      });
+    });
+    return {
+      label: label,
+      dataSet: dataSet,
+    };
+  };
+  useEffect(() => {
+    var { label, dataSet } = convertDataToDataGraph(props.data);
 
-                            label: "B",
-                            fill: true,
-                            lineTension: 0.5,
-                            borderColor: purple[500],
-                            backgroundColor: fade(purple[500], 0.2),
-                            borderWidth: 2,
-                            data: state.labelB
-                        },
+    setState((pre) => {
+      return {
+        ...pre,
+        yAxisLabel: label,
+        dataSet: dataSet,
+      };
+    });
+  }, [props.data]);
 
-                    ]
-                }}
-                options={
-                    {
-                        tooltips: {
-                            enabled: true,
-                            mode: 'index',
-                            intersect: false
-                        },
-
-                        elements: {
-                            point: {
-                                radius: 0
-                            }
-                        },
-                        hover: {
-                            animationDuration: 0 
-                        },
-                        responsiveAnimationDuration: 0,
-                        maintainAspectRatio: false,
-                        responsive: true,
-                        legend: {
-                            display: true,
-                            position: 'top'
-                        },
-                        offset: true,
-                        scales: {
-                            xAxes: [{
-
-                                gridLines: {
-                                    display: true,
-                                },
-                                distribution: 'linear',
-                                bounds: 'ticks',
-                            }],
-                            yAxes: [{
-
-                                gridLines: {
-                                    display: true,
-                                },
-                                ticks: {
-                                    beginAtZero: true,
-                                },
-                            }]
-                        },
-                    }
-                }
-            />
-        </div>
-    );
+  return (
+    <div
+      style={{
+        minHeight: "30vh",
+        position: "relative",
+        margin: "auto",
+        width: "75vw",
+      }}
+    >
+      <Bar
+        data={{
+          labels: state.yAxisLabel,
+          datasets: state.dataSet,
+        }}
+        options={{
+          tooltips: {
+            enabled: true,
+            mode: "index",
+            intersect: false,
+          },
+          elements: {
+            point: {
+              radius: 0,
+            },
+          },
+          hover: {
+            animationDuration: 0,
+          },
+          responsiveAnimationDuration: 0,
+          maintainAspectRatio: false,
+          responsive: true,
+          legend: {
+            display: true,
+            position: "top",
+          },
+          offset: true,
+          scales: {
+            xAxes: [
+              {
+                type: "time",
+                time: {
+                  unit: state.typeView,
+                  round: state.typeView,
+                  displayFormats: {
+                    month: "MMM",
+                    year: "YYYY",
+                    day: "MMM DD",
+                  },
+                },
+                gridLines: {
+                  display: true,
+                },
+                distribution: "linear",
+                bounds: "tick",
+                ticks: {
+                  source: "auto",
+									scaleOverride: true,
+                  min: moment.utc("2021-03-01T00:00:00+0700").valueOf(),
+                  max: moment.utc("2021-04-30T23:59:00+0700").valueOf(),
+                },
+              },
+            ],
+            yAxes: [
+              {
+                gridLines: {
+                  display: true,
+                },
+                ticks: {
+                  beginAtZero: true,
+                },
+              },
+            ],
+          },
+        }}
+      />
+    </div>
+  );
 }

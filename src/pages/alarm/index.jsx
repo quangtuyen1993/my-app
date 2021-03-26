@@ -1,9 +1,9 @@
-import { Box, Container, Grid, Paper, TextField, useTheme } from "@material-ui/core";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Container, Grid, useTheme } from "@material-ui/core";
+import { useEffect, useRef, useState } from "react";
 import CardLayout from "../../common/layouts/CardLayout";
 import MDatePicker from "../../components/MDatePicker";
-import TableApp from "../../components/TableApp";
 import SearchBar from "../../components/SearchBar";
+import TableApp from "../../components/TableApp";
 
 export default function AlarmScreen() {
     const theme = useTheme()
@@ -16,14 +16,19 @@ export default function AlarmScreen() {
 
 
     useEffect(() => {
-        var newHeight = boundTable.current.getBoundingClientRect()
-        if (state.heightTable !== newHeight.height + theme.spacing(2) * 2)
-            setState(pre => {
-                return {
-                    ...pre,
-                    heightTable: newHeight.height + theme.spacing(2) * 2
-                }
-            })
+        try{
+            var newHeight = boundTable.current.getBoundingClientRect()
+            if (state.heightTable !== newHeight.height + theme.spacing(2) * 2)
+                setState(pre => {
+                    return {
+                        ...pre,
+                        heightTable: newHeight.height + theme.spacing(2) * 2
+                    }
+                })
+        }catch(e){
+            console.log(e.message)
+        }
+
 
     }, [state.heightTable])
 

@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
 import LoginScreen from "../pages/Login";
 import MainLayout from "../common/layouts/main/MainLayout";
 import DefaultLayout from "../common/layouts/DefaultLayout";
@@ -16,16 +21,15 @@ export default function AppRouter(props) {
           </DefaultLayout>
         </Route>
 
-        
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
-
 
         {RouterList.filter((item) => item.priority === PRIVATE).map((item) => (
           <Route exact key={item.id} path={item.path}>
             {item.child.map((child) => (
               <PrivateRoute
+                key={child.id}
                 exact
                 layout={MainLayout}
                 path={child.path}

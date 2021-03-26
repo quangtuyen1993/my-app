@@ -13,15 +13,12 @@ const ColorsApp = {
     ENEGRY: green[500],
 }
 
-export const LISTCOLOR = [
+export const LIST_COLOR = [
     green[900],
-
     red[900],
     purple[900],
-
     pink[900],
     orange[900],
-
     lime[900],
     indigo[900],
     lightBlue[900],

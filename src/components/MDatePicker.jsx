@@ -7,10 +7,15 @@ import {useEffect, useState } from "react";
 import moment from "moment";
 import DateUtils from "../utils/DateUtils";
 import PropTypes from 'prop-types';
+
+export const TYPE_DATE = "MM/dd/yyyy"
+export const TYPE_HOUR_DATE = "MM/dd/yyyy HH:mm:ss"
+
 export default function MDatePicker(props) {
     const [selectedFrom, handleDateFromChange] = useState(new Date().setHours(0, 0, 0))
     const [selectedTo, handleDateToChange] = useState(new Date().setHours(23, 59, 59))
     const [isSignleDate, setIsSignleDate] = useState(false)
+    const [typeFormat,setTypeFormat]=useState(TYPE_DATE)
 
 
     useEffect(() => {
@@ -19,6 +24,12 @@ export default function MDatePicker(props) {
         }
     }, [props.isSignleDate])
 
+    useEffect(()=>{
+       if(props.typeFormat!==undefined){
+           setTypeFormat(props.typeFormat)
+       }
+       console.log(props.typeFormat)
+    },[props.typeFormat])
 
 
     useEffect(() => {
@@ -54,7 +65,7 @@ export default function MDatePicker(props) {
                         autoOk={true}
                         value={selectedFrom}
                         onChange={onDateChangeFrom}
-                        format="MM/dd/yyyy"
+                        format={typeFormat}
                     />
                 </Grid>
 
@@ -78,7 +89,7 @@ export default function MDatePicker(props) {
                             autoOk={true}
                             value={selectedTo}
                             onChange={onDateChangeTo}
-                            format="MM/dd/yyyy"
+                            format={typeFormat}
                         />
                     </Grid>
                 </Grid>

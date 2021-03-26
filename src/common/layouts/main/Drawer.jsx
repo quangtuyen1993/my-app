@@ -10,30 +10,9 @@ import {
 } from "@material-ui/core";
 import React from "react";
 import clsx from "clsx";
-import IconApp from "../../icons";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RouterList } from "../../../routes/Routes";
-
-const routes = [
-  { id: 1, iconItem: IconApp.DASHBOARD, name: "Overview", linkTo: "/admin" },
-  { id: 2, iconItem: IconApp.DEVICE, name: "Devices", linkTo: "/admin/device" },
-  { id: 3, iconItem: IconApp.ALARM, name: "Alarms", linkTo: "/admin/alarm" },
-  { id: 7, iconItem: IconApp.TRENT, name: "Alarms", linkTo: "/admin/trend" },
-  {
-    id: 4,
-    iconItem: IconApp.CACL,
-    name: "PR Calculation",
-    linkTo: "/admin/prcalculation",
-  },
-  {
-    id: 5,
-    iconItem: IconApp.INFO,
-    name: "System info",
-    linkTo: "/admin/systeminfor",
-  },
-  { id: 6, iconItem: IconApp.SIGN_OUT, name: "Log Out", linkTo: "/login" },
-];
 
 const DrawerApp = ({ drawerWidth, open, onClose }) => {
   const useStyle = makeStyles((theme) => ({

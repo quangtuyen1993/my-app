@@ -11,9 +11,7 @@ export default function MainLayout(props) {
     setOpen(!open);
   };
   const onClose = () => {
-    window.scrollTo({
-      top:0
-    })
+   
     setOpen(false);
   };
 

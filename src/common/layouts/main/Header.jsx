@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   AppBar,
+  Avatar,
   Badge,
   Box,
   IconButton,
@@ -83,13 +84,16 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
             Sky
           </Box>
           <Box mr={2}>
-            <Badge badgeContent={4} classes={{ badge: classes.customBadge }}>
-              <FontAwesomeIcon icon={IconApp.ALARM} />
-            </Badge>
-          </Box>
-          <Box>
             <DialogApp />
           </Box>
+          <Box mr={2}>
+            <Avatar>
+              <Badge badgeContent={4} classes={{ badge: classes.customBadge }}>
+                <FontAwesomeIcon icon={IconApp.ALARM} />
+              </Badge>
+            </Avatar>
+          </Box>
+
           <Box>
             <img
               height={theme.spacing(6) + 1}
