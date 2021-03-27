@@ -51,7 +51,7 @@ export const RouterList = [
       },
       {
         id: 2,
-        path: "/device/detail",
+        path: "/device/:index",
         component: DetailScreen,
       },
     ],

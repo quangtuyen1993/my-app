@@ -21,7 +21,6 @@ export default function MainLayout(props) {
         display: "flex",
       }}
     >
-      {console.log("render home")}
       <Header drawerWidth={drawWidth} open={open} onToggleDrawer={onToggle} />
       <Drawer drawerWidth={drawWidth} open={open} onClose={onClose} />
       <Main>{props.children}</Main>
