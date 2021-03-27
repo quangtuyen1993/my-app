@@ -36,9 +36,9 @@ export default class Demo extends React.PureComponent {
     var mList = [];
     appointments.forEach((item) => {
       var position = resourcesData.map((rs) => rs.id).indexOf(item.deviceId);
-      console.log(position)
-      var {text} = resourcesData[position];
-      console.log("TITLE",text)
+      console.log(position);
+      var { text } = resourcesData[position];
+      console.log("TITLE", text);
       var mObj = { ...item, title: text.toLocaleUpperCase() };
       mList.push(mObj);
     });
@@ -55,6 +55,7 @@ export default class Demo extends React.PureComponent {
   };
 
   commitChanges({ added, changed, deleted }) {
+    console.log(added, changed, deleted)
     this.setState((state) => {
       let { data } = state;
       if (added) {
@@ -81,21 +82,29 @@ export default class Demo extends React.PureComponent {
 
     return (
       <Paper>
-        <Scheduler data={data}>
+        <Scheduler data={data}
+        
+      
+        >
           <ViewState defaultCurrentDate="2017-05-25" />
           <EditingState onCommitChanges={this.commitChanges} />
           <EditRecurrenceMenu />
 
-          <WeekView startDayHour={7} endDayHour={17} />
+          <WeekView startDayHour={7} endDayHour={17}  />
           <MonthView startDayHour={7} endDayHour={17} />
-          <Appointments />
+          <Appointments  />
           <AppointmentTooltip showOpenButton />
-          <AppointmentForm />
+          <AppointmentForm
+            booleanEditorComponent={() => null}
+            weeklyRecurrenceSelectorComponent={() => null}
+            selectComponent={() => null}
+            radioGroupComponent={() => null}
+          />
           <Toolbar />
           <DateNavigator />
           <ViewSwitcher />
 
-          <Resources data={resources} mainResourceName="deviceId" />
+          <Resources data={resources} mainResourceName="deviceId"  />
           <DragDropProvider />
         </Scheduler>
       </Paper>
