@@ -44,6 +44,7 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
 
   return (
     <>
+    {console.log("re-render header")}
       <AppBar
         position="fixed"
         className={clsx(classes.root, {

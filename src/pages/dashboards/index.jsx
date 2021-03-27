@@ -3,10 +3,14 @@ import OverView from "./components/OverView.jsx";
 import Weather from "./components/Weather.jsx";
 import EnergyTrend from "./components/EnergyTrend.jsx";
 import PowerTrend from "./components/PowerTrend.jsx";
+import { useMemo } from "react";
+
+
 
 var list = [OverView, Weather, PowerTrend, EnergyTrend];
 
 function DashBoard(props) {
+
   return (
     <Container disableGutters maxWidth={false}>
       {list.map((item, index) => (

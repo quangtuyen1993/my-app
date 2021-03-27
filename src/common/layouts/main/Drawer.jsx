@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { RouterList } from "../../../routes/Routes";
 
 const DrawerApp = ({ drawerWidth, open, onClose }) => {
+
   const useStyle = makeStyles((theme) => ({
     paper: {
       background: theme.palette.secondary.main,

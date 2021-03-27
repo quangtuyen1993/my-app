@@ -34,12 +34,6 @@ export default function Overview() {
             type: "Power"
         },
         {
-            data: "-0.04 kW",
-            name: " Active Power",
-            type: "Power"
-
-        },
-        {
             data: "0 kVar",
             name: " Reactive Power",
             type: "Power"
@@ -122,9 +116,6 @@ export default function Overview() {
                                 <Card variant="outlined" color="primary"
                                     style={{ background: icon.background }}
                                     className={classes.cardPrimary} >
-
-
-
                                     <CardContent style={{ position: "relative" }} >
                                         <FontAwesomeIcon
                                             style={{

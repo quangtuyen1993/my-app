@@ -6,6 +6,7 @@ import DetailScreen from "../pages/devices/detail/Details";
 import PRCalculationSreen from "../pages/prcalc/index";
 import TrendScreen from "../pages/trend";
 import SystemInfoScreen from "../pages/system";
+import SchedulerScreen from "../pages/scheduler_maintain";
 
 export const PRIVATE = "_private_";
 export const PUBLIC = "_public_";
@@ -117,6 +118,21 @@ export const RouterList = [
     ],
   },
   {
+    id: 8,
+    iconItem: IconApp.INFO,
+    name: "System info",
+    linkTo: "/scheduler",
+    path: "/scheduler/:path?",
+    priority: PRIVATE,
+    child: [
+      {
+        id: 1,
+        path: "/scheduler",
+        component: SchedulerScreen,
+      },
+    ],
+  },
+  {
     id: 7,
     iconItem: IconApp.SIGN_OUT,
     name: "Log Out",
@@ -130,4 +146,5 @@ export const RouterList = [
       },
     ],
   },
+  
 ];
