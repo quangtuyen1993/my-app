@@ -1,22 +1,18 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   AppBar,
-  Avatar,
-  Badge,
   Box,
   IconButton,
   makeStyles,
   Toolbar,
   useTheme,
 } from "@material-ui/core";
-
-import React from "react";
 import MenuIcon from "@material-ui/icons/Menu";
-import IconApp, { PUBLIC_ICON_ISOLAR, PUBLIC_ICON_LIGHT } from "../../icons";
 import clsx from "clsx";
-import ColorsApp from "../../colors";
+import React from "react";
 import DialogApp from "../../../components/DialogApp";
 import AppBadge from "../../../redux/feature/AppBadge";
+import ColorsApp from "../../colors";
+import { PUBLIC_ICON_ISOLAR, PUBLIC_ICON_LIGHT } from "../../icons";
 
 export default function Header({ drawerWidth, onToggleDrawer, open }) {
   const useStyle = makeStyles((theme) => ({
@@ -88,7 +84,7 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
             <DialogApp />
           </Box>
           <Box mr={2}>
-            <AppBadge/>
+            <AppBadge />
           </Box>
 
           <Box>
