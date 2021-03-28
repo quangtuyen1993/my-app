@@ -54,6 +54,7 @@ export default class Demo extends React.PureComponent {
     });
   };
 
+  //handle change in scheduler
   commitChanges({ added, changed, deleted }) {
     console.log(added, changed, deleted)
     this.setState((state) => {

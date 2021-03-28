@@ -7,7 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Colors from "../common/colors";
 import { PUBLIC_ICON } from "../common/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { onLogin } from "../redux/feature/user.slice";
+import { onLogin } from "../redux/feature/user/user.slice";
 const useStyles = makeStyles({
   form: {
     padding: "10px",

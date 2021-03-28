@@ -85,12 +85,17 @@ export default function DetailScreen(props) {
           <Grid container spacing={2} direction="row">
             <Grid item lg={6} md={6} xs={12} sm={12}>
               <CardLayout title="DC Input">
-                <TableApp data={dcInput} field={["DC", "Voltage", "Current"]} />
+                <TableApp
+                  index={true}
+                  data={dcInput}
+                  field={["DC", "Voltage", "Current"]}
+                />
               </CardLayout>
             </Grid>
             <Grid item lg={6} md={6} xs={12} sm={12}>
               <CardLayout title="DC OutPut">
                 <TableApp
+                  index={true}
                   pagination={true}
                   chipField={["AC"]}
                   chipComponent={(item, f) => (

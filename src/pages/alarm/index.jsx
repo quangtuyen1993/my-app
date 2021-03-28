@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import CardLayout from "../../common/layouts/CardLayout";
 import MDatePicker from "../../components/MDatePicker";
 import SearchBar from "../../components/SearchBar";
-import TableApp from "../../components/TableApp";
+import TableAppOverSize from "../../components/TableAppOverSize";
 
 export default function AlarmScreen() {
   const theme = useTheme();
@@ -87,7 +87,7 @@ export default function AlarmScreen() {
                       right: 0,
                     }}
                   >
-                    <TableApp
+                    <TableAppOverSize
                       pagination={true}
                       perPage={5}
                       index={true}

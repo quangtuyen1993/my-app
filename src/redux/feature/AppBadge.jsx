@@ -1,11 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  Avatar,
   Badge,
-  Box,
+
   Grid,
   makeStyles,
-  Tooltip,
+  Tooltip
 } from "@material-ui/core";
 import React from "react";
 import IconApp from "../../common/icons";
