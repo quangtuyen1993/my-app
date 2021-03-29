@@ -3,7 +3,6 @@ import { blue, cyan, deepPurple, green, indigo, lightBlue, lightGreen, lime, ora
 const ColorsApp = {
     secondary: "#ffffff",
     primary: "#343a40",
-    accent: "",
     primaryText: "#000000",
     secondaryText: "#666666",
     POWER_GRADIENT: 'linear-gradient(180deg, #e15361 40%,#dc3545 60%)',

@@ -1,5 +1,5 @@
 import { Chip } from "@material-ui/core";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ColorsApp from "../common/colors";
 import PropTypes from "prop-types";
@@ -196,7 +196,7 @@ const TableApp = ({
       <Chip
         {...props}
         label={props.name}
-        style={{ backgroundColor: ColorsApp.ENEGRY, color: "white" }}
+        style={{ backgroundColor: ColorsApp.ENERGY, color: "white" }}
       />
     );
   }
