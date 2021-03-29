@@ -31,4 +31,25 @@ export const LIST_COLOR = [
     orange[900],
 
 ]
+
+export const LIST_COLOR_ACCENT = [
+    blue[200],
+    blue[300],
+    lime[400],
+    lime[600],
+    orange[400],
+    orange[900],
+    purple[400],
+    pink[400],
+    indigo[400],
+    lightBlue[400],
+    pink[400],
+    deepPurple[400],
+    cyan[400],
+    teal[400],
+    lightGreen[400],
+    yellow[400],
+    orange[400],
+
+]
 export default ColorsApp;

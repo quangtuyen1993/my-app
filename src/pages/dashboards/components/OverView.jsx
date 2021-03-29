@@ -1,12 +1,13 @@
 
-import { useState, useEffect } from "react"
-import CardLayout from "../../../common/layouts/CardLayout"
-import { makeStyles ,useTheme} from '@material-ui/core/styles';
-
-import { Grid, Typography, Card, CardContent } from "@material-ui/core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import IconApp from "../../../common/icons";
+import { Card, CardContent, CardHeader, Grid, Typography } from "@material-ui/core";
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useEffect, useState } from "react";
 import ColorsApp from "../../../common/colors";
+import IconApp from "../../../common/icons";
+import CardLayout from "../../../common/layouts/CardLayout";
+import MCircleProgress from "../../../components/MCircleProgress";
+
 
 
 const object=
@@ -76,26 +77,35 @@ const getTypeField=(fieldStr)=>{
 
 const createListItem=(object)=>{
     var listItem=[]
+    var listPr=[]
     var field=Object.keys(object)
+
     field.forEach((f)=>{
       var obPattern = getTypeField(f)
-
-
-
       var name= f.toLocaleUpperCase()
       var value=object[f]
-      
       var obj={
           ...obPattern,
           name,
           value
       }
       
-      listItem.push(obj)
+      if(obj.type===Type.PR){
+        listPr.push(obj)
+      }else{
+        listItem.push(obj)
+      }
     })
-    return listItem
+    return {
+        listPr:listPr,
+        listItem:listItem
+    }
 
 }
+
+
+    
+
 const useStyles = makeStyles((themes) => ({
     root: {
     },
@@ -114,41 +124,100 @@ const useStyles = makeStyles((themes) => ({
 export default function Overview() {
     const classes = useStyles();
     const theme=useTheme()
-    const [data, setData] = useState([])
+    const [state, setState] = useState({
+        listPr:[],
+        listItem:[],
+        max:100,
+        values:[1,1,1]
+    })
     useEffect(function () {
-        console.log(createListItem(object))
        var data = createListItem(object)
-        setData([...data])
+        setState(pre=>({
+            ...pre,
+            listPr:data.listPr,
+            listItem:data.listItem
+        }))
     }, [])
 
  
+    useEffect(()=>{
+        startTimeOut()
+    },[])
+    const renderItem=(item,index)=>{
+       return( 
+            <Grid item sm={6} xs={12} md={4} lg={3} key={index}>
+                <Card variant="outlined" color="primary"
+                    style={{ background: item.bg }}
+                    className={classes.cardPrimary} >
+                    <CardContent style={{ position: "relative" }} >
+                        <FontAwesomeIcon
+                            style={{
+                                opacity: 0.5,
+                                position: "absolute",
+                                right: 0+theme.spacing(2),
+                            }}
+                            icon={item.icon} size={"3x"} />
+                        <Typography variant="h5">{item.value}</Typography>
+                        <Typography variant="h6">{item.name}</Typography>
+                    </CardContent>
+                </Card>
+            </Grid>)
+    }
 
+    const renderCircle=(item,index)=>{
+        const {max,value}=state
+        return ( 
+            <MCircleProgress 
+                    max={max} 
+                    item={item}
+                    value={state.values[index]}
+                    progress={state.values[index]} 
+                    size={100}  
+                   />
+            )
+        }
+    const startTimeOut=()=>{
+        var set= setInterval(()=>{
+            
+            let values=[]
+            for(var i=0;i<=3;i++){
+                const value =Math.random()*100
+                values.push(value)
+            }
+            setState(pre=>({
+                ...pre,
+                values:values
+            }))
+        },500)
+        return ()=>{
+            clearInterval(set)
+        }
+    }
     return (
         <CardLayout title="Overview" className={classes.root}>
-            <Grid container alignItems="stretch" alignContent="stretch" spacing={2}>
-                {
-                   data.map((item, index) => {
-                        return (
-                            <Grid item sm={6} xs={12} md={4} lg={3} key={index}>
-                                <Card variant="outlined" color="primary"
-                                    style={{ background: item.bg }}
-                                    className={classes.cardPrimary} >
-                                    <CardContent style={{ position: "relative" }} >
-                                        <FontAwesomeIcon
-                                            style={{
-                                                opacity: 0.5,
-                                                position: "absolute",
-                                                right: 0+theme.spacing(2),
-                                            }}
-                                            icon={item.icon} size={"3x"} />
-                                        <Typography variant="h5">{item.value}</Typography>
-                                        <Typography variant="h6">{item.name}</Typography>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        )
-                    })
-                }
+            
+            <Grid container spacing={2}>
+           
+                <Grid item xs={12} md={12} lg={12} sm={12}>
+                    <CardLayout title="Information" >
+                        <Grid container alignItems="stretch" alignContent="stretch" spacing={2}>
+                            {state.listItem.map((item,index)=>renderItem(item,index)) }
+                        </Grid>
+                    </CardLayout>
+                </Grid>
+            <Grid item xs={12} md={12} lg={12} sm={12}>
+                <CardLayout title="Power" icon={IconApp.ENERGY} >
+                        <Grid container  alignItems="stretch" alignContent="stretch"  spacing={2}>
+                                {state.listPr.map((item,index)=>
+                                    <Grid item md={4} lg={4} xs={12} sm={12}>
+                                       
+                                            {renderCircle(item,index)}
+                                    </Grid>
+                                )}
+                        </Grid>
+                 </CardLayout>
+                
+             </Grid>
             </Grid>
         </CardLayout>
     )

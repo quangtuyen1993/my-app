@@ -2,3 +2,15 @@
     font-family: 'SourceSansPro';
     src: local('SourceSansPro'), url(assets/fonts/SourceSansPro.ttf) format('truetype');
   }
+
+  .path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: dash 5s linear forwards;
+  }
+  
+  @keyframes dash {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
