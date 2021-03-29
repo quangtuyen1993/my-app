@@ -33,12 +33,11 @@ const Type=Object.freeze({
 
 
 const getTypeField=(fieldStr)=>{
-    if(fieldStr.includes(Type.ENG.valueOf()))
-    {
+    if(fieldStr.includes(Type.ENG.valueOf())) {
         return {
             type:Type.ENG.valueOf(),
             icon:IconApp.ENERGY,
-            bg: ColorsApp.ENEGRY_GRADIENT
+            bg: ColorsApp.ENERGY_GRADIENT
         } 
     }
     if(fieldStr.includes(Type.PR.valueOf())){
@@ -47,7 +46,6 @@ const getTypeField=(fieldStr)=>{
             icon:IconApp.PR,
             bg: ColorsApp.RUNNING_GRADIENT
         } 
-
     }
     if(fieldStr.includes(Type.POWER.valueOf())){
         return{
@@ -55,9 +53,6 @@ const getTypeField=(fieldStr)=>{
             icon:IconApp.POWER,
             bg: ColorsApp.POWER_GRADIENT
         } 
-
-
-
     }
     if(fieldStr.includes(Type.RUN.valueOf())){
 
@@ -157,11 +152,4 @@ export default function Overview() {
             </Grid>
         </CardLayout>
     )
-}
-
-class ItemCard {
-    constructor(icon, background) {
-        this.icon = icon;
-        this.background = background;
-    }
 }
