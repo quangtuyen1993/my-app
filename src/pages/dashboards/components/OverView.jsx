@@ -8,6 +8,99 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import IconApp from "../../../common/icons";
 import ColorsApp from "../../../common/colors";
 
+
+const object=
+{
+        Active_Power: "-0.04 kW",
+        Reactive_Power: "0 kVar",
+        Inverter_Running: "8/8",
+        Energy_to_day: "2.73 MWh",
+        Energy_this_month: "46.44 MWh",
+        Energy_this_year: "258.35 MWh",
+        Total_Energy: "458.18 MWh",
+        PR_Of_Day: "75.53 %",
+        PR_Of_Month: " 79.14 %",
+        PR_Of_Year: " 0.00 %",
+
+}
+const Type=Object.freeze({
+    ENG:"Energy",
+    PR:"PR",
+    POWER:"Power",
+    RUN:"Running",
+    TOTAL:"Total"
+})
+
+
+const getTypeField=(fieldStr)=>{
+    if(fieldStr.includes(Type.ENG.valueOf()))
+    {
+        return {
+            type:Type.ENG.valueOf(),
+            icon:IconApp.ENERGY,
+            bg: ColorsApp.ENEGRY_GRADIENT
+        } 
+    }
+    if(fieldStr.includes(Type.PR.valueOf())){
+        return{
+            type: Type.PR.valueOf(),
+            icon:IconApp.PR,
+            bg: ColorsApp.RUNNING_GRADIENT
+        } 
+
+    }
+    if(fieldStr.includes(Type.POWER.valueOf())){
+        return{
+            type: Type.POWER.valueOf(),
+            icon:IconApp.POWER,
+            bg: ColorsApp.POWER_GRADIENT
+        } 
+
+
+
+    }
+    if(fieldStr.includes(Type.RUN.valueOf())){
+
+        return{
+            type: Type.RUN.valueOf(),
+            icon:IconApp.RUNNING,
+            bg: ColorsApp.RUNNING_GRADIENT
+        } 
+       
+
+    }
+    if(fieldStr.includes(Type.TOTAL.valueOf())){
+        return{
+            type: Type.TOTAL.valueOf(),
+            icon:IconApp.RUNNING,
+            bg: ColorsApp.RUNNING_GRADIENT
+        }
+
+    }
+}
+
+const createListItem=(object)=>{
+    var listItem=[]
+    var field=Object.keys(object)
+    field.forEach((f)=>{
+      var obPattern = getTypeField(f)
+
+
+
+      var name= f.toLocaleUpperCase()
+      var value=object[f]
+      
+      var obj={
+          ...obPattern,
+          name,
+          value
+      }
+      
+      listItem.push(obj)
+    })
+    return listItem
+
+}
 const useStyles = makeStyles((themes) => ({
     root: {
     },
@@ -28,93 +121,22 @@ export default function Overview() {
     const theme=useTheme()
     const [data, setData] = useState([])
     useEffect(function () {
-        setData([{
-            data: "-0.04 kW",
-            name: " Active Power",
-            type: "Power"
-        },
-        {
-            data: "0 kVar",
-            name: " Reactive Power",
-            type: "Power"
-
-        },
-        {
-            data: "8/8",
-            name: "Inverter Running",
-            type: "Running"
-
-        },
-        {
-            data: "2.73 MWh",
-            name: "Energy to day",
-            type: "Energy"
-
-        },
-        {
-            data: "46.44 MWh",
-            name: "Energy this month",
-            type: "Energy"
-
-        },
-        {
-            data: "258.35 MWh",
-            name: "Energy this year",
-            type: "Energy"
-
-        },
-        {
-            data: "458.18 MWh",
-            name: "Total Energy",
-            type: "Energy"
-
-        },
-        {
-            data: "75.53 %",
-            name: " PR Of Day",
-            type: "PR"
-
-        },
-        {
-            data: " 79.14 %",
-            name: " PR Of Month",
-            type: "PR"
-
-        },
-        {
-            data: " 0.00 %",
-            name: "PR Of Year",
-            type: "PR"
-
-        }]
-        )
+        console.log(createListItem(object))
+       var data = createListItem(object)
+        setData([...data])
     }, [])
 
  
-    const getIconBackground = (type) => {
-        switch (type) {
-            case "Energy":
-                return new ItemCard(IconApp.ENERGY, ColorsApp.ENEGRY_GRADIENT)
-            case "Running":
-                return new ItemCard(IconApp.RUNNING, ColorsApp.RUNNING_GRADIENT)
-            case "Power":
-                return new ItemCard(IconApp.POWER, ColorsApp.POWER_GRADIENT)
-            default:
-                return new ItemCard(IconApp.PR, ColorsApp.RUNNING_GRADIENT)
-        }
-    }
 
     return (
         <CardLayout title="Overview" className={classes.root}>
             <Grid container alignItems="stretch" alignContent="stretch" spacing={2}>
                 {
-                    data.map((item, index) => {
-                        var icon = getIconBackground(item.type)
+                   data.map((item, index) => {
                         return (
-
                             <Grid item sm={6} xs={12} md={4} lg={3} key={index}>
                                 <Card variant="outlined" color="primary"
-                                    style={{ background: icon.background }}
+                                    style={{ background: item.bg }}
                                     className={classes.cardPrimary} >
                                     <CardContent style={{ position: "relative" }} >
                                         <FontAwesomeIcon
@@ -123,8 +145,8 @@ export default function Overview() {
                                                 position: "absolute",
                                                 right: 0+theme.spacing(2),
                                             }}
-                                            icon={icon.icon} size={"4x"} />
-                                        <Typography variant="h5">{item.data}</Typography>
+                                            icon={item.icon} size={"3x"} />
+                                        <Typography variant="h5">{item.value}</Typography>
                                         <Typography variant="h6">{item.name}</Typography>
                                     </CardContent>
                                 </Card>
