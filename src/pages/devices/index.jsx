@@ -6,10 +6,9 @@ import TableApp from "../../components/TableApp";
 export default function DeviceScreen() {
   const [state, setState] = useState({
     Inverters: [],
-    MCCB_ABC:[],
-    POWER_METER:[],
-    Sensors:[]
-
+    MCCB_ABC: [],
+    POWER_METER: [],
+    Sensors: [],
   });
 
   useEffect(() => {
@@ -17,16 +16,16 @@ export default function DeviceScreen() {
       return {
         ...pre,
         Inverters: Inverter,
-        MCCB_ABC:MCCB_ABC,
-        POWER_METER:POWER_METER,
-        Sensors:Sensors
-    
+        MCCB_ABC: [...MCCB_ABC],
+        POWER_METER: [...POWER_METER],
+        Sensors: [...Sensors],
       };
     });
   }, []);
 
   return (
     <>
+      {console.log(state.Inverters)}
       <Container disableGutters direction="row" maxWidth={false}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
@@ -34,12 +33,17 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="Inverters">
                   <TableApp
-                    data={state.Inverter}
+                    data={state.Inverters}
                     chipField={["Status"]}
                     field={["Name", "Status"]}
                     fieldTitle={["Name", "Status", "Operate"]}
-                    link={true}
+                    showLink={true}
+                    showIndex={true}
                     path="/device"
+                    maxLength={Math.max(
+                      state.Inverters.length,
+                      state.MCCB_ABC.length
+                    )}
                   />
                 </CardLayout>
               </Grid>
@@ -57,7 +61,7 @@ export default function DeviceScreen() {
             </Grid>
           </Grid>
 
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="POWER_METER">
@@ -66,7 +70,7 @@ export default function DeviceScreen() {
                     chipField={["Status"]}
                     field={["Name", "Status"]}
                     fieldTitle={["Name", "Status", "Operate"]}
-                    link={true}
+                    showLink={true}
                     path="/device"
                   />
                 </CardLayout>
@@ -83,7 +87,7 @@ export default function DeviceScreen() {
                 </CardLayout>
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </>

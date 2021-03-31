@@ -49,7 +49,7 @@ export default function AlarmScreen() {
                   <Grid container justify="flex-start" spacing={2}>
                     <Grid item xs={12} sm={12} md={6} lg={6}>
                       <MDatePicker
-                        isSignleDate={false}
+                        isSingleDate={false}
                         onRangeDateChange={handleRangeDateChange}
                       />
                     </Grid>

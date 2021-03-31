@@ -1,5 +1,6 @@
+/* eslint-disable no-loop-func */
 import { Chip } from "@material-ui/core";
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ColorsApp from "../common/colors";
 import PropTypes from "prop-types";
@@ -18,13 +19,15 @@ const TableApp = ({
   data,
   chipField,
   fieldTitle,
-  index,
-  link,
+  showIndex,
+  showLink,
   path,
   onChipClick,
   chipComponent,
+  maxLength,
 }) => {
   const classes = useStyles();
+  const themes = useTheme();
   const [state, setState] = useState({
     //paging
     data: [],
@@ -36,7 +39,8 @@ const TableApp = ({
     field: [],
     chipField: [],
     fieldTitle: [],
-    index: true,
+    showIndex: false,
+    maxLength: 0,
   });
 
   useEffect(() => {
@@ -47,25 +51,13 @@ const TableApp = ({
         data: data,
         chipField: chipField,
         fieldTitle: fieldTitle,
-        index: index,
+        showIndex: showIndex ? showIndex : false,
+        showLink: showLink ? showLink : false,
+        dataShow: data,
+        maxLength: maxLength,
       };
     });
-  }, [field, data, chipField, fieldTitle, index]);
-
-  useEffect(() => {
-    var mPerPage = perPage ? perPage : state.data.length;
-    var startIndex = (state.pageNumber - 1) * mPerPage;
-    var endIndex = state.pageNumber * mPerPage;
-    var mDataShow = data.slice(startIndex, endIndex);
-    setState((pre) => {
-      return {
-        ...pre,
-        perPage: mPerPage,
-        dataShow: mDataShow,
-        pageCount: Math.ceil(data.length / perPage),
-      };
-    });
-  }, [data, perPage, state.data.length, state.pageNumber]);
+  }, [field, data, chipField, fieldTitle, showIndex, maxLength, showLink]);
 
   const onChange = (e, pageNumber) => {
     setState((pre) => {
@@ -88,14 +80,14 @@ const TableApp = ({
       return (
         <tr
           style={{
-            borderTopLeftRadius:"5px",
-            borderTopRightRadius:"5px",
+            borderTopLeftRadius: "5px",
+            borderTopRightRadius: "5px",
             display: "flex",
             color: "white",
             background: themes.palette.primary.main,
           }}
         >
-          {state.index === true ? (
+          {state.showIndex === true ? (
             <th className={classes.cell} style={{ flex: 1 }}>
               #
             </th>
@@ -110,22 +102,49 @@ const TableApp = ({
     return null;
   };
 
+  const renderCompare = () => {
+    if (state.maxLength) {
+      var rowEmpty = state.maxLength - state.dataShow.length;
+      if (rowEmpty <= 0) return null;
+      for (var i = 0; i <= rowEmpty; i++) {
+        return (
+          <tr style={{ display: "flex" }}>
+            {state.showIndex ? (
+              <th style={{ flex: 1 }} className={classes.cell}>
+                &nbsp;
+              </th>
+            ) : null}
+            {state.field.map((f) => (
+              <th style={{ flex: 1 }} className={classes.cell} key={f}>
+                &nbsp;
+              </th>
+            ))}
+            {showLink ? (
+              <th style={{ flex: 1 }} className={classes.cell}>
+                &nbsp;
+              </th>
+            ) : null}
+          </tr>
+        );
+      }
+    }
+  };
   const renderBody = () => {
     if (state.dataShow !== undefined && state.dataShow.length !== 0)
-      return state.dataShow.map((item, index) => (
-        <tr style={{ display: "flex" }} key={index}>
-          {state.index ? (
+      return state.dataShow.map((item, i) => (
+        <tr style={{ display: "flex" }} key={i}>
+          {state.showIndex ? (
             <th style={{ flex: 1 }} className={classes.cell}>
               {data.indexOf(item) + 1}
             </th>
           ) : null}
           {state.field.map((f) => (
             <th style={{ flex: 1 }} className={classes.cell} key={f}>
-              {renderRow(item, f)}
+              {renderCell(item, f)}
             </th>
           ))}
           {/* render link */}
-          {link ? (
+          {state.showLink ? (
             <th style={{ flex: 1 }} className={classes.cell}>
               <Link key={item.id} to={path + "/" + item.id}>
                 See Detail
@@ -136,9 +155,8 @@ const TableApp = ({
       ));
     return null;
   };
-  const themes = useTheme();
 
-  const renderRow = (item, f) => {
+  const renderCell = (item, f) => {
     if (state.chipField === undefined || !state.chipField.includes(f)) {
       return item[f];
     } else {
@@ -157,13 +175,11 @@ const TableApp = ({
   };
 
   return (
-    <div
-      className="table-responsive-lg"
-      style={{ margin: 0, padding: 0}}
-    >
+    <div className="table-responsive-lg" style={{ margin: 0, padding: 0 }}>
+      {console.log("show index", state.showIndex)}
       <table
         style={{
-          border:"none",
+          border: "none",
           flex: 3,
           flexGrow: 3,
         }}
@@ -171,7 +187,10 @@ const TableApp = ({
         className="table table-bordered table-hover "
       >
         <thead>{renderHeader()}</thead>
-        <tbody>{renderBody()}</tbody>
+        <tbody>
+          {renderBody()}
+          {renderCompare()}
+        </tbody>
       </table>
       <>{renderPagination()}</>
     </div>
@@ -196,6 +215,7 @@ const TableApp = ({
       <Chip
         {...props}
         label={props.name}
+        size="small"
         style={{ backgroundColor: ColorsApp.ENERGY, color: "white" }}
       />
     );
@@ -207,7 +227,8 @@ TableApp.propTypes = {
   data: PropTypes.array,
   chipField: PropTypes.array,
   fieldTitle: PropTypes.array,
-  link: PropTypes.bool,
+  showLink: PropTypes.bool,
   onChipClick: PropTypes.func,
+  showIndex: PropTypes.bool,
 };
 export default TableApp;
