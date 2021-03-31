@@ -1,21 +1,19 @@
 import DateFnsUtils from "@date-io/date-fns";
-import PropTypes from "prop-types";
-
-import {
-  DatePicker,
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
 import {
   FormControl,
   FormControlLabel,
   FormLabel,
   Grid,
   Radio,
-  RadioGroup,
+  RadioGroup
 } from "@material-ui/core";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider
+} from "@material-ui/pickers";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+
 
 export const YEAR = "year";
 export const MONTH = "month";
@@ -30,7 +28,6 @@ export default function MYearMonthPicker({ type, showControl }) {
     if (type !== undefined) {
       setState({ type: type });
     }
-    console.log(type);
   }, [type]);
 
   const handleTypeChange = (event) => {

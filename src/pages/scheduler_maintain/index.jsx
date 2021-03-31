@@ -36,9 +36,7 @@ export default class Demo extends React.PureComponent {
     var mList = [];
     appointments.forEach((item) => {
       var position = resourcesData.map((rs) => rs.id).indexOf(item.deviceId);
-      console.log(position);
       var { text } = resourcesData[position];
-      console.log("TITLE", text);
       var mObj = { ...item, title: text.toLocaleUpperCase() };
       mList.push(mObj);
     });
@@ -56,7 +54,6 @@ export default class Demo extends React.PureComponent {
 
   //handle change in scheduler
   commitChanges({ added, changed, deleted }) {
-    console.log(added, changed, deleted)
     this.setState((state) => {
       let { data } = state;
       if (added) {

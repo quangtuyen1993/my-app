@@ -1,12 +1,12 @@
 import IconApp from "../common/icons";
-import Dashboard from "../pages/dashboards";
 import AlarmScreen from "../pages/alarm";
+import Dashboard from "../pages/dashboards";
 import DeviceScreen from "../pages/devices";
 import DetailScreen from "../pages/devices/detail/Details";
 import PRCalculationSreen from "../pages/prcalc/index";
-import TrendScreen from "../pages/trend";
-import SystemInfoScreen from "../pages/system";
 import SchedulerScreen from "../pages/scheduler_maintain";
+import SystemInfoScreen from "../pages/system";
+import TrendScreen from "../pages/trend";
 
 export const PRIVATE = "_private_";
 export const PUBLIC = "_public_";
@@ -129,20 +129,6 @@ export const RouterList = [
         id: 1,
         path: "/scheduler",
         component: SchedulerScreen,
-      },
-    ],
-  },
-  {
-    id: 7,
-    iconItem: IconApp.SIGN_OUT,
-    name: "Log Out",
-    linkTo: "/login",
-    path: "/login",
-    child: [
-      {
-        id: 1,
-        path: "/device/detail/:index",
-        component: DetailScreen,
       },
     ],
   },

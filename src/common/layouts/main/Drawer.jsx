@@ -1,3 +1,4 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Box,
   Drawer,
@@ -6,16 +7,15 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
-  Typography,
+  Typography
 } from "@material-ui/core";
-import React from "react";
 import clsx from "clsx";
+import React from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LogOutIcon from "../../../redux/feature/user/LogOutIcon";
 import { RouterList } from "../../../routes/Routes";
 
 const DrawerApp = ({ drawerWidth, open, onClose }) => {
-
   const useStyle = makeStyles((theme) => ({
     paper: {
       background: theme.palette.secondary.main,
@@ -104,6 +104,7 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
               </ListItem>
             </Link>
           ))}
+          <LogOutIcon />
         </List>
       </Drawer>
     </div>

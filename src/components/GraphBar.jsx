@@ -29,7 +29,7 @@ export default function GraphBar(props) {
       var value = [];
       item.data.forEach((da) => {
         if (index === 0) {
-          var date = moment(da.date).valueOf();
+          var date = moment(da.date,"YYYY-MM-DD").format().valueOf();
           label.push(date);
         }
         value.push(da.value);

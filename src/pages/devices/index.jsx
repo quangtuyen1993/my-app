@@ -5,18 +5,22 @@ import TableApp from "../../components/TableApp";
 
 export default function DeviceScreen() {
   const [state, setState] = useState({
-    Inverters: {
-      data: [],
-    },
+    Inverters: [],
+    MCCB_ABC:[],
+    POWER_METER:[],
+    Sensors:[]
+
   });
 
   useEffect(() => {
     setState((pre) => {
       return {
         ...pre,
-        Inverters: {
-          data: Device.getDevices(),
-        },
+        Inverters: Inverter,
+        MCCB_ABC:MCCB_ABC,
+        POWER_METER:POWER_METER,
+        Sensors:Sensors
+    
       };
     });
   }, []);
@@ -30,7 +34,7 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="Inverters">
                   <TableApp
-                    data={Inverter}
+                    data={state.Inverter}
                     chipField={["Status"]}
                     field={["Name", "Status"]}
                     fieldTitle={["Name", "Status", "Operate"]}
@@ -42,7 +46,7 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="MCCB_ABC">
                   <TableApp
-                    data={MCCB_ABC}
+                    data={state.MCCB_ABC}
                     chipField={["Status"]}
                     field={["Name", "Status"]}
                     fieldTitle={["Name", "Status"]}
@@ -58,7 +62,7 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="POWER_METER">
                   <TableApp
-                    data={POWER_METER}
+                    data={state.POWER_METER}
                     chipField={["Status"]}
                     field={["Name", "Status"]}
                     fieldTitle={["Name", "Status", "Operate"]}
@@ -70,7 +74,7 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="Sensors">
                   <TableApp
-                    data={Sensors}
+                    data={state.Sensors}
                     chipField={["Status"]}
                     field={["Name", "Status"]}
                     fieldTitle={["Name", "Status"]}
@@ -86,24 +90,6 @@ export default function DeviceScreen() {
   );
 }
 
-class Device {
-  constructor(id, name, status, operate) {
-    this.id = id;
-    this.name = name;
-    this.status = status;
-  }
-  static createDevice(id, name, status) {
-    return new Device(id, name, status);
-  }
-  static getDevices() {
-    var devices = [];
-    for (var i = 0; i <= 10; i++) {
-      var device = Device.createDevice(i, `Inverter ${i}`, "run");
-      devices.push(device);
-    }
-    return devices;
-  }
-}
 const Inverter = [
   {
     "#": 1,

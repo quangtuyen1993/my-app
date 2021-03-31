@@ -6,10 +6,9 @@ import {
   Grid,
   LinearProgress,
   Typography,
-  withStyles,
+  withStyles
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
 import CardLayout from "../../../common/layouts/CardLayout";
 import TableApp from "../../../components/TableApp";
 import PowerTrend from "../../dashboards/components/PowerTrend";
@@ -43,7 +42,7 @@ const BorderLinearProgress = withStyles((theme) => ({
 }))(LinearProgress);
 
 export default function DetailScreen(props) {
-  let { id } = useParams();
+  // let { id } = useParams();
 
   const [device, setDevice] = useState({});
   const [keys, setKey] = useState([]);
@@ -51,7 +50,7 @@ export default function DetailScreen(props) {
   useEffect(() => {
     setDevice(modal);
     setKey(Object.keys(modal));
-  }, [modal]);
+  }, []);
 
   return (
     <Container disableGutters direction="row" maxWidth={false}>

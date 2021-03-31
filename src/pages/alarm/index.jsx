@@ -25,12 +25,10 @@ export default function AlarmScreen() {
           };
         });
     } catch (e) {
-      console.log(e.message);
     }
   }, [state.heightTable, theme]);
 
   const handleRangeDateChange = (from, to) => {
-    console.log(from, to);
     setState((pre) => {
       return {
         ...pre,
@@ -43,7 +41,6 @@ export default function AlarmScreen() {
   return (
     <>
       <Container disableGutters direction="row" maxWidth={false}>
-        {console.log("Alarm is loading")}
         <Grid container spacing={2}>
           <Grid item sm={12} lg={12}>
             <CardLayout>
@@ -92,7 +89,6 @@ export default function AlarmScreen() {
                       perPage={5}
                       index={true}
                       ref={boundTable}
-                      onChipClick={(i, f) => console.log(i, f)}
                       data={historical}
                       field={[
                         "Action",

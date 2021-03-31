@@ -139,9 +139,6 @@ const TableAppOverSize = forwardRef(
           return (
             <ChipTag
               name={item[f]}
-              onClick={(e) =>
-                onChipClick ? onChipClick(item, f) : console.log("chip click")
-              }
             />
           );
       }

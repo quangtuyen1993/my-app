@@ -18,7 +18,7 @@ const DatePickerApp = ({ data, typeView }) => {
       var value = [];
       item.data.forEach((da, i) => {
         if (index === 0) {
-          var date = moment.utc(da.date).valueOf();
+          var date = moment.utc(da.date,"dd-MM-yyyy hh:mm:ss").valueOf();
           label.push(date);
         }
         value.push(da.value);

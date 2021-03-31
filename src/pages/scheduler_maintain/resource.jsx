@@ -1,9 +1,8 @@
 import {
-  pink,
-  purple,
-  teal,
   amber,
-  deepOrange,
+  deepOrange, pink,
+  purple,
+  teal
 } from "@material-ui/core/colors";
 
 export const appointments = [
@@ -108,16 +107,14 @@ export const resourcesData = [
     color: teal,
   },
 ];
- function dataShow() {
-  console.log("data show");
-  var newList = appointments.map((item) => {
-    var position = resourcesData.map((rs) => rs.id).indexOf(item.deviceId);
-    var title = resourcesData[position];
-    return {
-      ...item,
-      title: title,
-    };
-  });
-  console.log("new list", newList);
-  return newList;
-}
+//  function dataShow() {
+//   var newList = appointments.map((item) => {
+//     var position = resourcesData.map((rs) => rs.id).indexOf(item.deviceId);
+//     var title = resourcesData[position];
+//     return {
+//       ...item,
+//       title: title,
+//     };
+//   });
+//   return newList;
+// }

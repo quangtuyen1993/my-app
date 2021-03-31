@@ -1,16 +1,13 @@
-import { Container, Box } from "@material-ui/core";
-import OverView from "./components/OverView.jsx";
-import Weather from "./components/Weather.jsx";
+import { Box, Container } from "@material-ui/core";
 import EnergyTrend from "./components/EnergyTrend.jsx";
+import OverView from "./components/OverView.jsx";
 import PowerTrend from "./components/PowerTrend.jsx";
-import { useMemo } from "react";
-
-
+import Weather from "./components/Weather.jsx";
 
 var list = [OverView, Weather, PowerTrend, EnergyTrend];
 
 function DashBoard(props) {
-
+  
   return (
     <Container disableGutters maxWidth={false}>
       {list.map((item, index) => (
@@ -22,4 +19,4 @@ function DashBoard(props) {
   );
 }
 
-export default DashBoard
+export default DashBoard;

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const stationDefault = [
   { id: 1, name: "station 1" },
@@ -14,10 +14,7 @@ const init = {
   stationSelected: stationDefault[0],
 };
 
-const onFetchStation = createAsyncThunk(
-  "/station",
-  async (req, thunkApi) => {}
-);
+
 export const stationSlice = createSlice({
   name: "station",
   initialState: init,

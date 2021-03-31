@@ -9,12 +9,18 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import React from "react";
-import DialogApp from "../../../components/DialogApp";
 import AppBadge from "../../../redux/feature/AppBadge";
 import Station from "../../../redux/feature/station/Station";
 import ColorsApp from "../../colors";
 import { PUBLIC_ICON_ISOLAR, PUBLIC_ICON_LIGHT } from "../../icons";
+
+
+
+
 const useStyle = makeStyles((theme) => ({
+
+
+
   root: {
     display: "flex",
   },
@@ -43,7 +49,6 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
 
   return (
     <>
-      {console.log("re-render header")}
       <AppBar
         position="fixed"
         className={clsx(classes.root, {
@@ -51,7 +56,6 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
           [classes.appBarUnShift]: !open,
         })}
       >
-        {console.log(JSON.stringify(classes.appBarUnShift))}
         <Toolbar>
           {
             <IconButton

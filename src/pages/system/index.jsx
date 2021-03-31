@@ -1,6 +1,5 @@
 import { Container, Grid } from "@material-ui/core";
 import CardLayout from "../../common/layouts/CardLayout";
-import MDatePicker from "../../components/MDatePicker";
 import TableApp from "../../components/TableApp";
 
 export default function SystemInfoScreen() {

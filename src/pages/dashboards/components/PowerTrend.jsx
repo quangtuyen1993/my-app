@@ -1,12 +1,13 @@
-import IconApp from "../../../common/icons"
-import React, { useEffect, useState } from "react"
-import CardLayout from "../../../common/layouts/CardLayout"
+import { Grid } from "@material-ui/core";
+import React, { useState } from "react";
+import IconApp from "../../../common/icons";
+import CardLayout from "../../../common/layouts/CardLayout";
 import GraphLineApp from "../../../components/GraphLineApp";
 import AppDatePicker from "../../../components/MDatePicker";
-import { Grid } from "@material-ui/core";
 
 export default function PowerTrend() {
 
+    // eslint-disable-next-line no-unused-vars
     const [state,setState]=useState({
         data:[],
         dateFrom:null,
@@ -16,7 +17,6 @@ export default function PowerTrend() {
 
     const handleChangeDate=(from,to)=>{
 
-        console.log(from,to)
         setState(pre=>{
             return{
                 ...pre,
