@@ -25,7 +25,6 @@ export default function DeviceScreen() {
 
   return (
     <>
-      {console.log(state.Inverters)}
       <Container disableGutters direction="row" maxWidth={false}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

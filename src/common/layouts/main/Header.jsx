@@ -13,14 +13,7 @@ import AppBadge from "../../../redux/feature/AppBadge";
 import Station from "../../../redux/feature/station/Station";
 import ColorsApp from "../../colors";
 import { PUBLIC_ICON_ISOLAR, PUBLIC_ICON_LIGHT } from "../../icons";
-
-
-
-
 const useStyle = makeStyles((theme) => ({
-
-
-
   root: {
     display: "flex",
   },
@@ -86,7 +79,7 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
             Sky
           </Box>
           <Box mr={2}>
-            <Station />
+            <Station device={10} />
           </Box>
           <Box mr={2}>
             <AppBadge />

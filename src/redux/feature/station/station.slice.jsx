@@ -1,29 +1,65 @@
-import { createSlice } from "@reduxjs/toolkit";
-
-const stationDefault = [
-  { id: 1, name: "station 1" },
-  { id: 2, name: "station 2" },
-  { id: 3, name: "station 3" },
-  { id: 4, name: "station 4" },
-  { id: 5, name: "station 5" },
-  { id: 6, name: "station 6" },
-];
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axiosApp from "../../../utils/AxiosApp";
+import { CookieManger } from "../../../utils/CookieManager";
+import { URL_STATIONS } from "../../URL";
 
 const init = {
-  stations: stationDefault,
-  stationSelected: stationDefault[0],
+  stations: [],
+  stationSelected: 1,
 };
 
+const fetchStation = createAsyncThunk(
+  "/fetch_station",
+  async (data, { getState, rejectWithValue }) => {
+    try {
+      return axiosApp.get(URL_STATIONS).then((response) => {
+        var currentStation;
+        var stations = response.data;
+        var stringCookie = CookieManger.GetStationCurrent();
+        if (stringCookie !== ""&&stringCookie!==undefined) {
+          currentStation = JSON.parse(stringCookie);
+        } else {
+          currentStation = response.data[0].id;
+        }
+        return {
+          stations: stations,
+          stationSelected: currentStation,
+        };
+      });
+    } catch (e) {
+      rejectWithValue(e);
+    }
+  }
+);
+
+const onSelected = createAsyncThunk(
+  "/selected_station",
+  (data, { getState }) => {
+    CookieManger.SetStationCurrent(data);
+    return data;
+  }
+);
 
 export const stationSlice = createSlice({
   name: "station",
   initialState: init,
-  reducers: {
-    onSelected: (state, action) => {
-      state.stationSelected = action.payload;
+  reducers: {},
+  extraReducers: {
+    [fetchStation.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        stations: [...action.payload.stations],
+        stationSelected: action.payload.stationSelected,
+      };
+    },
+    [onSelected.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        stationSelected: action.payload,
+      };
     },
   },
 });
-
-export const { onSelected } = stationSlice.actions;
+export { fetchStation, onSelected };
+// export const { onSelected } = stationSlice.actions;
 export default stationSlice.reducer;

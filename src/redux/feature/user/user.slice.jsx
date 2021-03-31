@@ -28,7 +28,10 @@ const onLogin = createAsyncThunk(
         username: username,
         password: password,
       });
-      CookieManger.SetRefreshCookie(userData.data.refreshToken);
+      CookieManger.SetRefreshCookie(
+        userData.data.refreshToken,
+        userData.data.expires
+      );
       return userData.data;
     } catch (e) {
       return rejectWithValue(e.response.data);
@@ -44,7 +47,10 @@ const onRefreshToken = createAsyncThunk(
       var userData = await axios.post(URL_REFRESH_TOKEN, {
         RefreshToken: refresh,
       });
-      CookieManger.SetRefreshCookie(userData.data.refreshToken);
+      CookieManger.SetRefreshCookie(
+        userData.data.refreshToken,
+        userData.data.expires
+      );
       return userData.data;
     } catch (e) {
       return rejectWithValue(e);
@@ -68,7 +74,7 @@ const onLogOut = createAsyncThunk(
           },
         }
       );
-      Cookies.remove("refreshToken");
+      CookieManger.RevokeAllCookies()
       return result.data;
     } catch (e) {
       return e.message;
@@ -81,10 +87,7 @@ export const authorSlice = createSlice({
   initialState: init,
   reducers: {
     refreshLogin: (state, action) => {
-      CookieManger.RevokeRefreshCookie();
-      return {
-        ...init,
-      };
+      state = init;
     },
   },
   extraReducers: {

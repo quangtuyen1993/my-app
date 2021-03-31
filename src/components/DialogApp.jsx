@@ -9,8 +9,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import IconNotify from "../redux/feature/IconNotify";
+import { fetchStation } from "../redux/feature/station/station.slice";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -27,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 
   chip: {
-      backgroundColor:theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.main,
     cursor: "pointer",
     "&:hover": {
       backgroundColor: theme.palette.secondary.main,
@@ -35,9 +37,7 @@ const useStyles = makeStyles((theme) => ({
         color: "white !importain",
       },
     },
- 
   },
- 
 }));
 
 export default function DialogApp(props) {
@@ -45,6 +45,12 @@ export default function DialogApp(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [device, setDevice] = React.useState(1);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchStation());
+  }, [dispatch]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -59,7 +65,10 @@ export default function DialogApp(props) {
 
   return (
     <>
-      <IconNotify handleClickOpen={handleClickOpen} tooltip={"Current device:"+device} />
+      <IconNotify
+        handleClickOpen={handleClickOpen}
+        tooltip={"Current device:" + device}
+      />
       <Dialog fullWidth maxWidth={"xs"} open={open} onClose={handleClose}>
         <DialogTitle
           disableTypography

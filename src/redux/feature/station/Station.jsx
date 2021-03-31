@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Box, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -9,11 +9,11 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import IconNotify from "../IconNotify";
-import { onSelected } from "./station.slice";
+import { fetchStation, onSelected } from "./station.slice";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -35,60 +35,84 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.secondary.main,
       icon: {
-        color: "white !importain",
+        color: "white ",
       },
     },
   },
 }));
 
 export default function Station(props) {
+  const theme = useTheme();
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
   const { stations, stationSelected } = useSelector(
     (state) => state.stationReducer
   );
 
-  const theme = useTheme();
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
   const [state, setState] = useState({
-    stations: [...stations],
-    stationSelected: stationSelected,
+    selected: "",
   });
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    setState({
+      selected: stationSelected,
+    });
+  }, [stationSelected]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  useEffect(() => {
+    dispatch(fetchStation());
+  }, [dispatch]);
+
+  const onChange = (e) => {
+    setState((pre) => ({
+      ...pre,
+      selected: e.target.value,
+    }));
   };
 
-  const handleSubmit = () => {
-    dispatch(onSelected(state.stationSelected));
+  const handleSelect = () => {
+    dispatch(onSelected(state.selected));
     setOpen(false);
   };
 
   const handleCancel = () => {
-    setState((pre)=>({
-      ...pre,
-      stationSelected:stationSelected
-    }))
-    setOpen(false);
-
-  };
-
-  const handleDevice = (e) => {
     setState((pre) => ({
       ...pre,
-      stationSelected: e.target.value,
+      selected: stationSelected,
     }));
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   return (
     <>
-      <IconNotify
-        handleClickOpen={handleClickOpen}
-        tooltip={"Current device:" + stations}
-      />
-      <Dialog fullWidth maxWidth={"xs"} open={open} onClose={handleSubmit}>
+      <Box
+        className={classes.chip}
+        onClick={handleOpen}
+        justifyContent="center"
+        alignContent="center"
+        display="flex"
+      >
+        <Box mr={1}>
+          <IconNotify
+            handleClickOpen={handleOpen}
+            tooltip={"Current device:" + stations}
+          />
+        </Box>
+        <Box display="flex" flexDirection="column" justifyContent="center">
+          {stations.length!==0 && (
+            <Typography style={{ textAlign: "center" }} variant="h6">
+             {stations.find((item)=>item.id===stationSelected).name}
+            </Typography>
+          )}
+        </Box>
+      </Box>
+
+      <Dialog fullWidth maxWidth={"xs"} open={open}>
         <DialogTitle
           disableTypography
           style={{ backgroundColor: theme.palette.primary.main }}
@@ -103,11 +127,11 @@ export default function Station(props) {
               <Select
                 fullWidth
                 autoFocus
-                value={state.stationSelected}
-                onChange={handleDevice}
+                value={state.selected}
+                onChange={onChange}
               >
-                {state.stations.map((sta) => (
-                  <MenuItem key={sta.id} value={sta}>
+                {stations.map((sta, index) => (
+                  <MenuItem key={sta.id} value={sta.id}>
                     {sta.name}
                   </MenuItem>
                 ))}
@@ -116,7 +140,7 @@ export default function Station(props) {
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSubmit} color="primary">
+          <Button onClick={handleSelect} color="primary">
             Open
           </Button>
           <Button onClick={handleCancel} color="primary">

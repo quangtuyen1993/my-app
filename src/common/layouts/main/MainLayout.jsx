@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { onRefreshToken } from "../../../redux/feature/user/user.slice";
+import { CookieManger } from "../../../utils/CookieManager";
 import Drawer from "./Drawer";
 import Header from "./Header";
 import Main from "./Main";
@@ -23,7 +24,7 @@ export default function MainLayout(props) {
   };
 
   useEffect(() => {
-    var refreshToken = Cookies.get("refreshToken");
+    var refreshToken = CookieManger.GetRefreshCookie()
     if (refreshToken === undefined) {
       history.push("/login");
       return;

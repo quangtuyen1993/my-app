@@ -176,7 +176,6 @@ const TableApp = ({
 
   return (
     <div className="table-responsive-lg" style={{ margin: 0, padding: 0 }}>
-      {console.log("show index", state.showIndex)}
       <table
         style={{
           border: "none",
