@@ -3,8 +3,6 @@ import { BASE_URL } from "../redux/URL";
 import { CookieManger } from "./CookieManager";
 
 
-
-
 const AxiosAuthor = axios.create({
   baseURL: BASE_URL,
 });

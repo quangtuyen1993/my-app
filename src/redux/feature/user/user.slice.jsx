@@ -49,7 +49,6 @@ const onRefreshToken = createAsyncThunk(
         RefreshToken: refresh,
       });
       const { refreshToken, expires, jwtToken } = userData.data;
-      // CookieManger.setJWTToken(jwtToken);
       refreshHeader(jwtToken)
       CookieManger.SetRefreshCookie(refreshToken, expires);
       return userData.data;

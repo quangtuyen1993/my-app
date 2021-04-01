@@ -1,9 +1,16 @@
 import { Container, Grid } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import CardLayout from "../../common/layouts/CardLayout";
 import TableApp from "../../components/TableApp";
+import DeviceService from "../../service/device.service";
+import { CookieManger } from "../../utils/CookieManager";
 
 export default function DeviceScreen() {
+  const { stationSelected } = useSelector((state) => state.stationReducer);
+
+  const interval = useRef(null);
+
   const [state, setState] = useState({
     Inverters: [],
     MCCB_ABC: [],
@@ -12,16 +19,24 @@ export default function DeviceScreen() {
   });
 
   useEffect(() => {
-    setState((pre) => {
-      return {
+    const onFetchData = async () => {
+      var inverters = await DeviceService.fetchAllDevice(stationSelected);
+      setState((pre) => ({
         ...pre,
-        Inverters: Inverter,
-        MCCB_ABC: [...MCCB_ABC],
-        POWER_METER: [...POWER_METER],
-        Sensors: [...Sensors],
-      };
-    });
-  }, []);
+        Inverters: inverters,
+      }));
+    };
+    if (interval !== null) {
+      clearInterval(interval.current);
+    }
+    onFetchData();
+    interval.current = setInterval(() => {
+      onFetchData();
+    }, 10000);
+    return () => {
+      clearInterval(interval.current);
+    };
+  }, [stationSelected]);
 
   return (
     <>
@@ -33,8 +48,8 @@ export default function DeviceScreen() {
                 <CardLayout title="Inverters">
                   <TableApp
                     data={state.Inverters}
-                    chipField={["Status"]}
-                    field={["Name", "Status"]}
+                    chipField={["state"]}
+                    field={["name", "state"]}
                     fieldTitle={["Name", "Status", "Operate"]}
                     showLink={true}
                     showIndex={true}
@@ -49,6 +64,10 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="MCCB_ABC">
                   <TableApp
+                       maxLength={Math.max(
+                        state.Inverters.length,
+                        state.MCCB_ABC.length
+                      )}
                     data={state.MCCB_ABC}
                     chipField={["Status"]}
                     field={["Name", "Status"]}
@@ -93,120 +112,28 @@ export default function DeviceScreen() {
   );
 }
 
-const Inverter = [
-  {
-    "#": 1,
-    Name: "Inverter 1",
-    Status: "Run",
-    Operate: "Detail",
-  },
-  {
-    "#": 2,
-    Name: "Inverter 2",
-    Status: "Run",
-    Operate: "Detail",
-  },
-  {
-    "#": 3,
-    Name: "Inverter 3",
-    Status: "Run",
-    Operate: "Detail",
-  },
-  {
-    "#": 4,
-    Name: "Inverter 4",
-    Status: "Run",
-    Operate: "Detail",
-  },
-  {
-    "#": 5,
-    Name: "Inverter 5",
-    Status: "Run",
-    Operate: "Detail",
-  },
-  {
-    "#": 6,
-    Name: "Inverter 6",
-    Status: "Run",
-    Operate: "Detail",
-  },
-  {
-    "#": 7,
-    Name: "Inverter 7",
-    Status: "Run",
-    Operate: "Detail",
-  },
-  {
-    "#": 8,
-    Name: "Inverter 8",
-    Status: "Run",
-    Operate: "Detail",
-  },
-];
-const MCCB_ABC = [
-  {
-    "#": 1,
-    Name: "ACB 1",
-    Status: "Closed",
-  },
-  {
-    "#": 2,
-    Name: "MCCB 1",
-    Status: "Closed",
-  },
-  {
-    "#": 3,
-    Name: "MCCB 2",
-    Status: "Closed",
-  },
-  {
-    "#": 4,
-    Name: "MCCB 3",
-    Status: "Closed",
-  },
-  {
-    "#": 5,
-    Name: "MCCB 4",
-    Status: "Closed",
-  },
-  {
-    "#": 6,
-    Name: "MCCB 5",
-    Status: "Closed",
-  },
-  {
-    "#": 7,
-    Name: "MCCB 6",
-    Status: "Closed",
-  },
-  {
-    "#": 8,
-    Name: "MCCB 7",
-    Status: "Closed",
-  },
-  {
-    "#": 9,
-    Name: "MCCB 8",
-    Status: "Closed",
-  },
-];
-const POWER_METER = [
-  {
-    "#": 1,
-    Name: "Power Meter1",
-    Status: "Online",
-    Operate: "Detail",
-  },
-];
-const Sensors = [
-  {
-    "#": 1,
-    Name: "Wind",
-    Status: "Online",
-  },
-  {
-    "#": 2,
-    Name: "Radiation - Ambient Temp",
-    Status: "Online",
-  },
-];
+const createItem = (
+  id,
+  logInterval,
+  manufacturer,
+  maxPower,
+  model,
+  nominalPower,
+  state,
+  stateBackground,
+  stationId,
+  tagPrefix
+) => {
+  return {
+    logInterval,
+    manufacturer,
+    maxPower,
+    model,
+    nominalPower,
+    state,
+    stateBackground,
+    stationId,
+    tagPrefix,
+  };
+};
+

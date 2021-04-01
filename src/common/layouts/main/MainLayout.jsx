@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -37,9 +36,7 @@ export default function MainLayout(props) {
       onRefresh();
       return;
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isError, isLoginComplete]);
+  }, [isError, isLoginComplete, isLoading]);
 
   const onToggle = () => {
     setOpen(!open);
@@ -57,7 +54,7 @@ export default function MainLayout(props) {
     >
       <Header drawerWidth={drawWidth} open={open} onToggleDrawer={onToggle} />
       <Drawer drawerWidth={drawWidth} open={open} onClose={onClose} />
-      <Main>{props.children}</Main>
+      {isLoginComplete && <Main>{props.children}</Main>}
     </div>
   );
 }

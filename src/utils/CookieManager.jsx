@@ -1,13 +1,10 @@
-import id from "date-fns/locale/id";
 import Cookies from "js-cookie";
-
 export const CookieType = Object.freeze({
   REFRESH_TOKEN: "refreshToken",
   CURRENT_STATION: "currentStation",
   JWT_TOKEN: "accessToken",
-
+  CURRENT_DEVICES: "deviceCurrent",
 });
-
 
 export class CookieManger {
   //refresh token
@@ -20,7 +17,6 @@ export class CookieManger {
     });
   }
 
-
   static GetRefreshCookie() {
     return Cookies.get(CookieType.REFRESH_TOKEN);
   }
@@ -30,23 +26,33 @@ export class CookieManger {
   }
   static SetStationCurrent(station) {
     Cookies.set(CookieType.CURRENT_STATION, station, {
-      expires: new Date((Date.now() + (24 * 1000 * 60 * 60))),
+      expires: new Date(Date.now() + 24 * 1000 * 60 * 60),
     });
   }
-  static RevokeStationCurrent(){
-    Cookies.remove(CookieType.CURRENT_STATION)
+  static RevokeStationCurrent() {
+    Cookies.remove(CookieType.CURRENT_STATION);
   }
 
-  static setJWTToken(jwtToken){
+  static setJWTToken(jwtToken) {
     Cookies.set(CookieType.JWT_TOKEN, jwtToken);
   }
 
-  static getJWTToken(){
-    Cookies.get(CookieType.JWT_TOKEN)
+  static getJWTToken() {
+    Cookies.get(CookieType.JWT_TOKEN);
   }
 
-  static RevokeAllCookies(){
-    this.RevokeStationCurrent()
-    this.RevokeRefreshCookie()
+  static getCurrentDevice() {
+    return Cookies.get(CookieType.CURRENT_DEVICES);
+  }
+
+  static setCurrentDevice(currentDevice) {
+    Cookies.set(CookieType.CURRENT_DEVICES, currentDevice);
+  }
+  static revokeCurrentDevice() {
+    Cookies.remove(CookieType.CURRENT_DEVICES);
+  }
+  static RevokeAllCookies() {
+    this.RevokeStationCurrent();
+    this.RevokeRefreshCookie();
   }
 }

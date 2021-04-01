@@ -35,7 +35,6 @@ const TableApp = ({
     dataShow: [],
     pageNumber: 1,
     pageCount: 1,
-
     field: [],
     chipField: [],
     fieldTitle: [],
@@ -84,7 +83,7 @@ const TableApp = ({
             borderTopRightRadius: "5px",
             display: "flex",
             color: "white",
-            background: themes.palette.primary.main,
+            background: themes.palette.secondary.main,
           }}
         >
           {state.showIndex === true ? (
@@ -146,7 +145,13 @@ const TableApp = ({
           {/* render link */}
           {state.showLink ? (
             <th style={{ flex: 1 }} className={classes.cell}>
-              <Link key={item.id} to={path + "/" + item.id}>
+              <Link
+                key={item.id}
+                to={{
+                  pathname: path + "/" + i+"0x001",
+                  deviceId: item.id,
+                }}
+              >
                 See Detail
               </Link>
             </th>

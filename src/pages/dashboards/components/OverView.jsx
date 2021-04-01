@@ -85,12 +85,12 @@ export default function Overview() {
                 right: 0 + theme.spacing(2),
               }}
               icon={item.icon}
-              size={"3x"}
+              size={"2x"}
             />
-            <Typography variant="h5">
+            <Typography variant="h6">{item.title}</Typography>
+            <Typography variant="h6">
               {item.value} {item.unit}
             </Typography>
-            <Typography variant="h6">{item.title}</Typography>
           </CardContent>
         </Card>
       </Grid>
