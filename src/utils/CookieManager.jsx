@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 export const CookieType = Object.freeze({
   REFRESH_TOKEN: "refreshToken",
   CURRENT_STATION: "currentStation",
+  JWT_TOKEN: "accessToken",
+
 });
 
 
@@ -17,6 +19,7 @@ export class CookieManger {
       expires: new Date(expires),
     });
   }
+
 
   static GetRefreshCookie() {
     return Cookies.get(CookieType.REFRESH_TOKEN);
@@ -32,6 +35,14 @@ export class CookieManger {
   }
   static RevokeStationCurrent(){
     Cookies.remove(CookieType.CURRENT_STATION)
+  }
+
+  static setJWTToken(jwtToken){
+    Cookies.set(CookieType.JWT_TOKEN, jwtToken);
+  }
+
+  static getJWTToken(){
+    Cookies.get(CookieType.JWT_TOKEN)
   }
 
   static RevokeAllCookies(){

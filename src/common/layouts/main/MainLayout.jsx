@@ -24,7 +24,7 @@ export default function MainLayout(props) {
   };
 
   useEffect(() => {
-    var refreshToken = CookieManger.GetRefreshCookie()
+    var refreshToken = CookieManger.GetRefreshCookie();
     if (refreshToken === undefined) {
       history.push("/login");
       return;
@@ -35,14 +35,15 @@ export default function MainLayout(props) {
     }
     if (!isLoading && !isLoginComplete) {
       onRefresh();
+      return;
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError, isLoginComplete]);
 
   const onToggle = () => {
     setOpen(!open);
   };
-
 
   const onClose = () => {
     setOpen(false);

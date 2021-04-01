@@ -1,21 +1,26 @@
 import axios from "axios";
 import { BASE_URL } from "../redux/URL";
 import { CookieManger } from "./CookieManager";
-const axiosApp = axios.create({
+
+
+
+
+const AxiosAuthor = axios.create({
   baseURL: BASE_URL,
-  headers: {
-    Authorization: "Bearer "+CookieManger.GetRefreshCookie(),
-  },
 });
 
-axiosApp.interceptors.request.use((request) => {
+AxiosAuthor.interceptors.request.use((request) => {
   console.log("Starting Request", JSON.stringify(request, null, 2));
   return request;
 });
 
-axiosApp.interceptors.response.use((response) => {
+AxiosAuthor.interceptors.response.use((response) => {
   console.log("Response:", JSON.stringify(response, null, 2));
   return response;
 });
 
-export default axiosApp;
+export const refreshHeader = (jwtToken) => {
+  AxiosAuthor.defaults.headers.common['Authorization'] = "Bearer " + jwtToken;
+};
+
+export default AxiosAuthor;

@@ -16,7 +16,7 @@ const fetchStation = createAsyncThunk(
         var currentStation;
         var stations = response.data;
         var stringCookie = CookieManger.GetStationCurrent();
-        if (stringCookie !== ""&&stringCookie!==undefined) {
+        if (stringCookie !== "" && stringCookie !== undefined) {
           currentStation = JSON.parse(stringCookie);
         } else {
           currentStation = response.data[0].id;
@@ -26,8 +26,11 @@ const fetchStation = createAsyncThunk(
           stationSelected: currentStation,
         };
       });
-    } catch (e) {
-      rejectWithValue(e);
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      rejectWithValue(err.response.data);
     }
   }
 );

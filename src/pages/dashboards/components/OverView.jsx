@@ -1,102 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Card,
-  CardContent,
-
-  Grid,
-  Typography
-} from "@material-ui/core";
+import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import ColorsApp from "../../../common/colors";
 import IconApp from "../../../common/icons";
 import CardLayout from "../../../common/layouts/CardLayout";
 import MCircleProgress from "../../../components/MCircleProgress";
-
-const object = {
-  Active_Power: "-0.04 kW",
-  Reactive_Power: "0 kVar",
-  Inverter_Running: "8/8",
-  Energy_to_day: "2.73 MWh",
-  Energy_this_month: "46.44 MWh",
-  Energy_this_year: "258.35 MWh",
-  Total_Energy: "458.18 MWh",
-  PR_Of_Day: "75.53 %",
-  PR_Of_Month: " 79.14 %",
-  PR_Of_Year: " 0.00 %",
-};
-const Type = Object.freeze({
-  ENG: "Energy",
-  PR: "PR",
-  POWER: "Power",
-  RUN: "Running",
-  TOTAL: "Total",
-});
-
-const getTypeField = (fieldStr) => {
-  if (fieldStr.includes(Type.ENG.valueOf())) {
-    return {
-      type: Type.ENG.valueOf(),
-      icon: IconApp.ENERGY,
-      bg: ColorsApp.ENERGY_GRADIENT,
-    };
-  }
-  if (fieldStr.includes(Type.PR.valueOf())) {
-    return {
-      type: Type.PR.valueOf(),
-      icon: IconApp.PR,
-      bg: ColorsApp.RUNNING_GRADIENT,
-    };
-  }
-  if (fieldStr.includes(Type.POWER.valueOf())) {
-    return {
-      type: Type.POWER.valueOf(),
-      icon: IconApp.POWER,
-      bg: ColorsApp.POWER_GRADIENT,
-    };
-  }
-  if (fieldStr.includes(Type.RUN.valueOf())) {
-    return {
-      type: Type.RUN.valueOf(),
-      icon: IconApp.RUNNING,
-      bg: ColorsApp.RUNNING_GRADIENT,
-    };
-  }
-  if (fieldStr.includes(Type.TOTAL.valueOf())) {
-    return {
-      type: Type.TOTAL.valueOf(),
-      icon: IconApp.RUNNING,
-      bg: ColorsApp.RUNNING_GRADIENT,
-    };
-  }
-};
-
-const createListItem = (object) => {
-  var listItem = [];
-  var listPr = [];
-  var field = Object.keys(object);
-
-  field.forEach((f) => {
-    var obPattern = getTypeField(f);
-    var name = f.toLocaleUpperCase();
-    var value = object[f];
-    var obj = {
-      ...obPattern,
-      name,
-      value,
-    };
-
-    if (obj.type === Type.PR) {
-      listPr.push(obj);
-    } else {
-      listItem.push(obj);
-    }
-  });
-  return {
-    listPr: listPr,
-    listItem: listItem,
-  };
-};
+import OverviewService from "../../../service/overview.service";
 
 const useStyles = makeStyles((themes) => ({
   root: {},
@@ -114,27 +25,46 @@ const useStyles = makeStyles((themes) => ({
 export default function Overview() {
   const classes = useStyles();
   const theme = useTheme();
+  const { stationSelected } = useSelector((state) => state.stationReducer);
+  const { jwtToken } = useSelector((state) => state.authorReducer.userProfile);
+  const timer = useRef(null);
   const [state, setState] = useState({
     listPr: [],
     listItem: [],
     max: 100,
     values: [1, 1, 1],
   });
-  useEffect(function () {
-    var data = createListItem(object);
+
+  const onFetchData = async () => {
+    var response = await OverviewService.fetchOverview(stationSelected);
+    var dataNormal = [];
+    response.forEach((item) => {
+      let obj = createItem(item);
+      dataNormal.push(obj);
+    });
     setState((pre) => ({
       ...pre,
-      listPr: data.listPr,
-      listItem: data.listItem,
+      listItem: dataNormal,
     }));
-  }, []);
-
+  };
+  let timeRun=1
   useEffect(() => {
-//    var interval= startTimeOut();
-//     return () => {
-//         clearInterval(interval)
-//     };
-  }, []);
+    if (timer !== null) {
+      clearInterval(timer.current);
+    }
+
+    if (jwtToken === "" || stationSelected === undefined) return;
+    
+    onFetchData();
+    
+    timer.current = setInterval(async () => {
+      timeRun++
+      console.log("run timer",timeRun)
+      onFetchData();
+    }, 3000);
+
+
+  }, [jwtToken, stationSelected]);
 
   const renderItem = (item, index) => {
     return (
@@ -155,8 +85,10 @@ export default function Overview() {
               icon={item.icon}
               size={"3x"}
             />
-            <Typography variant="h5">{item.value}</Typography>
-            <Typography variant="h6">{item.name}</Typography>
+            <Typography variant="h5">
+              {item.value} {item.unit}
+            </Typography>
+            <Typography variant="h6">{item.title}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -177,21 +109,6 @@ export default function Overview() {
       </Grid>
     );
   };
-  // const startTimeOut = () => {
-  //   var intervalInstance = setInterval(() => {
-  //     let values = [];
-  //     for (var i = 0; i <= 3; i++) {
-  //       const value = Math.random() * 100;
-  //       values.push(value);
-  //     }
-  //     setState((pre) => ({
-  //       ...pre,
-  //       values: values,
-  //     }));
-  //   }, 500);
-  //   return intervalInstance
-  // };
-
   return (
     <>
       <Grid container spacing={2}>
@@ -214,3 +131,66 @@ export default function Overview() {
     </>
   );
 }
+
+const Type = Object.freeze({
+  ENG: "Energy",
+  PR: "PR",
+  POWER: "Power",
+  RUN: "Running",
+  TOTAL: "Total",
+});
+
+const getTypeField = (titleField) => {
+  if (titleField.includes(Type.ENG.valueOf())) {
+    return {
+      type: Type.ENG.valueOf(),
+      icon: IconApp.ENERGY,
+      bg: ColorsApp.ENERGY_GRADIENT,
+    };
+  }
+  if (titleField.includes(Type.PR.valueOf())) {
+    return {
+      type: Type.PR.valueOf(),
+      icon: IconApp.PR,
+      bg: ColorsApp.RUNNING_GRADIENT,
+    };
+  }
+  if (titleField.includes(Type.POWER.valueOf())) {
+    return {
+      type: Type.POWER.valueOf(),
+      icon: IconApp.POWER,
+      bg: ColorsApp.POWER_GRADIENT,
+    };
+  }
+  if (titleField.includes(Type.RUN.valueOf())) {
+    return {
+      type: Type.RUN.valueOf(),
+      icon: IconApp.RUNNING,
+      bg: ColorsApp.RUNNING_GRADIENT,
+    };
+  }
+  if (titleField.includes(Type.TOTAL.valueOf())) {
+    return {
+      type: Type.TOTAL.valueOf(),
+      icon: IconApp.RUNNING,
+      bg: ColorsApp.RUNNING_GRADIENT,
+    };
+  }
+  return {
+    type: Type.TOTAL.valueOf(),
+    icon: IconApp.RUNNING,
+    bg: ColorsApp.RUNNING_GRADIENT,
+  };
+};
+
+const createItem = ({
+  title,
+  unit,
+  //  icon,
+  quality,
+  value,
+  //  background
+}) => {
+  var objPatter = getTypeField(title);
+  return { ...objPatter, title, unit, quality, value };
+};

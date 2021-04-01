@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { refreshHeader } from "../../../utils/AxiosAuthor";
 import { CookieManger } from "../../../utils/CookieManager";
 import { URL_LOGIN, URL_REFRESH_TOKEN, URL_REVOKE_TOKEN } from "../../URL";
 const init = {
@@ -47,10 +48,10 @@ const onRefreshToken = createAsyncThunk(
       var userData = await axios.post(URL_REFRESH_TOKEN, {
         RefreshToken: refresh,
       });
-      CookieManger.SetRefreshCookie(
-        userData.data.refreshToken,
-        userData.data.expires
-      );
+      const { refreshToken, expires, jwtToken } = userData.data;
+      // CookieManger.setJWTToken(jwtToken);
+      refreshHeader(jwtToken)
+      CookieManger.SetRefreshCookie(refreshToken, expires);
       return userData.data;
     } catch (e) {
       return rejectWithValue(e);
@@ -74,7 +75,7 @@ const onLogOut = createAsyncThunk(
           },
         }
       );
-      CookieManger.RevokeAllCookies()
+      CookieManger.RevokeAllCookies();
       return result.data;
     } catch (e) {
       return e.message;
