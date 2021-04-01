@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ColorsApp from "../../../common/colors";
 import IconApp from "../../../common/icons";
@@ -47,23 +47,25 @@ export default function Overview() {
       listItem: dataNormal,
     }));
   };
-  let timeRun=1
+  let timeRun = 1;
   useEffect(() => {
     if (timer !== null) {
       clearInterval(timer.current);
     }
 
     if (jwtToken === "" || stationSelected === undefined) return;
-    
+
     onFetchData();
-    
+
     timer.current = setInterval(async () => {
-      timeRun++
-      console.log("run timer",timeRun)
+      timeRun++;
+      console.log("run timer", timeRun);
       onFetchData();
     }, 3000);
 
-
+    return () => {
+      clearInterval(timer.current);
+    };
   }, [jwtToken, stationSelected]);
 
   const renderItem = (item, index) => {
