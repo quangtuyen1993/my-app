@@ -1,4 +1,10 @@
-import { URL_DEVICES, URL_DEVICES_DETAIL, URL_POWER_METER, URL_POWER_METER_DETAIL, URL_SENSOR } from "../redux/URL";
+import {
+  URL_DEVICES,
+  URL_DEVICES_DETAIL,
+  URL_POWER_METER,
+  URL_POWER_METER_DETAIL,
+  URL_SENSOR,
+} from "../redux/URL";
 import AxiosAuthor from "../utils/AxiosAuthor";
 
 const DeviceService = {
@@ -23,18 +29,18 @@ const DeviceService = {
     return response.data;
   },
 
-  fetchAllPowerMeter: async(idStation)=>{
+  fetchAllPowerMeter: async (idStation) => {
     let response = await AxiosAuthor.post(URL_POWER_METER, {
       stationId: idStation,
     });
     return response.data;
   },
-  
-  fetchAllPowerMeterDetail: async(idPowerMeter)=>{
+
+  fetchAllPowerMeterDetail: async (idPowerMeter) => {
     let response = await AxiosAuthor.get(URL_POWER_METER_DETAIL, {
       id: idPowerMeter,
     });
     return response.data;
-  }
+  },
 };
 export default DeviceService;

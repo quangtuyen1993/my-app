@@ -4,7 +4,7 @@ import Dashboard from "../pages/dashboards";
 import DeviceScreen from "../pages/devices";
 import DetailScreen from "../pages/devices/detail/Details";
 import PowerMeterDetail from "../pages/devices/detail/PowerMeterDetail";
-import PRCalculationSreen from "../pages/prcalc/index";
+import PRCalculationScreen from "../pages/prcalc/index";
 import SchedulerScreen from "../pages/scheduler_maintain";
 import SystemInfoScreen from "../pages/system";
 import TrendScreen from "../pages/trend";
@@ -94,7 +94,7 @@ export const RouterList = [
       {
         id: 1,
         path: "/prcalculation",
-        component: PRCalculationSreen,
+        component: PRCalculationScreen,
       },
     ],
   },
