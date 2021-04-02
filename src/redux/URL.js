@@ -9,4 +9,7 @@ export const URL_STATIONS="Stations"
 export const URL_OVERVIEW="/Overview"
 export const URL_DEVICES="/Inverters/GetInvertersOfStation"
 export const URL_DEVICES_DETAIL="/Inverters/GetInverterDetail"
+export const URL_SENSOR="/Sensors/GetSensorsOfStation"
+export const URL_POWER_METER="/PowerMeters/GetPowerMetersOfStation"
+
 

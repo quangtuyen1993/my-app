@@ -13,24 +13,51 @@ export default function DeviceScreen() {
   const [state, setState] = useState({
     Inverters: [],
     MCCB_ABC: [],
-    POWER_METER: [],
+    Power_meters: [],
     Sensors: [],
   });
 
   useEffect(() => {
     const onFetchData = async () => {
-      var inverters = await DeviceService.fetchAllDevice(stationSelected);
+      var inverters = await DeviceService.fetchAllInverterDevice(
+        stationSelected
+      );
       setState((pre) => ({
         ...pre,
         Inverters: inverters,
       }));
     };
+
+    const onFetchSensorService = async () => {
+      var sensors = await DeviceService.fetchAllSensor(stationSelected);
+      setState((pre) => ({
+        ...pre,
+        Sensors: sensors,
+      }));
+    };
+
     if (interval !== null) {
       clearInterval(interval.current);
     }
+
+    const onFetchPowerMeter = async () => {
+      var powerMeters = await DeviceService.fetchAllPowerMeter(stationSelected);
+      console.log(powerMeters);
+      setState((pre) => ({
+        ...pre,
+        Power_meters: powerMeters,
+      }));
+    };
+
     onFetchData();
+    onFetchSensorService();
+    onFetchPowerMeter();
+
+
     interval.current = setInterval(() => {
       onFetchData();
+      onFetchSensorService();
+      onFetchPowerMeter();
     }, 10000);
     return () => {
       clearInterval(interval.current);
@@ -63,10 +90,10 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="MCCB_ABC">
                   <TableApp
-                       maxLength={Math.max(
-                        state.Inverters.length,
-                        state.MCCB_ABC.length
-                      )}
+                    maxLength={Math.max(
+                      state.Inverters.length,
+                      state.MCCB_ABC.length
+                    )}
                     data={state.MCCB_ABC}
                     chipField={["Status"]}
                     field={["Name", "Status"]}
@@ -78,14 +105,15 @@ export default function DeviceScreen() {
             </Grid>
           </Grid>
 
-          {/* <Grid item xs={12}>
+          <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="POWER_METER">
                   <TableApp
-                    data={state.POWER_METER}
-                    chipField={["Status"]}
-                    field={["Name", "Status"]}
+                    showIndex={true}
+                    data={state.Power_meters}
+                    chipField={["status"]}
+                    field={["name", "status"]}
                     fieldTitle={["Name", "Status", "Operate"]}
                     showLink={true}
                     path="/device"
@@ -95,16 +123,17 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout title="Sensors">
                   <TableApp
+                    showIndex={true}
                     data={state.Sensors}
-                    chipField={["Status"]}
-                    field={["Name", "Status"]}
+                    chipField={["sensorType"]}
+                    field={["name", "sensorType"]}
                     fieldTitle={["Name", "Status"]}
                     path="/device"
                   />
                 </CardLayout>
               </Grid>
             </Grid>
-          </Grid> */}
+          </Grid>
         </Grid>
       </Container>
     </>
@@ -135,4 +164,3 @@ const createItem = (
     tagPrefix,
   };
 };
-

@@ -8,9 +8,9 @@ import {
   LinearProgress,
   Typography,
   useTheme,
-  withStyles,
+  withStyles
 } from "@material-ui/core";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
 import ColorsApp from "../../../common/colors";
@@ -67,6 +67,9 @@ export default function DetailScreen(props) {
       history.goBack();
     }
   }, [history, state.stationSelected, stationSelected]);
+
+
+  
   useEffect(() => {
     let { deviceId } = location;
     if (deviceId === undefined) {
@@ -88,7 +91,7 @@ export default function DetailScreen(props) {
       var mppt = [];
       var phases = [];
       var general = [];
-      var obj = await DeviceService.fetchDeviceDetail(state.deviceId);
+      var obj = await DeviceService.fetchInverterDetail(state.deviceId);
       var fields = Object.keys(obj);
       fields.forEach((f) => {
         if (f.includes("mppt") || f.includes("mptt")) {
