@@ -28,7 +28,7 @@ export default function PowerTrend() {
     }
 
     return (
-        <CardLayout icon={IconApp.POWERTREND} title="24h Power Trend">
+        <CardLayout icon={IconApp.RATIO} title="24h Power Trend">
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                     <AppDatePicker

@@ -4,6 +4,7 @@ export const CookieType = Object.freeze({
   CURRENT_STATION: "currentStation",
   JWT_TOKEN: "accessToken",
   CURRENT_DEVICES: "deviceCurrent",
+  CURRENT_DEVICES_POWER_METER: "device_power_meter_Current",
 });
 
 export class CookieManger {
@@ -50,6 +51,17 @@ export class CookieManger {
   }
   static revokeCurrentDevice() {
     Cookies.remove(CookieType.CURRENT_DEVICES);
+  }
+  
+  static getCurrentDevicePowerMeter() {
+    return Cookies.get(CookieType.CURRENT_DEVICES_POWER_METER);
+  }
+
+  static setCurrentDevicePowerMeter(currentDevice) {
+    Cookies.set(CookieType.CURRENT_DEVICES_POWER_METER, currentDevice);
+  }
+  static revokeCurrentDevicePowerMeter() {
+    Cookies.remove(CookieType.CURRENT_DEVICES_POWER_METER);
   }
   static RevokeAllCookies() {
     this.RevokeStationCurrent();

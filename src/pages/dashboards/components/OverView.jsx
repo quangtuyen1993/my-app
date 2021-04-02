@@ -140,7 +140,7 @@ export default function Overview() {
         </Grid>
 
         <Grid item lg={12} sm={12} md={12} xs={12}>
-          <CardLayout title="PR Radio" className={classes.root}>
+          <CardLayout title="PR Radio" icon={IconApp.CALC} className={classes.root}>
             <Grid container spacing={2}>
               {state.listPr.map((item, index) => renderCircle(item, index))}
             </Grid>

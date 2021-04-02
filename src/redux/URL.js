@@ -11,5 +11,6 @@ export const URL_DEVICES="/Inverters/GetInvertersOfStation"
 export const URL_DEVICES_DETAIL="/Inverters/GetInverterDetail"
 export const URL_SENSOR="/Sensors/GetSensorsOfStation"
 export const URL_POWER_METER="/PowerMeters/GetPowerMetersOfStation"
+export const URL_POWER_METER_DETAIL="/PowerMeters/"
 
 

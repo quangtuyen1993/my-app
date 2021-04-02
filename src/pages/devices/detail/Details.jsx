@@ -78,7 +78,6 @@ export default function DetailScreen(props) {
       CookieManger.revokeCurrentDevice();
       CookieManger.setCurrentDevice(deviceId);
     }
-    console.log("device", deviceId);
     setState((pre) => ({
       ...pre,
       deviceId: deviceId,
@@ -139,7 +138,7 @@ export default function DetailScreen(props) {
     <Container disableGutters direction="row" maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item sm={12}>
-          <CardLayout title="General Info">
+          <CardLayout title="General Info" >
             <Grid
               container
               spacing={2}

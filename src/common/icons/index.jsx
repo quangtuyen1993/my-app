@@ -16,6 +16,9 @@ import {
   faInfo,
   faSignOutAlt,
   faBroadcastTower,
+  faChartBar,
+  faBinoculars,
+  faRadiationAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -36,7 +39,10 @@ library.add(
   faChartLine,
   faInfo,
   faSignOutAlt,
-  faBroadcastTower
+
+  faBroadcastTower,
+  faChartLine,
+  faRadiationAlt,
 );
 
 export const PUBLIC_ICON =
@@ -66,5 +72,10 @@ const IconApp = {
   INFO: faInfo,
   SIGN_OUT: faSignOutAlt,
   BROADCAST_TOWER: faBroadcastTower,
+
+
+  RATIO:faRadiationAlt,
+  TREND_24_HOURS:faChartBar,
+  TABLE:faBinoculars
 };
 export default IconApp;

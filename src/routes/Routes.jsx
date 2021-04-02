@@ -3,6 +3,7 @@ import AlarmScreen from "../pages/alarm";
 import Dashboard from "../pages/dashboards";
 import DeviceScreen from "../pages/devices";
 import DetailScreen from "../pages/devices/detail/Details";
+import PowerMeterDetail from "../pages/devices/detail/PowerMeterDetail";
 import PRCalculationSreen from "../pages/prcalc/index";
 import SchedulerScreen from "../pages/scheduler_maintain";
 import SystemInfoScreen from "../pages/system";
@@ -25,23 +26,13 @@ export const RouterList = [
         path: "/home",
         component: Dashboard,
       },
-      {
-        id: 2,
-        path: "/home/name",
-        component: Dashboard,
-      },
-      {
-        id: 3,
-        path: "/home/age",
-        component: Dashboard,
-      },
     ],
   },
   {
     id: 2,
     iconItem: IconApp.DEVICE,
     name: "Devices",
-    path: "/device/:path?",
+    path: "/device/:path?/:path?",
     linkTo: "/device",
     priority: PRIVATE,
     child: [
@@ -52,8 +43,13 @@ export const RouterList = [
       },
       {
         id: 2,
-        path: "/device/:index",
+        path: "/device/inverter/:index?",
         component: DetailScreen,
+      },
+      {
+        id: 3,
+        path: "/device/power_meter/:index",
+        component: PowerMeterDetail,
       },
     ],
   },
@@ -132,5 +128,4 @@ export const RouterList = [
       },
     ],
   },
-  
 ];

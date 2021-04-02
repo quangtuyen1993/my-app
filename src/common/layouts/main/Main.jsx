@@ -21,13 +21,16 @@ const useStyle = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
   },
   footer: {
+    width:"100%",
+    height:"60px",
     display: "flex",
+    justifyContent:"flex-end",
     borderTop: "0.5px rgba(0,0,0,0.3) solid",
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(0),
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-}
+  },
 }));
 
 export default function Main(props) {
@@ -39,24 +42,30 @@ export default function Main(props) {
           display: "flex",
           alignItems: "stretch",
           flexDirection: "column",
+          position: "relative",
         }}
       >
-        <div style={{ flex: 1,minHeight:"100vh" }}>
+        <div style={{ flex: 1, minHeight: "100vh" }}>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <div style={{ display: "flex", flexDirection: "column",justifyItems:"stretch" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyItems: "stretch",
+              }}
+            >
               {props.children}
             </div>
           </main>
         </div>
-        <div style={{ flex: 1 }}>
           <footer className={classes.footer}>
             <p>
               Copyright © 2020 <a href="/">PHUC THINH CO., LTD</a>. All rights
               reserved.
             </p>
           </footer>
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );

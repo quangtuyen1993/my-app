@@ -1,6 +1,7 @@
 import { Container, Grid } from "@material-ui/core";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
 import TableApp from "../../components/TableApp";
 import DeviceService from "../../service/device.service";
@@ -71,7 +72,7 @@ export default function DeviceScreen() {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout title="Inverters">
+                <CardLayout icon={IconApp.TABLE} title="Inverters">
                   <TableApp
                     data={state.Inverters}
                     chipField={["state"]}
@@ -79,7 +80,7 @@ export default function DeviceScreen() {
                     fieldTitle={["Name", "Status", "Operate"]}
                     showLink={true}
                     showIndex={true}
-                    path="/device"
+                    path="/device/inverter"
                     maxLength={Math.max(
                       state.Inverters.length,
                       state.MCCB_ABC.length
@@ -88,7 +89,7 @@ export default function DeviceScreen() {
                 </CardLayout>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout title="MCCB_ABC">
+                <CardLayout icon={IconApp.TABLE} title="MCCB_ABC">
                   <TableApp
                     maxLength={Math.max(
                       state.Inverters.length,
@@ -98,7 +99,6 @@ export default function DeviceScreen() {
                     chipField={["Status"]}
                     field={["Name", "Status"]}
                     fieldTitle={["Name", "Status"]}
-                    path="/device"
                   />
                 </CardLayout>
               </Grid>
@@ -108,7 +108,7 @@ export default function DeviceScreen() {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout title="POWER_METER">
+                <CardLayout  icon={IconApp.TABLE} title="POWER_METER">
                   <TableApp
                     showIndex={true}
                     data={state.Power_meters}
@@ -116,19 +116,18 @@ export default function DeviceScreen() {
                     field={["name", "status"]}
                     fieldTitle={["Name", "Status", "Operate"]}
                     showLink={true}
-                    path="/device"
+                    path="/device/power_meter"
                   />
                 </CardLayout>
               </Grid>
-              <Grid item xs={12} sm={12} md={6}>
-                <CardLayout title="Sensors">
+              <Grid  item xs={12} sm={12} md={6}>
+                <CardLayout icon={IconApp.TABLE} title="Sensors">
                   <TableApp
                     showIndex={true}
                     data={state.Sensors}
                     chipField={["sensorType"]}
                     field={["name", "sensorType"]}
                     fieldTitle={["Name", "Status"]}
-                    path="/device"
                   />
                 </CardLayout>
               </Grid>
