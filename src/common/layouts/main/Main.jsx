@@ -41,10 +41,10 @@ export default function Main(props) {
           flexDirection: "column",
         }}
       >
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1,minHeight:"100vh" }}>
           <main className={classes.content}>
             <div className={classes.toolbar} />
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", flexDirection: "column",justifyItems:"stretch" }}>
               {props.children}
             </div>
           </main>

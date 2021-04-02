@@ -37,7 +37,7 @@ const CardLayout = (props) => {
 
     return (
         <>
-            <Card variant="elevation" >
+            <Card variant="elevation"style={{height:"100%"}} >
                 <CardHeader
                     component={() => (
                         <div>

@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import CardLayout from "../../common/layouts/CardLayout";
 import TableApp from "../../components/TableApp";
 import DeviceService from "../../service/device.service";
-import { CookieManger } from "../../utils/CookieManager";
 
 export default function DeviceScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);

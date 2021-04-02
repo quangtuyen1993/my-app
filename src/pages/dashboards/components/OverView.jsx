@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Card, CardContent, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -47,7 +47,9 @@ export default function Overview() {
       listItem: dataNormal,
     }));
   };
+
   let timeRun = 1;
+
   useEffect(() => {
     if (timer !== null) {
       clearInterval(timer.current);
@@ -78,19 +80,34 @@ export default function Overview() {
           className={classes.cardPrimary}
         >
           <CardContent style={{ position: "relative" }}>
-            <FontAwesomeIcon
-              style={{
-                opacity: 0.5,
-                position: "absolute",
-                right: 0 + theme.spacing(2),
-              }}
-              icon={item.icon}
-              size={"2x"}
-            />
             <Typography variant="h6">{item.title}</Typography>
             <Typography variant="h6">
               {item.value} {item.unit}
             </Typography>
+            <Grid
+              container
+              justify="flex-end"
+              alignItems="center"
+              alignContent="center"
+              style={{
+                width: "100%",
+                position: "absolute",
+                top: "0",
+                left: "0",
+                height: "100%",
+              }}
+            >
+              <Grid item xs={3} md={3} sm={3} lg={3}>
+                <Box
+                  display="flex"
+                  justifyContent="center"
+                  alignContent="center"
+                  alignItems="center"
+                >
+                  <FontAwesomeIcon icon={item.icon} size="3x" />
+                </Box>
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </Grid>
