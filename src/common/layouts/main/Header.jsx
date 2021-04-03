@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Avatar,
   Box,
   IconButton,
   makeStyles,
@@ -9,6 +10,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import React from "react";
+import { useSelector } from "react-redux";
 import AppBadge from "../../../redux/feature/AppBadge";
 import Station from "../../../redux/feature/station/Station";
 import ColorsApp from "../../colors";
@@ -37,9 +39,9 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function Header({ drawerWidth, onToggleDrawer, open }) {
-  const classes = useStyle({drawerWidth});
+  const classes = useStyle({ drawerWidth });
   const theme = useTheme();
-
+  const { username } = useSelector((state) => state.authorReducer.userProfile);
   return (
     <>
       <AppBar
@@ -64,21 +66,25 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
             </IconButton>
           }
 
-          <Box mr={2}>
+          <Box
+            display="flex"
+            justifyContent="flex-start"
+            alignContent="center"
+            alignItems="center"
+            mr={2}
+            style={{
+              flexGrow: 3,
+              height: "40px",
+            }}
+          >
             <img
               height={theme.spacing(6) + 1}
               alt="Sky Black SoftWare"
               src={PUBLIC_ICON_LIGHT}
             />
           </Box>
-          <Box
-            style={{
-              flexGrow: 3,
-            }}
-          >
-            Sky
-          </Box>
-          <Box mr={2}>
+
+          <Box mr={1}>
             <Station device={10} />
           </Box>
           <Box mr={2}>
@@ -86,8 +92,29 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
           </Box>
 
           <Box>
+            {username && (
+              <Avatar
+                variant="circular"
+                style={{
+                  width: theme.spacing(4),
+                  height: theme.spacing(4),
+                  textAlign: "center",
+                  backgroundColor: theme.palette.primary.main,
+                }}
+              >
+                {username.charAt(0).toUpperCase()}
+              </Avatar>
+            )}
+          </Box>
+
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignContent="center"
+            alignItems="center"
+          >
             <img
-              height={theme.spacing(6) + 1}
+              height="40px"
               alt="Sky Black SoftWare"
               src={PUBLIC_ICON_ISOLAR}
             />

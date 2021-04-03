@@ -1,4 +1,5 @@
-import { Box, Typography } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Divider, Grid, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -12,6 +13,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
+import IconApp from "../../../common/icons";
 import IconNotify from "../IconNotify";
 import { fetchStation, onSelected } from "./station.slice";
 const useStyles = makeStyles((theme) => ({
@@ -30,7 +32,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   chip: {
+    borderRadius: "3px",
+    paddingTop: "5px",
+    paddingBottom: "5px",
     backgroundColor: theme.palette.primary.main,
+    paddingLeft: "5px",
+    paddingRight: "5px",
     cursor: "pointer",
     "&:hover": {
       backgroundColor: theme.palette.secondary.main,
@@ -90,27 +97,46 @@ export default function Station(props) {
 
   return (
     <>
-      <Box
+      <Grid
+        container
+        justify="center"
+        alignContent="center"
+        alignItems="center"
         className={classes.chip}
         onClick={handleOpen}
-        justifyContent="center"
-        alignContent="center"
-        display="flex"
       >
-        <Box mr={1}>
+        <Grid item>
           <IconNotify
-            handleClickOpen={handleOpen}
-            tooltip={"Current device:" + stations}
+            chipColor={theme.palette.primary.main}
+            tooltip={
+              stations.find((item) => item.id === stationSelected)
+                ? stations.find((item) => item.id === stationSelected).name
+                : "None"
+            }
           />
-        </Box>
-        <Box display="flex" flexDirection="column" justifyContent="center">
-          {stations.length!==0 && (
-            <Typography style={{ textAlign: "center" }} variant="h6">
-             {stations.find((item)=>item.id===stationSelected).name}
-            </Typography>
-          )}
-        </Box>
-      </Box>
+        </Grid>
+        <Grid item>
+          <Box display={{ xs: "none", sm: "none", md: "flex", lg: "flex" }}>
+            <Box>
+              {stations.length !== 0 && (
+                <Typography style={{ textAlign: "center" }} variant="subtitle1">
+                  {stations.find((item) => item.id === stationSelected).name}
+                </Typography>
+              )}
+            </Box>
+
+            <Box
+              ml={1}
+              display="flex"
+              justifyContent="center"
+              alignContent="center"
+              alignItems="center"
+            >
+              <FontAwesomeIcon icon={IconApp.ARROW_DOWN} />
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
 
       <Dialog fullWidth maxWidth={"xs"} open={open}>
         <DialogTitle

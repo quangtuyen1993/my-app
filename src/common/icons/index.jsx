@@ -19,6 +19,10 @@ import {
   faChartBar,
   faBinoculars,
   faRadiationAlt,
+  faInfoCircle,
+  faArrowDown,
+  faArrowCircleDown,
+  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -39,10 +43,13 @@ library.add(
   faChartLine,
   faInfo,
   faSignOutAlt,
-
+faInfoCircle,
   faBroadcastTower,
   faChartLine,
   faRadiationAlt,
+  faCalendar,
+  faArrowCircleDown,
+  faChevronDown
 );
 
 export const PUBLIC_ICON =
@@ -59,7 +66,7 @@ const IconApp = {
   PR: faCalculator,
   WEATHER: faCloudSun,
   POWER_TREND: ["fas", "atom"],
-  BOTH: ["fas","bolt"],
+  BOTH: ["fas", "bolt"],
   RADIATION: faSun,
   WIND: faWind,
   TEMP: faTemperatureHigh,
@@ -69,13 +76,13 @@ const IconApp = {
   ALARM: faBell,
   CALC: faCalculator,
   TRENT: faChartLine,
-  INFO: faInfo,
+  INFO: faInfoCircle,
   SIGN_OUT: faSignOutAlt,
   BROADCAST_TOWER: faBroadcastTower,
-
-
-  RATIO:faRadiationAlt,
-  TREND_24_HOURS:faChartBar,
-  TABLE:faBinoculars
+  SCHEDULER_TASK:faCalendar,
+  RATIO: faRadiationAlt,
+  TREND_24_HOURS: faChartBar,
+  TABLE: faBinoculars,
+  ARROW_DOWN:faChevronDown
 };
 export default IconApp;

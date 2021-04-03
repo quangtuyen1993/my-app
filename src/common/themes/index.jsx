@@ -4,7 +4,6 @@ import {
   deepPurple,
   indigo,
   grey,
-  blueGrey,
   red,
 } from "@material-ui/core/colors";
 
@@ -50,12 +49,7 @@ export const theme = createMuiTheme({
       main: indigo[700],
       contrastText: deepPurple[900],
     },
-    secondaryText: {
-      main: blueGrey[500],
-    },
-    primaryText: {
-      main: grey[100],
-    },
+    
   },
 });
 

@@ -7,7 +7,8 @@ import {
   ListItemIcon,
   ListItemText,
   makeStyles,
-  Typography
+  Typography,
+  useTheme
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
@@ -16,6 +17,7 @@ import LogOutIcon from "../../../redux/feature/user/LogOutIcon";
 import { RouterList } from "../../../routes/Routes";
 
 const DrawerApp = ({ drawerWidth, open, onClose }) => {
+  const theme=useTheme()
   const useStyle = makeStyles((theme) => ({
     paper: {
       background: theme.palette.secondary.main,
@@ -74,30 +76,29 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
       >
         <div className={classes.toolbar} />
         <List>
-          {RouterList.map((text, index) => (
+          {RouterList.map((route, index) => (
             <Link
               style={{ textDecoration: "none" }}
-              to={text.linkTo}
+              to={route.linkTo}
               onClick={() => {
                 onClose();
               }}
-              key={text.id}
+              key={route.id}
             >
               <ListItem button>
                 <ListItemIcon>
                   <Box paddingLeft={1}>
                     <FontAwesomeIcon
-                      icon={text.iconItem}
-                      style={{ fontSize: "24", textAlign: "center" }}
-                      color="#ffffff"
+                      icon={route.iconItem}
+                      style={{ fontSize: "24", textAlign: "center",color:"#ffffff" }}
                     />
                   </Box>
                 </ListItemIcon>
                 <ListItemText
                   disableTypography
                   primary={
-                    <Typography variant="h6" style={{ color: "#ffffff" }}>
-                      {text.name}
+                    <Typography variant="subtitle1" style={{ color: "#ffffff",fontWeight:"normal" }}>
+                      {route.name}
                     </Typography>
                   }
                 />

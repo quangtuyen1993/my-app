@@ -43,7 +43,6 @@ export default function DeviceScreen() {
 
     const onFetchPowerMeter = async () => {
       var powerMeters = await DeviceService.fetchAllPowerMeter(stationSelected);
-      console.log(powerMeters);
       setState((pre) => ({
         ...pre,
         Power_meters: powerMeters,
@@ -62,7 +61,7 @@ export default function DeviceScreen() {
     }, 10000);
     return () => {
       clearInterval(interval.current);
-    };
+    }
   }, [stationSelected]);
 
   return (
@@ -79,7 +78,6 @@ export default function DeviceScreen() {
                     field={["name", "state"]}
                     fieldTitle={["Name", "Status", "Operate"]}
                     showLink={true}
-                    showIndex={true}
                     path="/device/inverter"
                     maxLength={Math.max(
                       state.Inverters.length,
@@ -110,7 +108,6 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout  icon={IconApp.TABLE} title="POWER_METER">
                   <TableApp
-                    showIndex={true}
                     data={state.Power_meters}
                     chipField={["status"]}
                     field={["name", "status"]}
@@ -123,7 +120,6 @@ export default function DeviceScreen() {
               <Grid  item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="Sensors">
                   <TableApp
-                    showIndex={true}
                     data={state.Sensors}
                     chipField={["sensorType"]}
                     field={["name", "sensorType"]}

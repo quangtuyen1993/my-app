@@ -71,7 +71,7 @@ export const RouterList = [
   {
     id: 4,
     iconItem: IconApp.TRENT,
-    name: "Alarms",
+    name: "Power Trend",
     linkTo: "/trend",
     path: "/trend/:path?",
     priority: PRIVATE,
@@ -99,6 +99,21 @@ export const RouterList = [
     ],
   },
   {
+    id: 8,
+    iconItem: IconApp.SCHEDULER_TASK,
+    name: "Scheduler Task",
+    linkTo: "/scheduler",
+    path: "/scheduler/:path?",
+    priority: PRIVATE,
+    child: [
+      {
+        id: 1,
+        path: "/scheduler",
+        component: SchedulerScreen,
+      },
+    ],
+  },
+  {
     id: 6,
     iconItem: IconApp.INFO,
     name: "System info",
@@ -110,21 +125,6 @@ export const RouterList = [
         id: 1,
         path: "/systeminfor",
         component: SystemInfoScreen,
-      },
-    ],
-  },
-  {
-    id: 8,
-    iconItem: IconApp.INFO,
-    name: "System info",
-    linkTo: "/scheduler",
-    path: "/scheduler/:path?",
-    priority: PRIVATE,
-    child: [
-      {
-        id: 1,
-        path: "/scheduler",
-        component: SchedulerScreen,
       },
     ],
   },
