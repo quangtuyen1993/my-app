@@ -1,17 +1,41 @@
-import { Container, Grid, useTheme } from "@material-ui/core";
+import { Box, Container, Grid, useTheme } from "@material-ui/core";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import CardLayout from "../../common/layouts/CardLayout";
 import MDatePicker from "../../components/MDatePicker";
+import MTableMaterial from "../../components/MTableMaterial";
 import SearchBar from "../../components/SearchBar";
 import TableAppOverSize from "../../components/TableAppOverSize";
+import AlarmService from "../../service/alarm.service";
 
 export default function AlarmScreen() {
   const theme = useTheme();
   const boundTable = useRef(null);
+  const { stationSelected } = useSelector((state) => state.stationReducer);
   const [state, setState] = useState({
     fromDate: null,
     toDate: null,
     heightTable: 100,
+  });
+
+  useEffect(() => {
+    const fetchRealTimeData = async () => {
+      var data = await AlarmService.fetchRealTime({
+        stationId: stationSelected.id,
+      });
+      return data;
+    };
+
+    const fetchHistoricalData = async () => {
+      var data = await AlarmService.fetchHistorical({
+        stationId: stationSelected.id,
+      });
+      console.info("HISTORY CALL", data);
+      return data;
+    };
+
+    fetchRealTimeData();
+    fetchHistoricalData();
   });
 
   useEffect(() => {
@@ -24,8 +48,7 @@ export default function AlarmScreen() {
             heightTable: newHeight.height + theme.spacing(2) * 2,
           };
         });
-    } catch (e) {
-    }
+    } catch (e) {}
   }, [state.heightTable, theme]);
 
   const handleRangeDateChange = (from, to) => {
@@ -42,7 +65,7 @@ export default function AlarmScreen() {
     <>
       <Container disableGutters direction="row" maxWidth={false}>
         <Grid container spacing={2}>
-          <Grid item sm={12} lg={12}>
+          <Grid item sm={12} md={12} xs={12} lg={12}>
             <CardLayout>
               <Grid container spacing={2}>
                 <Grid item sm={12}>
@@ -53,60 +76,28 @@ export default function AlarmScreen() {
                         onRangeDateChange={handleRangeDateChange}
                       />
                     </Grid>
-                    <Grid item sm={12} xs={12} md={6} lg={6}>
-                      <Grid container justify="flex-end">
-                        <Grid item xs={12} sm={12} md={6} lg={6}>
-                          <SearchBar />
-                        </Grid>
-                      </Grid>
-                    </Grid>
                   </Grid>
                 </Grid>
-                <Grid
-                  item
-                  sm={12}
-                  xs={12}
-                  style={{
-                    overflow: "auto",
-                    whiteSpace: "nowrap",
-                    position: "relative",
-                    height: state.heightTable,
-                    display: "inline-block",
-                  }}
-                >
-                  <div
-                    style={{
-                      whiteSpace: "wrap",
-                      position: "absolute",
-                      left: 0,
-                      top: 0,
-                      bottom: 0,
-                      right: 0,
-                    }}
-                  >
-                    <TableAppOverSize
-                      pagination={true}
-                      perPage={5}
-                      index={true}
-                      ref={boundTable}
-                      data={historical}
-                      field={[
-                        "Action",
-                        "State",
-                        "Name",
-                        "Incomming Time",
-                        "Alarm Text",
-                        "Value",
-                        "Limit",
-                        "Compare Mode",
-                        "Outgoing Time",
-                        "Ack Time",
-                      ]}
-                      chipField={["Action"]}
-                    />
-                  </div>
+                <Grid item sm={12} xs={12}>
+                  <Box style={{ overflowX: "auto" }}></Box>
                 </Grid>
               </Grid>
+              <MTableMaterial
+                rowsPerPage={5}
+                dataSource={historical}
+                fieldArray={[
+                  "Action",
+                  "State",
+                  "Name",
+                  "Incomming Time",
+                  "Alarm Text",
+                  "Value",
+                  "Limit",
+                  "Compare Mode",
+                  "Outgoing Time",
+                  "Ack Time",
+                ]}
+              />
             </CardLayout>
           </Grid>
         </Grid>

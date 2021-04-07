@@ -1,4 +1,6 @@
 import IconApp from "../common/icons";
+import MainLayout from "../common/layouts/main/MainLayout";
+import AccountScreen from "../pages/account";
 import AlarmScreen from "../pages/alarm";
 import Dashboard from "../pages/dashboards";
 import DeviceScreen from "../pages/devices";
@@ -18,13 +20,22 @@ export const RouterList = [
     iconItem: IconApp.DASHBOARD,
     name: "Overview",
     linkTo: "/home",
-    path: "/home:path?",
+    path: "/home",
+    component: (
+      <MainLayout>
+        <Dashboard />
+      </MainLayout>
+    ),
     priority: PRIVATE,
     child: [
       {
         id: 1,
-        path: "/home",
-        component: Dashboard,
+        path: "/",
+        component: (
+          <MainLayout>
+            <Dashboard />
+          </MainLayout>
+        ),
       },
     ],
   },
@@ -32,24 +43,41 @@ export const RouterList = [
     id: 2,
     iconItem: IconApp.DEVICE,
     name: "Devices",
-    path: "/device/:path?/:path?",
+    path: "/device",
     linkTo: "/device",
     priority: PRIVATE,
+    component: (
+      <MainLayout>
+        <DeviceScreen />
+      </MainLayout>
+    ),
     child: [
       {
         id: 1,
-        path: "/device",
-        component: DeviceScreen,
-      },
-      {
-        id: 2,
-        path: "/device/inverter/:index?",
-        component: DetailScreen,
+        path: "/",
+        component: (
+          <MainLayout>
+            <DeviceScreen />
+          </MainLayout>
+        ),
       },
       {
         id: 3,
-        path: "/device/power_meter/:index",
-        component: PowerMeterDetail,
+        path: "/power_meter",
+        component: (
+          <MainLayout>
+            <PowerMeterDetail />
+          </MainLayout>
+        ),
+      },
+      {
+        id: 2,
+        path: "/inverter",
+        component: (
+          <MainLayout>
+            <DetailScreen />
+          </MainLayout>
+        ),
       },
     ],
   },
@@ -58,13 +86,22 @@ export const RouterList = [
     iconItem: IconApp.ALARM,
     name: "Alarms",
     linkTo: "/alarm",
-    path: "/alarm/:path?",
+    path: "/alarm",
     priority: PRIVATE,
+    component: (
+      <MainLayout>
+        <AlarmScreen />
+      </MainLayout>
+    ),
     child: [
       {
         id: 1,
-        path: "/alarm",
-        component: AlarmScreen,
+        path: "/",
+        component: (
+          <MainLayout>
+            <AlarmScreen />
+          </MainLayout>
+        ),
       },
     ],
   },
@@ -73,13 +110,17 @@ export const RouterList = [
     iconItem: IconApp.TRENT,
     name: "Power Trend",
     linkTo: "/trend",
-    path: "/trend/:path?",
+    path: "/trend",
     priority: PRIVATE,
     child: [
       {
         id: 1,
-        path: "/trend",
-        component: TrendScreen,
+        path: "/",
+        component: (
+          <MainLayout>
+            <TrendScreen />
+          </MainLayout>
+        ),
       },
     ],
   },
@@ -88,13 +129,18 @@ export const RouterList = [
     iconItem: IconApp.CALC,
     name: "PR Calculation",
     linkTo: "/prcalculation",
-    path: "/prcalculation/:path?",
+    path: "/prcalculation",
     priority: PRIVATE,
+
     child: [
       {
         id: 1,
-        path: "/prcalculation",
-        component: PRCalculationScreen,
+        path: "/",
+        component: (
+          <MainLayout>
+            <PRCalculationScreen />
+          </MainLayout>
+        ),
       },
     ],
   },
@@ -103,13 +149,18 @@ export const RouterList = [
     iconItem: IconApp.SCHEDULER_TASK,
     name: "Scheduler Task",
     linkTo: "/scheduler",
-    path: "/scheduler/:path?",
+    path: "/scheduler",
     priority: PRIVATE,
+
     child: [
       {
         id: 1,
-        path: "/scheduler",
-        component: SchedulerScreen,
+        path: "/",
+        component: (
+          <MainLayout>
+            <SchedulerScreen />
+          </MainLayout>
+        ),
       },
     ],
   },
@@ -117,14 +168,43 @@ export const RouterList = [
     id: 6,
     iconItem: IconApp.INFO,
     name: "System info",
-    linkTo: "/systeminfor",
-    path: "/systeminfor/:path?",
+    linkTo: "/systemInfo",
+    path: "/systemInfo",
     priority: PRIVATE,
+
     child: [
       {
         id: 1,
-        path: "/systeminfor",
-        component: SystemInfoScreen,
+        path: "/",
+        component: (
+          <MainLayout>
+            <SystemInfoScreen />
+          </MainLayout>
+        ),
+      },
+    ],
+  },
+  {
+    id: 99,
+    iconItem: IconApp.ACCOUNT,
+    name: "System info",
+    linkTo: "/account",
+    path: "/account",
+    priority: PRIVATE,
+    component: (
+      <MainLayout>
+        <SystemInfoScreen />
+      </MainLayout>
+    ),
+    child: [
+      {
+        id: 1,
+        path: "/",
+        component: (
+          <MainLayout>
+            <AccountScreen />
+          </MainLayout>
+        ),
       },
     ],
   },

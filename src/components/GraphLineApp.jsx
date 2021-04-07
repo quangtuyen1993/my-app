@@ -9,21 +9,26 @@ const initialState = {
   dataSet: [],
 };
 
-const DatePickerApp = ({ data, typeView }) => {
+const GraphLineApp = ({ data, typeView, minDate, maxDate }) => {
   const [state, setState] = useState(initialState);
+
   useEffect(() => {
+    if (data.length === 0) return;
     let label = [];
     let dataSet = [];
     data.forEach((item, index) => {
       var value = [];
+      if (item.data === undefined) return;
       item.data.forEach((da, i) => {
         if (index === 0) {
-          var date = moment.utc(da.date,"dd-MM-yyyy hh:mm:ss").valueOf();
+          var date = moment
+            .utc(da.date, "YYYY-MM-DD HH:mm:ss")
+            .format("l LT")
+            .valueOf();
           label.push(date);
         }
         value.push(da.value);
       });
-
       dataSet.push({
         label: item.name,
         lineTension: 0.5,
@@ -37,6 +42,7 @@ const DatePickerApp = ({ data, typeView }) => {
 
     setState((pre) => {
       return {
+        ...pre,
         yAxisLabel: label,
         dataSet: dataSet,
       };
@@ -44,10 +50,10 @@ const DatePickerApp = ({ data, typeView }) => {
   }, [data]);
 
   useEffect(() => {
-    setState(pre=>({
+    setState((pre) => ({
       ...pre,
-      typeView
-    }))
+      typeView,
+    }));
   }, [typeView]);
 
   return (
@@ -56,7 +62,7 @@ const DatePickerApp = ({ data, typeView }) => {
         minHeight: "30vh",
         position: "relative",
         margin: "auto",
-        width: "75vw",
+        width: "80vw",
       }}
     >
       <Line
@@ -68,7 +74,7 @@ const DatePickerApp = ({ data, typeView }) => {
         options={{
           tooltips: {
             enabled: true,
-            mode: "index",
+            mode: "nearest",
             intersect: false,
           },
 
@@ -77,13 +83,16 @@ const DatePickerApp = ({ data, typeView }) => {
               radius: 0,
             },
           },
+          animation: false,
+          interaction: {
+            intersect: false,
+          },
           hover: {
             animationDuration: 0,
           },
           responsiveAnimationDuration: 0,
           maintainAspectRatio: false,
           responsive: true,
-
           legend: {
             display: true,
             position: "top",
@@ -93,9 +102,9 @@ const DatePickerApp = ({ data, typeView }) => {
             xAxes: [
               {
                 type: "time",
-
                 time: {
                   adapters: moment,
+                  tooltipFormat: "DD-MM-YYYY HH:mm",
                   displayFormats: {
                     hour: "HH:mm",
                   },
@@ -106,13 +115,17 @@ const DatePickerApp = ({ data, typeView }) => {
                 },
                 distribution: "linear",
                 bounds: "ticks",
-
                 ticks: {
                   display: true,
-                  stepSize: 1,
                   scaleOverride: true,
-                  min: moment.utc("2021-03-24T00:00:00+0700").valueOf(),
-                  max: moment.utc("2021-03-25T23:59:00+0700").valueOf(),
+                  min: moment
+                    .utc(minDate, "YYYY-MM-DD HH:mm:ss")
+                    .format("l LT")
+                    .valueOf(),
+                  max: moment
+                    .utc(maxDate, "YYYY-MM-DD HH:mm:ss")
+                    .format("l LT")
+                    .valueOf(),
                 },
               },
             ],
@@ -123,9 +136,8 @@ const DatePickerApp = ({ data, typeView }) => {
                 },
                 bounds: "ticks",
                 ticks: {
-                  beginAtZero: true,
-                  suggestedMax: 1500,
-                  max: 3000,
+                  beginAtZero: false,
+                  suggestedMin:0
                 },
               },
             ],
@@ -135,5 +147,4 @@ const DatePickerApp = ({ data, typeView }) => {
     </div>
   );
 };
-
-export default React.memo(DatePickerApp);
+export default GraphLineApp;

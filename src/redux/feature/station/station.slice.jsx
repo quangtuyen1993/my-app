@@ -1,25 +1,32 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import StationService from "../../../service/station.service";
 import axiosApp from "../../../utils/AxiosApp";
 import { CookieManger } from "../../../utils/CookieManager";
 import { URL_STATIONS } from "../../URL";
 
 const init = {
   stations: [],
-  stationSelected: 1,
+  stationSelected: {
+    id: 1,
+    sensorTable: "",
+  },
 };
 
 const fetchStation = createAsyncThunk(
   "/fetch_station",
   async (data, { getState, rejectWithValue }) => {
     try {
-      return axiosApp.get(URL_STATIONS).then((response) => {
+      return StationService.getStation().then((response) => {
         var currentStation;
         var stations = response.data;
         var stringCookie = CookieManger.GetStationCurrent();
         if (stringCookie !== "" && stringCookie !== undefined) {
-          currentStation = JSON.parse(stringCookie);
+          currentStation = response.data.find(
+            (d) => d.id === JSON.parse(stringCookie).id
+          );
         } else {
-          currentStation = response.data[0].id;
+          currentStation = response.data[0];
+          console.info("current station", currentStation);
         }
         return {
           stations: stations,

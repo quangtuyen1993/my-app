@@ -11,31 +11,30 @@ import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import React from "react";
 import { useSelector } from "react-redux";
-import AppBadge from "../../../redux/feature/AppBadge";
+import AppBadge from "../../../redux/feature/alarm/AppBadge";
 import Station from "../../../redux/feature/station/Station";
 import ColorsApp from "../../colors";
 import { PUBLIC_ICON_ISOLAR, PUBLIC_ICON_LIGHT } from "../../icons";
 const useStyle = makeStyles((theme) => ({
   root: {
-    display: "flex",
+    // display: "flex",
+    zIndex: theme.zIndex.drawer + 1,
+ 
   },
 
   appBarUnShift: {
-    zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
   },
 
-  appBarShift: (props) => ({
-    marginLeft: props.drawerWidth,
-    width: `calc(100% - ${props.drawerWidth}px)`,
+  appBarShift:{
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-  }),
+  },
 }));
 
 export default function Header({ drawerWidth, onToggleDrawer, open }) {

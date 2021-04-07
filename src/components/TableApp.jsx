@@ -1,7 +1,7 @@
 /* eslint-disable no-loop-func */
-import { Chip } from "@material-ui/core";
+import { Chip,Link } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {  Outlet, useNavigate } from "react-router-dom";
 import ColorsApp from "../common/colors";
 import PropTypes from "prop-types";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -11,7 +11,6 @@ const useStyles = makeStyles((themes) => ({
     textAlign: "center",
   },
 }));
-
 const TableApp = ({
   pagination,
   perPage,
@@ -28,6 +27,8 @@ const TableApp = ({
 }) => {
   const classes = useStyles();
   const themes = useTheme();
+  const navigate = useNavigate();
+
   const [state, setState] = useState({
     //paging
     data: [],
@@ -144,18 +145,21 @@ const TableApp = ({
           ))}
           {/* render link */}
           {state.showLink ? (
-            <th style={{ flex: 1 }} className={classes.cell}>
-              <Link
-                key={item.id}
-                to={{
-                  pathname: path + "/" + i+"0x001",
-                  deviceId: item.id,
-                }}
-              >
-                See Detail
-              </Link>
+            <th
+              style={{ flex: 1 }}
+              className={classes.cell}
+              onClick={() => {
+                navigate(path, {
+                  state: {
+                    deviceId: item.id,
+                  },
+                });
+              }}
+            >
+              <Link>See Detail</Link>
             </th>
           ) : null}
+          <Outlet />
         </tr>
       ));
     return null;

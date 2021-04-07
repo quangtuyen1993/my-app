@@ -20,9 +20,16 @@ import {
   faBinoculars,
   faRadiationAlt,
   faInfoCircle,
-  faArrowDown,
   faArrowCircleDown,
   faChevronDown,
+  faAddressCard,
+  faCogs,
+  faUserCog,
+  faUserMinus,
+  faCog,
+  faKey,
+  faPersonBooth,
+  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -43,13 +50,19 @@ library.add(
   faChartLine,
   faInfo,
   faSignOutAlt,
-faInfoCircle,
+  faInfoCircle,
   faBroadcastTower,
   faChartLine,
   faRadiationAlt,
   faCalendar,
   faArrowCircleDown,
-  faChevronDown
+  faChevronDown,
+  faAddressCard,
+  faUserCog,
+  faUserMinus,
+  faCogs,
+  faKey,
+  faUsers,
 );
 
 export const PUBLIC_ICON =
@@ -79,10 +92,17 @@ const IconApp = {
   INFO: faInfoCircle,
   SIGN_OUT: faSignOutAlt,
   BROADCAST_TOWER: faBroadcastTower,
-  SCHEDULER_TASK:faCalendar,
+  SCHEDULER_TASK: faCalendar,
   RATIO: faRadiationAlt,
   TREND_24_HOURS: faChartBar,
   TABLE: faBinoculars,
-  ARROW_DOWN:faChevronDown
+  ARROW_DOWN: faChevronDown,
+  ACCOUNT: faAddressCard,
+  UPDATE:faUserCog,
+  REMOVE:faUserMinus,
+  CONFIG:faCogs,
+  SECURITY:faKey,
+  PERSON:faPersonBooth,
+  USERS:faUsers
 };
 export default IconApp;

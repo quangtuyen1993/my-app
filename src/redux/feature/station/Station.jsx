@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import IconApp from "../../../common/icons";
 import IconNotify from "../IconNotify";
 import { fetchStation, onSelected } from "./station.slice";
+
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -52,13 +53,15 @@ export default function Station(props) {
   const theme = useTheme();
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+
   const dispatch = useDispatch();
   const { stations, stationSelected } = useSelector(
     (state) => state.stationReducer
   );
+  const { isLoginComplete } = useSelector((state) => state.authorReducer);
 
   const [state, setState] = useState({
-    selected: "",
+    selected: {},
   });
 
   useEffect(() => {
@@ -67,9 +70,10 @@ export default function Station(props) {
     });
   }, [stationSelected]);
 
+
   useEffect(() => {
-    dispatch(fetchStation());
-  }, [dispatch]);
+    if (isLoginComplete) dispatch(fetchStation());
+  }, [dispatch, isLoginComplete]);
 
   const onChange = (e) => {
     setState((pre) => ({
@@ -120,7 +124,7 @@ export default function Station(props) {
             <Box>
               {stations.length !== 0 && (
                 <Typography style={{ textAlign: "center" }} variant="subtitle1">
-                  {stations.find((item) => item.id === stationSelected).name}
+                  {stationSelected.name}
                 </Typography>
               )}
             </Box>
@@ -157,7 +161,7 @@ export default function Station(props) {
                 onChange={onChange}
               >
                 {stations.map((sta, index) => (
-                  <MenuItem key={sta.id} value={sta.id}>
+                  <MenuItem key={sta.id} value={sta}>
                     {sta.name}
                   </MenuItem>
                 ))}

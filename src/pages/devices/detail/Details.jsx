@@ -8,19 +8,21 @@ import {
   LinearProgress,
   Typography,
   useTheme,
-  withStyles
+  withStyles,
 } from "@material-ui/core";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router";
+import { Outlet, useLocation, useNavigate } from "react-router";
 import ColorsApp from "../../../common/colors";
 import IconApp from "../../../common/icons";
 import CardLayout from "../../../common/layouts/CardLayout";
+import MDatePicker from "../../../components/MDatePicker";
 import TableApp from "../../../components/TableApp";
 import DeviceService from "../../../service/device.service";
 import { CookieManger } from "../../../utils/CookieManager";
-import PowerTrend from "../../dashboards/components/PowerTrend";
-
+import GraphLineApp from "../../../components/GraphLineApp";
+import moment from "moment";
+import DataTrendParser from "../../../utils/DataTrenParser";
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
     height: 10,
@@ -37,21 +39,35 @@ const BorderLinearProgress = withStyles((theme) => ({
   },
 }))(LinearProgress);
 
-export default function DetailScreen(props) {
-  let location = useLocation();
+export default function DetailScreen() {
   const theme = useTheme();
   const timer = useRef(null);
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const history = useHistory();
+  const history = useNavigate();
 
   const [state, setState] = useState({
     mttp: [],
     phases: [],
     general: [],
     deviceId: "",
-    stationSelected: -1,
+    tableName: "",
+    stationSelected: null,
     temp: {},
+
+    dataTrend: [],
+    dateFrom: moment().startOf("day"),
+    dateTo: moment().endOf("day"),
   });
+
+  const handleChangeDate = (from, to) => {
+    setState((pre) => {
+      return {
+        ...pre,
+        dateFrom: from,
+        dateTo: to,
+      };
+    });
+  };
 
   useEffect(() => {
     if (stationSelected !== undefined) {
@@ -61,17 +77,16 @@ export default function DetailScreen(props) {
       }));
     }
     if (
-      state.stationSelected !== -1 &&
+      state.stationSelected !== null &&
       state.stationSelected !== stationSelected
     ) {
-      history.goBack();
+      // navigator
     }
   }, [history, state.stationSelected, stationSelected]);
+  let location = useLocation();
 
-
-  
   useEffect(() => {
-    let { deviceId } = location;
+    let { deviceId } = location.state;
     if (deviceId === undefined) {
       deviceId = CookieManger.getCurrentDevice();
     } else {
@@ -82,63 +97,83 @@ export default function DetailScreen(props) {
       ...pre,
       deviceId: deviceId,
     }));
-  }, [location]);
+  }, [location.state]);
+
+  const onFetchData = useCallback(async () => {
+    var mppt = [];
+    var phases = [];
+    var general = [];
+
+    var obj = await DeviceService.fetchInverterDetail(state.deviceId);
+    var fields = Object.keys(obj);
+    console.log("detail", fields);
+    fields.forEach((f) => {
+      if (f === "tableName") {
+        setState((pre) => ({
+          ...pre,
+          tableName: obj[f],
+        }));
+      } else if (f.includes("mppt") || f.includes("mptt")) {
+        filterMPPT(f, obj, mppt);
+      } else if (
+        f.includes("ab", 0) ||
+        f.includes("bc", 0) ||
+        f.includes("ca", 0) ||
+        f.includes("phase")
+      ) {
+        filterPhase(f, obj, phases);
+      } else {
+        filterGeneral(f, obj, general);
+      }
+    });
+
+    var generalShow = [].concat(general).sort((a, b) => {
+      return a.type.priority > b.type.priority ? 1 : -1;
+    });
+
+    setState((pre) => ({
+      ...pre,
+      mttp: mppt,
+      phases: phases,
+      general: generalShow,
+    }));
+  }, [state.deviceId]);
+
+  const onFetchDataTrend = useCallback(async () => {
+    if (state.tableName === "") return;
+    var data = await DeviceService.fetchDataPowerMeterInverter({
+      fromDate: state.dateFrom,
+      toDate: state.dateTo,
+      tableName: state.tableName,
+    });
+    console.info("Details", data);
+    var cols = DataTrendParser.parserTrend(data.columns, data.rows);
+    setState((pre) => ({
+      ...pre,
+      dataTrend: cols,
+    }));
+  }, [state.dateFrom, state.dateTo, state.tableName]);
 
   useEffect(() => {
     if (state.deviceId === "" || state.deviceId === undefined) return;
-    const onFetchData = async () => {
-      var mppt = [];
-      var phases = [];
-      var general = [];
-      var obj = await DeviceService.fetchInverterDetail(state.deviceId);
-      var fields = Object.keys(obj);
-      fields.forEach((f) => {
-        if (f.includes("mppt") || f.includes("mptt")) {
-          filterMPPT(f, obj, mppt);
-        } else if (
-          f.includes("ab", 0) ||
-          f.includes("bc", 0) ||
-          f.includes("ca", 0) ||
-          f.includes("phase")
-        ) {
-          filterPhase(f, obj, phases);
-        } else {
-          filterGeneral(f, obj,general);
-        }
-      });
-
-      var generalShow = [].concat(general).sort((a, b) => {
-        return a.type.priority > b.type.priority ? 1 : -1;
-      });
-
-      setState((pre) => ({
-        ...pre,
-        mttp: mppt,
-        phases: phases,
-        general: generalShow,
-      }));
-    };
-
-    if(timer.current!==undefined) clearInterval(timer.current)
-
+    if (timer.current !== undefined) clearInterval(timer.current);
     onFetchData();
+    onFetchDataTrend();
     timer.current = setInterval(() => {
       onFetchData();
+      onFetchDataTrend();
     }, 10000);
 
-
-
-    return (()=>{
-      clearInterval(timer.current)
-    })
-
-  }, [state.deviceId]);
+    return () => {
+      clearInterval(timer.current);
+    };
+  }, [onFetchData, onFetchDataTrend, state.deviceId]);
 
   return (
     <Container disableGutters direction="row" maxWidth={false}>
       <Grid container spacing={2}>
         <Grid item sm={12}>
-          <CardLayout title="General Info" >
+          <CardLayout title="General Info">
             <Grid
               container
               spacing={2}
@@ -224,9 +259,26 @@ export default function DetailScreen(props) {
         </Grid>
 
         <Grid item sm={12}>
-          <PowerTrend />
+          <CardLayout icon={IconApp.RATIO} title="24h Power Trend">
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12} md={6} lg={6}>
+                <MDatePicker
+                  isSingleDate={true}
+                  onRangeDateChange={handleChangeDate}
+                />
+              </Grid>
+            </Grid>
+
+            <GraphLineApp
+              minDate={state.dateFrom}
+              maxDate={state.dateTo}
+              type="HourInDate"
+              data={state.dataTrend}
+            />
+          </CardLayout>
         </Grid>
       </Grid>
+      <Outlet />
     </Container>
   );
 }

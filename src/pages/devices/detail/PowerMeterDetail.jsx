@@ -11,7 +11,7 @@ export default function PowerMeterDetail() {
   });
 
   useEffect(() => {
-    let { deviceId } = location;
+    let { deviceId } = location.state;
     if (deviceId === undefined) {
       deviceId = CookieManger.getCurrentDevicePowerMeter();
     } else {
@@ -39,7 +39,7 @@ export default function PowerMeterDetail() {
 
   return (
     <div style={{ height: "100vh", color: "red", width: "100%" }}>
-      {JSON.stringify(location)}
+      {JSON.stringify(state.pws)}
     </div>
   );
 }

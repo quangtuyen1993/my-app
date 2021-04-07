@@ -9,12 +9,12 @@ const axiosApp = axios.create({
 });
 
 axiosApp.interceptors.request.use((request) => {
-  console.log("Starting Request", JSON.stringify(request, null, 2));
+  // console.log("Starting Request", JSON.stringify(request, null, 2));
   return request;
 });
 
 axiosApp.interceptors.response.use((response) => {
-  console.log("Response:", JSON.stringify(response, null, 2));
+  // console.log("Response:", JSON.stringify(response, null, 2));
   return response;
 });
 

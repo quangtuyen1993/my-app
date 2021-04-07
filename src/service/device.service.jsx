@@ -1,6 +1,8 @@
 import {
   URL_DEVICES,
   URL_DEVICES_DETAIL,
+  URL_HISTORICAL,
+  URL_MCCB,
   URL_POWER_METER,
   URL_POWER_METER_DETAIL,
   URL_SENSOR,
@@ -37,10 +39,27 @@ const DeviceService = {
   },
 
   fetchAllPowerMeterDetail: async (idPowerMeter) => {
-    let response = await AxiosAuthor.get(URL_POWER_METER_DETAIL, {
+    let response = await AxiosAuthor.post(URL_POWER_METER_DETAIL, {
       id: idPowerMeter,
     });
     return response.data;
+  },
+
+  fetchAllMCCB: async (idStation) => {
+    let response = await AxiosAuthor.post(URL_MCCB, {
+      stationId: idStation,
+    });
+    return response.data;
+  },
+
+  fetchDataPowerMeterInverter: async ({fromDate, toDate, tableName}) => {
+    var data = await AxiosAuthor.post(URL_HISTORICAL, {
+      fromTime: fromDate,
+      toTime: toDate,
+      tableName: tableName,
+      columns: ["total_active_power", "Radiation"],
+    });
+    return data.data;
   },
 };
 export default DeviceService;

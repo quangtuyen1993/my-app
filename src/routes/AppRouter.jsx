@@ -1,45 +1,50 @@
 import React from "react";
 import {
   BrowserRouter as Router,
-  Redirect,
+  Navigate,
   Route,
-  Switch,
+  Routes,
+  useLocation,
 } from "react-router-dom";
-import LoginScreen from "../pages/Login";
-import MainLayout from "../common/layouts/main/MainLayout";
 import DefaultLayout from "../common/layouts/DefaultLayout";
+import MainLayout from "../common/layouts/main/MainLayout";
+import LoginScreen from "../pages/Login";
 import NotFound from "../pages/NotFound";
 import PrivateRoute from "./PrivateRouter";
 import { PRIVATE, RouterList } from "./Routes";
 export default function AppRouter(props) {
   return (
     <Router>
-      <Switch>
-        <Route exact path="/login">
-          <DefaultLayout>
-            <Route exact path="/login" component={LoginScreen} />
-          </DefaultLayout>
-        </Route>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <DefaultLayout>
+              <LoginScreen />
+            </DefaultLayout>
+          }
+        />
 
-        <Route exact path="/">
-          <Redirect to="/home" />
+        <Route path="/">
+          <Navigate to="/home" />
         </Route>
 
         {RouterList.filter((item) => item.priority === PRIVATE).map((item) => (
-          <Route exact key={item.id} path={item.path}>
+          <PrivateRoute key={item.id} path={item.path}>
+            
+
             {item.child.map((child) => (
               <PrivateRoute
                 key={child.id}
-                exact
                 layout={MainLayout}
                 path={child.path}
-                component={child.component}
+                element={child.component}
               />
             ))}
-          </Route>
+          </PrivateRoute>
         ))}
-        <Route path="*" component={NotFound} />
-      </Switch>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </Router>
   );
 }

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { useEffect, useRef, useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ColorsApp from "../../../common/colors";
 import IconApp from "../../../common/icons";
@@ -24,9 +24,11 @@ const useStyles = makeStyles((themes) => ({
 
 export default function Overview() {
   const classes = useStyles();
-  const theme = useTheme();
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const { jwtToken } = useSelector((state) => state.authorReducer.userProfile);
+
+  const { jwtToken, isLoginComplete } = useSelector(
+    (state) => state.authorReducer.userProfile
+  );
   const timer = useRef(null);
   const [state, setState] = useState({
     listPr: [],
@@ -35,8 +37,8 @@ export default function Overview() {
     values: [1, 1, 1],
   });
 
-  const onFetchData = async () => {
-    var response = await OverviewService.fetchOverview(stationSelected);
+  const onFetchData = useCallback(async () => {
+    var response = await OverviewService.fetchOverview(stationSelected.id);
     var dataNormal = [];
     response.forEach((item) => {
       let obj = createItem(item);
@@ -46,29 +48,23 @@ export default function Overview() {
       ...pre,
       listItem: dataNormal,
     }));
-  };
-
-  let timeRun = 1;
+  }, [stationSelected.id]);
 
   useEffect(() => {
     if (timer !== null) {
       clearInterval(timer.current);
     }
-
-    if (jwtToken === "" || stationSelected === undefined) return;
-
     onFetchData();
 
     timer.current = setInterval(async () => {
-      timeRun++;
-      console.log("run timer", timeRun);
+      console.info("overview run timer")
       onFetchData();
-    }, 3000);
+    }, 10000);
 
     return () => {
       clearInterval(timer.current);
     };
-  }, [jwtToken, stationSelected]);
+  }, [onFetchData, stationSelected]);
 
   const renderItem = (item, index) => {
     return (
@@ -140,7 +136,11 @@ export default function Overview() {
         </Grid>
 
         <Grid item lg={12} sm={12} md={12} xs={12}>
-          <CardLayout title="PR Radio" icon={IconApp.CALC} className={classes.root}>
+          <CardLayout
+            title="PR Radio"
+            icon={IconApp.CALC}
+            className={classes.root}
+          >
             <Grid container spacing={2}>
               {state.listPr.map((item, index) => renderCircle(item, index))}
             </Grid>

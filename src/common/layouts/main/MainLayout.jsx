@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { onRefreshToken } from "../../../redux/feature/user/user.slice";
 import { CookieManger } from "../../../utils/CookieManager";
 import Drawer from "./Drawer";
@@ -9,14 +9,14 @@ import Main from "./Main";
 
 const drawWidth = 240;
 
-export default function MainLayout(props) {
+export default function MainLayout({children,location,navigate}) {
   const [open, setOpen] = useState(false);
 
   const { isLoading, isError, isLoginComplete } = useSelector(
     (state) => state.authorReducer
   );
   const dispatch = useDispatch();
-  const history = useHistory();
+  const history = useNavigate();
 
   const onRefresh = () => {
     dispatch(onRefreshToken());
@@ -25,11 +25,11 @@ export default function MainLayout(props) {
   useEffect(() => {
     var refreshToken = CookieManger.GetRefreshCookie();
     if (refreshToken === undefined) {
-      history.push("/login");
+      history("/login");
       return;
     }
     if (!isLoading && isError) {
-      history.push("/login");
+      history("/login");
       return;
     }
     if (!isLoading && !isLoginComplete) {
@@ -47,14 +47,10 @@ export default function MainLayout(props) {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-      }}
-    >
+    <div>
       <Header drawerWidth={drawWidth} open={open} onToggleDrawer={onToggle} />
       <Drawer drawerWidth={drawWidth} open={open} onClose={onClose} />
-      {isLoginComplete && <Main>{props.children}</Main>}
+      {isLoginComplete && <Main>{children}</Main>}
     </div>
   );
 }

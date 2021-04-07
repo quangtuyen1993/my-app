@@ -1,25 +1,21 @@
 import React from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Route, useLocation, useNavigate } from "react-router-dom";
 import { CookieManger } from "../utils/CookieManager";
 
-const PrivateRoute = ({ component: Component, layout: Layout, ...rest }) => {
-  const refreshToken = CookieManger.GetRefreshCookie()
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const refreshToken = CookieManger.GetRefreshCookie();
+  const navigate = useNavigate();
   let isCheck = refreshToken !== undefined;
+  const location = useLocation();
+
   return (
     <Route
       {...rest}
       render={(props) =>
         isCheck ? (
-          <Layout>
-            <Component {...props} />
-          </Layout>
+          <Component {...props} navigate={navigate} location={location} />
         ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: props.location },
-            }}
-          />
+          navigate("login")
         )
       }
     />

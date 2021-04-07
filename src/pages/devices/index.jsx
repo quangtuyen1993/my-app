@@ -1,4 +1,5 @@
-import { Container, Grid } from "@material-ui/core";
+import { Chip, Container, Grid } from "@material-ui/core";
+import { green, red } from "@material-ui/core/colors";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
@@ -21,7 +22,7 @@ export default function DeviceScreen() {
   useEffect(() => {
     const onFetchData = async () => {
       var inverters = await DeviceService.fetchAllInverterDevice(
-        stationSelected
+        stationSelected.id
       );
       setState((pre) => ({
         ...pre,
@@ -30,7 +31,8 @@ export default function DeviceScreen() {
     };
 
     const onFetchSensorService = async () => {
-      var sensors = await DeviceService.fetchAllSensor(stationSelected);
+      var sensors = await DeviceService.fetchAllSensor(stationSelected.id);
+      console.info(sensors);
       setState((pre) => ({
         ...pre,
         Sensors: sensors,
@@ -42,18 +44,25 @@ export default function DeviceScreen() {
     }
 
     const onFetchPowerMeter = async () => {
-      var powerMeters = await DeviceService.fetchAllPowerMeter(stationSelected);
+      var powerMeters = await DeviceService.fetchAllPowerMeter(
+        stationSelected.id
+      );
+      console.info("POWER", powerMeters);
       setState((pre) => ({
         ...pre,
         Power_meters: powerMeters,
       }));
     };
 
+    const onFetchMCCB = async () => {
+      var mccbs = await DeviceService.fetchAllMCCB(stationSelected.id);
+      console.log(mccbs);
+    };
+
     onFetchData();
     onFetchSensorService();
     onFetchPowerMeter();
-
-
+    onFetchMCCB();
     interval.current = setInterval(() => {
       onFetchData();
       onFetchSensorService();
@@ -61,7 +70,7 @@ export default function DeviceScreen() {
     }, 10000);
     return () => {
       clearInterval(interval.current);
-    }
+    };
   }, [stationSelected]);
 
   return (
@@ -79,6 +88,26 @@ export default function DeviceScreen() {
                     fieldTitle={["Name", "Status", "Operate"]}
                     showLink={true}
                     path="/device/inverter"
+                    chipComponent={(item, f) => {
+                      var color = "";
+
+                      switch (item[f]) {
+                        case "danger":
+                          color = red[500];
+                          break;
+                        default:
+                          color = green[500];
+                      }
+                      return (
+                        <Chip
+                          label={item[f]}
+                          style={{
+                            backgroundColor: color,
+                            color:"white"
+                          }}
+                        />
+                      );
+                    }}
                     maxLength={Math.max(
                       state.Inverters.length,
                       state.MCCB_ABC.length
@@ -106,7 +135,7 @@ export default function DeviceScreen() {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout  icon={IconApp.TABLE} title="POWER_METER">
+                <CardLayout icon={IconApp.TABLE} title="POWER_METER">
                   <TableApp
                     data={state.Power_meters}
                     chipField={["status"]}
@@ -117,12 +146,12 @@ export default function DeviceScreen() {
                   />
                 </CardLayout>
               </Grid>
-              <Grid  item xs={12} sm={12} md={6}>
+              <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="Sensors">
                   <TableApp
                     data={state.Sensors}
-                    chipField={["sensorType"]}
-                    field={["name", "sensorType"]}
+                    chipField={["status"]}
+                    field={["name", "status"]}
                     fieldTitle={["Name", "Status"]}
                   />
                 </CardLayout>

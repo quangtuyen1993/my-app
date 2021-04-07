@@ -14,3 +14,19 @@
       stroke-dashoffset: 0;
     }
   }
+
+  .container {
+    display: flex;
+  }
+  
+  .horizontally-scrolled-items {
+    display: flex;
+    width: 100%;
+    background: lightblue;
+    overflow-x: scroll;
+  }
+  .item {
+    min-width: 400px;
+    flex-grow: 1;
+    border: 1px solid blue;
+  }

@@ -1,4 +1,4 @@
-import { Container, Grid } from "@material-ui/core";
+import { Container, CssBaseline, Grid } from "@material-ui/core";
 import CardLayout from "../../common/layouts/CardLayout";
 import TableApp from "../../components/TableApp";
 
@@ -12,7 +12,6 @@ export default function SystemInfoScreen() {
               <TableApp 
                 data={data} 
                 field={["Name","Value"]}
-                index={false}
                 />
             </CardLayout>
           </Grid>

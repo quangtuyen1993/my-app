@@ -5,7 +5,6 @@ import { refreshHeader } from "../../../utils/AxiosAuthor";
 import { CookieManger } from "../../../utils/CookieManager";
 import { URL_LOGIN, URL_REFRESH_TOKEN, URL_REVOKE_TOKEN } from "../../URL";
 const init = {
-  // isSuccess: false,
   isError: false,
   isLoading: false,
   isSuccess: false,

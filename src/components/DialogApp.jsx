@@ -1,18 +1,25 @@
-import { Typography } from "@material-ui/core";
+import {
+  Box,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
+import {
+  Fingerprint,
+  Lock,
+  Person,
+  SupervisorAccount,
+} from "@material-ui/icons";
+import PropTypes from "prop-types";
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import IconNotify from "../redux/feature/IconNotify";
-import { fetchStation } from "../redux/feature/station/station.slice";
+import { useForm } from "react-hook-form";
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -34,77 +41,140 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.secondary.main,
       icon: {
-        color: "white !importain",
+        color: "white !important",
       },
     },
   },
 }));
 
-export default function DialogApp(props) {
+export default function DialogApp({
+  userDefault,
+  onSubmit,
+  handleClose,
+  open,
+}) {
   const theme = useTheme();
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [device, setDevice] = React.useState(1);
 
-  const dispatch = useDispatch();
-
+  const onHandleSubmit = (data) => {
+    alert(JSON.stringify(data));
+  };
+  //handler form
+  const { handleSubmit, register, setValue, errors, getValues } = useForm({
+    mode: "onBlur",
+    shouldUnregister: false,
+  });
   useEffect(() => {
-    dispatch(fetchStation());
-  }, [dispatch]);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleDevice = (e) => {
-    setDevice(e.target.value);
-  };
+    setValue("username", userDefault.username);
+    setValue("role", userDefault.role);
+  }, [setValue, userDefault]);
+  const DarkerDisabledTextField = withStyles({
+    root: {
+      marginRight: 8,
+      "& .MuiInputBase-root.Mui-disabled": {
+        color: "rgba(0, 0, 0, 1)",
+        backgroundColor: "white",
+      },
+    },
+  })(TextField);
 
   return (
     <>
-      <IconNotify
-        handleClickOpen={handleClickOpen}
-        tooltip={"Current device:" + device}
-      />
       <Dialog fullWidth maxWidth={"xs"} open={open} onClose={handleClose}>
-        <DialogTitle
-          disableTypography
-          style={{ backgroundColor: theme.palette.primary.main }}
-          id="max-width-dialog-title"
-        >
-          <Typography variant="h5">Station</Typography>
-        </DialogTitle>
-        <DialogContent>
-          <form className={classes.form} noValidate>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="max-width">Choose Device</InputLabel>
-              <Select
-                fullWidth
-                autoFocus
-                value={device}
-                onChange={handleDevice}
-              >
-                <MenuItem value={1}>Device 1</MenuItem>
-                <MenuItem value={2}>Device 2</MenuItem>
-                <MenuItem value={3}>Device 3</MenuItem>
-                <MenuItem value={4}>Device 4</MenuItem>
-              </Select>
-            </FormControl>
-          </form>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Open
-          </Button>
+        <form>
+          <DialogTitle
+            disableTypography
+            style={{ backgroundColor: theme.palette.primary.main }}
+            id="max-width-dialog-title"
+          >
+            <Typography variant="h6">Update Client Account</Typography>
+          </DialogTitle>
 
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
+          <DialogContent>
+            <Box p={2}>
+              <Grid spacing={2} container direction="column">
+                <Grid item>
+                  <DarkerDisabledTextField
+                    disabled
+                    label="Username"
+           
+                    fullWidth
+                    name="username"
+                    inputRef={register}
+                    variant="outlined"
+                    placeholder="Username"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Person color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+
+                <Grid item>
+                  <DarkerDisabledTextField
+                    disabled
+                
+                    label="Role"
+                    fullWidth
+                    name="role"
+                    inputRef={register}
+                    variant="outlined"
+                    placeholder="role"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SupervisorAccount color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    autoFocus
+                    label="Password"
+                    fullWidth
+                    name="password"
+                    inputRef={register}
+                    variant="outlined"
+                    error={errors.username ? true : false}
+                    placeholder="Update Password"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Lock color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Box>
+          </DialogContent>
+
+          <DialogActions>
+            <Button
+              variant="outlined"
+              onClick={handleSubmit(onHandleSubmit)}
+              color="primary"
+            >
+              Apply
+            </Button>
+
+            <Button variant="outlined" onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </>
   );
 }
+
+DialogApp.propTypes = {
+  handleClose: PropTypes.func,
+  open: PropTypes.bool,
+  onSubmit: PropTypes.func,
+};

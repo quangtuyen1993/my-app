@@ -35,7 +35,15 @@ const CardLayout = (props) => {
   const themes = useTheme();
   return (
     <>
-      <Card variant="elevation" style={{ height: "100%" }}>
+      <Card
+        variant="elevation"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          minHeight: props.minHeight ? props.minHeight : "auto",
+        }}
+      >
         <CardHeader
           component={() => (
             <div>
@@ -64,7 +72,14 @@ const CardLayout = (props) => {
           )}
         />
         <Divider style={{ backgroundColor: themes.palette.primary.main }} />
-        <CardContent>{props.children}</CardContent>
+        <CardContent
+          style={{
+            height: "100%",
+            flexGrow: 1,
+          }}
+        >
+          {props.children}
+        </CardContent>
       </Card>
     </>
   );

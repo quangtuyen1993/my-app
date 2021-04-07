@@ -33,9 +33,13 @@ export default function MDatePicker(props) {
 
     useEffect(() => {
         if (props.onRangeDateChange !== undefined) {
-            props.onRangeDateChange(selectedFrom, selectedTo)
+            var dateFrom=moment(selectedFrom).format("yyyy-MM-DD HH:mm:ss")
+            var dateTo=moment(selectedTo).format("yyyy-MM-DD HH:mm:ss")
+            console.log("DATE INFO " +dateFrom,dateTo)
+            props.onRangeDateChange(dateFrom, dateTo)
         }
     }, [selectedFrom, selectedTo])
+
 
     const onDateChangeFrom = (date, value) => {
         var dateFrom = DateUtils.setHourBeginOfDate(date)
@@ -44,7 +48,7 @@ export default function MDatePicker(props) {
     }
 
     const onDateChangeTo = (date, value) => {
-        if (!isSingleDate) {
+        if (isSingleDate) {
             onDateChangeFrom(date, value)
         }
         var dateTo = DateUtils.setHourEndDay(date)

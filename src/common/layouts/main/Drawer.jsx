@@ -8,7 +8,7 @@ import {
   ListItemText,
   makeStyles,
   Typography,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
@@ -17,13 +17,12 @@ import LogOutIcon from "../../../redux/feature/user/LogOutIcon";
 import { RouterList } from "../../../routes/Routes";
 
 const DrawerApp = ({ drawerWidth, open, onClose }) => {
-  const theme=useTheme()
+  const theme = useTheme();
   const useStyle = makeStyles((theme) => ({
     paper: {
       background: theme.palette.secondary.main,
     },
     drawer: {
-      width: drawerWidth,
       flexShrink: 0,
       whiteSpace: "nowrap",
     },
@@ -90,14 +89,21 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
                   <Box paddingLeft={1}>
                     <FontAwesomeIcon
                       icon={route.iconItem}
-                      style={{ fontSize: "24", textAlign: "center",color:"#ffffff" }}
+                      style={{
+                        fontSize: "24",
+                        textAlign: "center",
+                        color: "#ffffff",
+                      }}
                     />
                   </Box>
                 </ListItemIcon>
                 <ListItemText
                   disableTypography
                   primary={
-                    <Typography variant="subtitle1" style={{ color: "#ffffff",fontWeight:"normal" }}>
+                    <Typography
+                      variant="subtitle1"
+                      style={{ color: "#ffffff", fontWeight: "normal" }}
+                    >
                       {route.name}
                     </Typography>
                   }

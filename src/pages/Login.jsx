@@ -7,7 +7,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import Colors from "../common/colors";
 import { PUBLIC_ICON } from "../common/icons";
 import { onLogin, refreshLogin } from "../redux/feature/user/user.slice";
@@ -34,7 +34,7 @@ export default function LoginScreen(props) {
   const classes = useStyles(props);
   const dispatch = useDispatch();
 
-  const history = useHistory();
+  const history = useNavigate();
   const { handleSubmit, register, errors } = useForm({
     defaultValues,
     mode: "onBlur",
@@ -44,7 +44,7 @@ export default function LoginScreen(props) {
   );
 
   const dispatchToHome = useCallback(() => {
-    history.push("/home");
+    history("/home");
   }, [history]);
 
   //call when login start
