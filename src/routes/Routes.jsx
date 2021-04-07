@@ -187,7 +187,7 @@ export const RouterList = [
   {
     id: 99,
     iconItem: IconApp.ACCOUNT,
-    name: "System info",
+    name: "Account Manager",
     linkTo: "/account",
     path: "/account",
     priority: PRIVATE,

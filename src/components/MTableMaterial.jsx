@@ -1,14 +1,18 @@
 import {
   Box,
+  InputAdornment,
+  makeStyles,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TablePagination,
   TableRow,
+  TextField,
+  useMediaQuery,
   useTheme,
   withStyles,
 } from "@material-ui/core";
+import { Search } from "@material-ui/icons";
 import Pagination from "@material-ui/lab/Pagination";
 import React, { useEffect, useState } from "react";
 const StyledTableCell = withStyles((theme) => ({
@@ -16,7 +20,7 @@ const StyledTableCell = withStyles((theme) => ({
     border: "1px solid white",
   },
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: theme.palette.secondary.main,
     color: theme.palette.common.white,
     textAlign: "center",
   },
@@ -34,62 +38,71 @@ const StyledTableRow = withStyles((theme) => ({
   },
 }))(TableRow);
 
-const MTableMaterial = ({ dataSource, fieldArray, controls, rowsPerPage }) => {
+const useStyle = makeStyles((theme) => ({
+  box: {},
+}));
+
+const MTableMaterial = ({
+  dataSource,
+  fieldArray,
+  addControlColumns,
+  rowsPerPage,
+  showSearch,
+}) => {
+  const theme = useTheme();
+  const classes = useStyle();
+  const matchesDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchesDownMD = useMediaQuery(theme.breakpoints.down("md"));
+
   const [state, setState] = useState({
-    fields: [],
     renderControl: null,
     percentW: 0,
-
     page: 1,
     dataShow: [],
     emptyRows: 0,
     count: 1,
+    additionalFields: [],
+    search: "",
   });
 
   useEffect(() => {
-    var sumField = [...fieldArray];
-    if (controls) {
-      sumField.push("Controls");
+    var additionalFields = [];
+    if (addControlColumns) {
+      addControlColumns.forEach((item) => {
+        additionalFields.push(item.name);
+      });
     }
-    var w = Math.round(100 / sumField.length);
-
+    var sumCols = additionalFields.length + fieldArray.length;
+    var w = Math.round(100 / sumCols);
     setState((pre) => ({
       ...pre,
-      fields: sumField,
+      additionalFields: additionalFields,
       percentW: w,
     }));
-  }, [controls, fieldArray]);
+  }, [addControlColumns, fieldArray]);
 
+  //pagingnation
   useEffect(() => {
     var mPerPage = rowsPerPage ? rowsPerPage : dataSource.length;
     var startIndex = (state.page - 1) * mPerPage;
     var endIndex = state.page * mPerPage;
-    var mDataShow = dataSource.slice(startIndex, endIndex);
+    var dataFilter = dataSource.filter((item) =>
+      fieldArray.find((f) => {
+        return item[f].toUpperCase().includes(state.search.toUpperCase());
+      })
+    );
+    var count = Math.ceil(dataFilter.length / rowsPerPage);
+    var mDataShow = dataFilter.slice(startIndex, endIndex);
+
     setState((pre) => ({
       ...pre,
       dataShow: mDataShow,
-    }));
-  }, [dataSource, rowsPerPage, state.page]);
-
-  useEffect(() => {
-    var count = Math.ceil(dataSource.length / rowsPerPage);
-    setState((pre) => ({
-      ...pre,
       count: count,
     }));
-  }, [dataSource.length, rowsPerPage]);
-
-  // useEffect(() => {
-  //   if (!state.dataShow) return;
-  //   const emptyRows = rowsPerPage - state.dataShow.length;
-  //   setState((pre) => ({
-  //     ...pre,
-  //     emptyRows: emptyRows,
-  //   }));
-  // }, [state.dataShow]);
+  }, [dataSource, fieldArray, rowsPerPage, state.page, state.search]);
 
   const renderControl = (user) => {
-    return controls(user);
+    return addControlColumns.map((item, index) => item.component(user, index));
   };
 
   const handleChangePage = (e, newPage) => {
@@ -99,71 +112,102 @@ const MTableMaterial = ({ dataSource, fieldArray, controls, rowsPerPage }) => {
     }));
   };
 
+  const handleChangeText = (e) => {
+    setState((pre) => ({
+      ...pre,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   return (
     <Box style={{ overflowX: "auto" }}>
-      <Table style={{ border: "1px rgba(0,0,0,0.2) solid" }}>
-        <TableHead>
-          <StyledTableRow>
-            {state.fields &&
-              state.fields.map((item) => (
+      {showSearch && (
+        <Box
+          pt={1}
+          mb={2}
+          className={classes.box}
+          style={{
+            width: !matchesDownMD ? "24%" : !matchesDownSM ? "49.3%" : "100%",
+          }}
+        >
+          <TextField
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search />
+                </InputAdornment>
+              ),
+            }}
+            name="search"
+            value={state.search}
+            onChange={handleChangeText}
+            fullWidth
+            label="Search"
+            variant="outlined"
+            holder="search"
+          />
+        </Box>
+      )}
+
+      <Box mb={2}>
+        <Table style={{ border: "1px rgba(0,0,0,0.4) solid" }}>
+          <TableHead>
+            <StyledTableRow>
+              {fieldArray.map((item) => (
                 <StyledTableCell width={`${state.percentW}%`} key={item}>
                   {item.toUpperCase()}
                 </StyledTableCell>
               ))}
-          </StyledTableRow>
-        </TableHead>
+              {state.additionalFields &&
+                state.additionalFields.map((item) => (
+                  <StyledTableCell width={`${state.percentW}%`} key={item}>
+                    {item.toUpperCase()}
+                  </StyledTableCell>
+                ))}
+            </StyledTableRow>
+          </TableHead>
 
-        <TableBody>
-          {state.dataShow &&
-            state.dataShow.map((dataRow, index) => (
-              <StyledTableRow key={index}>
-                {state.fields.map((f) =>
-                  f === "Controls" ? (
-                    <StyledTableCell key={f}>
-                      <Box
-                        justifyContent="space-between"
-                        alignContent="center"
-                        alignItems="center"
-                        display="flex"
-                        flexDirection="row"
-                        alignSelf="center"
-                      >
-                        {renderControl(dataRow)}
-                      </Box>
-                    </StyledTableCell>
-                  ) : (
+          <TableBody>
+            {state.dataShow &&
+              state.dataShow.map((dataRow, index) => (
+                <StyledTableRow key={index}>
+                  {fieldArray.map((f) => (
                     <StyledTableCell size="small" key={f}>
                       {dataRow[f]}
                     </StyledTableCell>
-                  )
-                )}
-              </StyledTableRow>
-            ))}
-        </TableBody>
-      </Table>
-      {rowsPerPage && (
-        <Pagination
-          count={state.count}
-          onChange={handleChangePage}
-          variant="outlined"
-        />
-      )}
+                  ))}
+                  {state.additionalFields &&
+                    state.additionalFields.map((f, index) => (
+                      <StyledTableCell key={index}>
+                        <Box
+                          justifyContent="space-between"
+                          alignContent="center"
+                          alignItems="center"
+                          display="flex"
+                          flexDirection="row"
+                          alignSelf="center"
+                        >
+                          {renderControl(dataRow)}
+                        </Box>
+                      </StyledTableCell>
+                    ))}
+                </StyledTableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </Box>
 
-      {/* <TablePagination
-        // rowsPerPageOptions={[rowsPerPage]}
-        // component="div"
-        // count={dataSource.length}
-        // rowsPerPage={rowsPerPage}
-        // // page={state.page}
-        // onChangePage={handleChangePage}
-        ActionsComponent={({ count, rowsPerPage, onChangePage }) => (
+      {rowsPerPage && (
+        <Box m={2}>
           <Pagination
-            count={Math.ceil(count / rowsPerPage)}
+            size="large"
+            color="secondary"
+            count={state.count}
             onChange={handleChangePage}
-            variant="outlined"
+            variant="text"
           />
-        )}
-      /> */}
+        </Box>
+      )}
     </Box>
   );
 };

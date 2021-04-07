@@ -268,9 +268,9 @@ export default function AccountScreen(props) {
     );
   };
 
-  const controls = useCallback((user) => {
+  const controls = useCallback((user, index) => {
     return (
-      <>
+      <React.Fragment key={index}>
         <Box flex={1}>
           <IconButton onClick={() => onOpen(user)}>
             <FontAwesomeIcon icon={IconApp.UPDATE} />
@@ -281,12 +281,10 @@ export default function AccountScreen(props) {
             <FontAwesomeIcon icon={IconApp.REMOVE} />
           </IconButton>
         </Box>
-      </>
+      </React.Fragment>
     );
   }, []);
 
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <Container maxWidth={false}>
       <Box mb={2}>
@@ -295,15 +293,11 @@ export default function AccountScreen(props) {
         </CardLayout>
       </Box>
       <Box>
-        <CardLayout
-          title="Client Manager"
-          icon={IconApp.USERS}
-        >
+        <CardLayout title="Client Manager" icon={IconApp.USERS}>
           <MTableMaterial
-            rowsPerPage={2}
             dataSource={state.users}
             fieldArray={["id", "username", "role"]}
-            controls={controls}
+            addControlColumns={[{ name: "Controls", component: controls }]}
           />
         </CardLayout>
       </Box>

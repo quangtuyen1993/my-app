@@ -30,6 +30,7 @@ import {
   faKey,
   faPersonBooth,
   faUsers,
+  faClock,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -63,6 +64,7 @@ library.add(
   faCogs,
   faKey,
   faUsers,
+  faClock
 );
 
 export const PUBLIC_ICON =
@@ -98,11 +100,12 @@ const IconApp = {
   TABLE: faBinoculars,
   ARROW_DOWN: faChevronDown,
   ACCOUNT: faAddressCard,
-  UPDATE:faUserCog,
-  REMOVE:faUserMinus,
-  CONFIG:faCogs,
-  SECURITY:faKey,
-  PERSON:faPersonBooth,
-  USERS:faUsers
+  UPDATE: faUserCog,
+  REMOVE: faUserMinus,
+  CONFIG: faCogs,
+  SECURITY: faKey,
+  PERSON: faPersonBooth,
+  USERS: faUsers,
+  CLOCK: faClock,
 };
 export default IconApp;
