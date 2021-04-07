@@ -1,111 +1,150 @@
-import * as React from "react";
-import Paper from "@material-ui/core/Paper";
-import { ViewState, EditingState } from "@devexpress/dx-react-scheduler";
-import {
-  Scheduler,
-  Resources,
-  MonthView,
-  Appointments,
-  AppointmentTooltip,
-  AppointmentForm,
-  EditRecurrenceMenu,
-  DragDropProvider,
-  DateNavigator,
-  WeekView,
-  Toolbar,
-  ViewSwitcher,
-} from "@devexpress/dx-react-scheduler-material-ui";
-import { appointments, resourcesData } from "./resource";
-export default class Demo extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      resources: [
-        {
-          fieldName: "deviceId",
-          title: "Device",
-          instances: resourcesData,
-        },
-      ],
-    };
-
-    this.commitChanges = this.commitChanges.bind(this);
-  }
-  dataShow = () => {
-    var mList = [];
-    appointments.forEach((item) => {
-      var position = resourcesData.map((rs) => rs.id).indexOf(item.deviceId);
-      var { text } = resourcesData[position];
-      var mObj = { ...item, title: text.toLocaleUpperCase() };
-      mList.push(mObj);
-    });
-    return mList;
+import React from "react";
+import { Box, Button, Container } from "@material-ui/core";
+import CardLayout from "../../common/layouts/CardLayout";
+import IconApp from "../../common/icons";
+import MTableMaterial from "../../components/MTableMaterial";
+import { Edit } from "react-feather";
+const createSchedulerTask = (id, startDate, endDate, deviceId, note) => {
+  return {
+    id: id,
+    startDate: startDate,
+    endDate: endDate,
+    deviceId: deviceId,
+    note: note,
   };
+};
+const listTask = [
+  createSchedulerTask(
+    1,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix update",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    2,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix ",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    3,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    " update",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    4,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix update",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    5,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix ",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    6,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    " update",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    11,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix update",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    22,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix ",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    33,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    " update",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    44,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix update",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    55,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    "fix ",
+    "12",
+    ""
+  ),
+  createSchedulerTask(
+    66,
+    "2021-04-05 00:00:00",
+    "2021-05-05 00:00:00",
+    " update",
+    "12",
+    ""
+  ),
+];
 
-  componentDidMount = () => {
-    var newList = this.dataShow();
-
-    this.setState({
-      data: newList,
-      resources: this.state.resources,
-    });
-  };
-
-  //handle change in scheduler
-  commitChanges({ added, changed, deleted }) {
-    this.setState((state) => {
-      let { data } = state;
-      if (added) {
-        const startingAddedId =
-          data.length > 0 ? data[data.length - 1].id + 1 : 0;
-        data = [...data, { id: startingAddedId, ...added }];
-      }
-      if (changed) {
-        data = data.map((appointment) =>
-          changed[appointment.id]
-            ? { ...appointment, ...changed[appointment.id] }
-            : appointment
-        );
-      }
-      if (deleted !== undefined) {
-        data = data.filter((appointment) => appointment.id !== deleted);
-      }
-      return { data };
-    });
-  }
-
-  render() {
-    const { data, resources } = this.state;
-
+const renderControl = {
+  name: "Controls",
+  component: (data, index) => {
     return (
-      <Paper>
-        <Scheduler data={data}
-        
-      
-        >
-          <ViewState defaultCurrentDate="2017-05-25" />
-          <EditingState onCommitChanges={this.commitChanges} />
-          <EditRecurrenceMenu />
-
-          <WeekView startDayHour={7} endDayHour={17}  />
-          <MonthView startDayHour={7} endDayHour={17} />
-          <Appointments  />
-          <AppointmentTooltip showOpenButton />
-          <AppointmentForm
-            booleanEditorComponent={() => null}
-            weeklyRecurrenceSelectorComponent={() => null}
-            selectComponent={() => null}
-            radioGroupComponent={() => null}
-          />
-          <Toolbar />
-          <DateNavigator />
-          <ViewSwitcher />
-
-          <Resources data={resources} mainResourceName="deviceId"  />
-          <DragDropProvider />
-        </Scheduler>
-      </Paper>
+      <Box
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignContent: "center",
+          justifyItems: "center",
+        }}
+      >
+        <Button startIcon={<Edit />} variant="contained" color="primary">
+          Note
+        </Button>
+      </Box>
     );
-  }
+  },
+};
+
+export default function SchedulerMaintain() {
+  return (
+    <Container maxWidth={false}>
+      <CardLayout title="Scheduler Task" icon={IconApp.CALENDAR}>
+        <MTableMaterial
+          // showSearch={true}
+          rowsPerPage={5}
+          addControlColumns={[renderControl]}
+          dataSource={listTask}
+          fieldArray={["id", "deviceId", "startDate", "endDate", "note"]}
+        />
+        Scheduler Maintain
+      </CardLayout>
+    </Container>
+  );
 }

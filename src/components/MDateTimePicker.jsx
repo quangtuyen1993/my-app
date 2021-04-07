@@ -1,16 +1,17 @@
-import { KeyboardDatePicker } from "@material-ui/pickers";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { Grid } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { Box, Grid, Typography } from "@material-ui/core";
+import {
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 import moment from "moment";
-import DateUtils from "../utils/DateUtils";
 import PropTypes from "prop-types";
+import { useCallback, useEffect, useState } from "react";
 
 export const TYPE_DATE = "MM/dd/yyyy";
 export const TYPE_HOUR_DATE = "MM/dd/yyyy HH:mm:ss";
 
-export default function MDatePicker(props) {
+export default function MDateTimePicker(props) {
   const [selectedFrom, handleDateFromChange] = useState(
     new Date().setHours(0, 0, 0)
   );
@@ -18,53 +19,54 @@ export default function MDatePicker(props) {
     new Date().setHours(23, 59, 59)
   );
   const [isSingleDate, setIsSingleDate] = useState(false);
+
   const [typeFormat, setTypeFormat] = useState(TYPE_DATE);
 
-  useEffect(() => {
-    if (props.isSingleDate !== undefined) {
-      setIsSingleDate(props.isSingleDate);
-    }
-  }, [props.isSingleDate]);
+    useEffect(() => {
+      if (props.isSingleDate !== undefined) {
+        setIsSingleDate(props.isSingleDate);
+      }
+    }, [props.isSingleDate]);
 
-  useEffect(() => {
-    if (props.typeFormat !== undefined) {
-      setTypeFormat(props.typeFormat);
-    }
-  }, [props.typeFormat]);
+    useEffect(() => {
+      if (props.typeFormat !== undefined) {
+        setTypeFormat(props.typeFormat);
+      }
+    }, [props.typeFormat]);
 
-  useEffect(() => {
-    if (props.onRangeDateChange !== undefined) {
-      var dateFrom = moment(selectedFrom).format("yyyy-MM-DD HH:mm:ss");
-      var dateTo = moment(selectedTo).format("yyyy-MM-DD HH:mm:ss");
-      props.onRangeDateChange(dateFrom, dateTo);
-    }
-  }, [selectedFrom, selectedTo]);
+    useEffect(() => {
+      if (props.onRangeDateChange !== undefined) {
+        var dateFrom = moment(selectedFrom).format("yyyy-MM-DD HH:mm:ss");
+        var dateTo = moment(selectedTo).format("yyyy-MM-DD HH:mm:ss");
+        props.onRangeDateChange({name:props.name,value:{
+            dateFrom:dateFrom,
+            dateTo:dateTo
+        }});
+      }
+    }, [selectedFrom, selectedTo]);
 
   const onDateChangeFrom = (date, value) => {
-    var dateFrom = DateUtils.setHourBeginOfDate(date);
-    handleDateFromChange(dateFrom, value);
+    handleDateFromChange(date, value);
   };
 
   const onDateChangeTo = (date, value) => {
     if (isSingleDate) {
       onDateChangeFrom(date, value);
+      handleDateToChange(date, value);
     }
-    var dateTo = DateUtils.setHourEndDay(date);
-    handleDateToChange(dateTo, value);
   };
 
   const renderFromDate = () => {
     if (!isSingleDate) {
       return (
         <Grid item xs={12} sm={12} md={6} lg={6}>
-          <KeyboardDatePicker
+          <KeyboardDateTimePicker
             label="From date"
             inputVariant="outlined"
             fullWidth
-            variant="inline"
-            autoOk={true}
-            value={selectedFrom}
+            variant="dialog"
             onChange={onDateChangeFrom}
+            value={selectedFrom}
             format={typeFormat}
           />
         </Grid>
@@ -79,14 +81,14 @@ export default function MDatePicker(props) {
         <Grid container spacing={2}>
           {renderFromDate()}
           <Grid item xs={12} sm={12} md={6} lg={6}>
-            <KeyboardDatePicker
+            <KeyboardDateTimePicker
+              okLabel="Done"
               label={isSingleDate ? "Pick date" : "To Date"}
               inputVariant="outlined"
               fullWidth
-              variant="inline"
-              autoOk={true}
-              value={selectedTo}
               onChange={onDateChangeTo}
+              variant="dialog"
+              value={selectedTo}
               format={typeFormat}
             />
           </Grid>
@@ -95,9 +97,10 @@ export default function MDatePicker(props) {
     </>
   );
 }
-MDatePicker.propTypes = {
+MDateTimePicker.propTypes = {
   onChangeDateFrom: PropTypes.func,
   onChangeDateTo: PropTypes.func,
   isSingleDate: PropTypes.bool,
   onRangeDateChange: PropTypes.func,
+  name: PropTypes.string,
 };

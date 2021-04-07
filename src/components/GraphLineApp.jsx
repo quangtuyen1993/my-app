@@ -9,7 +9,7 @@ const initialState = {
   dataSet: [],
 };
 
-const GraphLineApp = ({ data, typeView, minDate, maxDate }) => {
+const GraphLineApp = ({ data, typeView,minDate, maxDate }) => {
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const GraphLineApp = ({ data, typeView, minDate, maxDate }) => {
         minHeight: "30vh",
         position: "relative",
         margin: "auto",
-        width: "80vw",
+        width: "90vw",
       }}
     >
       <Line

@@ -9,7 +9,7 @@ import PowerMeterDetail from "../pages/devices/detail/PowerMeterDetail";
 import PRCalculationScreen from "../pages/prcalc/index";
 import SchedulerScreen from "../pages/scheduler_maintain";
 import SystemInfoScreen from "../pages/system";
-import TrendScreen from "../pages/trend";
+import TrendScreen from "../pages/trendMainScreen";
 
 export const PRIVATE = "_private_";
 export const PUBLIC = "_public_";

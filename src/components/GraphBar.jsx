@@ -7,29 +7,28 @@ import { LIST_COLOR } from "../common/colors";
 export const MONTH_IN_YEAR = "month";
 export const DAY_IN_MONTH = "day";
 
-
 const dataSetPattern = {
-  lineTension: 0.5,
   fill: true,
   borderWidth: 2,
 };
 
-export default function GraphBar(props) {
-	const initialState = {
-		yAxisLabel: [],
-		dataSet: [],
-		typeView: DAY_IN_MONTH,
-	};
-	
+export default function GraphBar({ data, typeView, minDate, maxDate }) {
+  const initialState = {
+    yAxisLabel: [],
+    dataSet: [],
+    typeView: DAY_IN_MONTH,
+  };
+
   const [state, setState] = useState(initialState);
   const convertDataToDataGraph = (data) => {
     let label = [];
     let dataSet = [];
     data.forEach((item, index) => {
       var value = [];
+      if (item.data === undefined) return;
       item.data.forEach((da) => {
         if (index === 0) {
-          var date = moment(da.date,"YYYY-MM-DD").format().valueOf();
+          var date = moment.utc(da.date, "YYYY-MM").format("l LT").valueOf();
           label.push(date);
         }
         value.push(da.value);
@@ -37,9 +36,10 @@ export default function GraphBar(props) {
 
       dataSet.push({
         ...dataSetPattern,
-        label: item.name,
+        lineTension: 0.5,
         borderColor: LIST_COLOR[index],
         backgroundColor: fade(LIST_COLOR[index], 0.1),
+        label: item.name,
         data: value,
       });
     });
@@ -49,7 +49,7 @@ export default function GraphBar(props) {
     };
   };
   useEffect(() => {
-    var { label, dataSet } = convertDataToDataGraph(props.data);
+    var { label, dataSet } = convertDataToDataGraph(data);
 
     setState((pre) => {
       return {
@@ -58,7 +58,7 @@ export default function GraphBar(props) {
         dataSet: dataSet,
       };
     });
-  }, [props.data]);
+  }, [data]);
 
   return (
     <div
@@ -66,12 +66,12 @@ export default function GraphBar(props) {
         minHeight: "30vh",
         position: "relative",
         margin: "auto",
-        width: "75vw",
+        width: "90vw",
       }}
     >
       <Bar
         data={{
-          labels: state.yAxisLabel,
+          labels: ["2021-02","2021-03","2021-04",],
           datasets: state.dataSet,
         }}
         options={{
@@ -99,15 +99,21 @@ export default function GraphBar(props) {
           scales: {
             xAxes: [
               {
+                offset: true,
                 type: "time",
                 time: {
-                  unit: state.typeView,
-                  round: state.typeView,
+                  adapters: moment,
                   displayFormats: {
                     month: "MMM",
-                    year: "YYYY",
-                    day: "MMM DD",
+                    // year: "YYYY",
+                    // day: "MMM DD",
                   },
+                  unit: "month",
+                  // round:"month"
+                },
+                scaleLabel: {
+                  display: true,
+                  labelString: "Date",
                 },
                 gridLines: {
                   display: true,
@@ -116,9 +122,25 @@ export default function GraphBar(props) {
                 bounds: "tick",
                 ticks: {
                   source: "auto",
-									scaleOverride: true,
-                  min: moment.utc("2021-03-01T00:00:00+0700").valueOf(),
-                  max: moment.utc("2021-04-30T23:59:00+0700").valueOf(),
+                  scaleOverride: true,
+                  stepSize: 1,
+                  // autoSkip: true,
+                  // min: moment
+                  //   .utc(minDate, "YYYY-MM-DD HH:mm:ss")
+                  //   .format("l LT")
+                  //   .valueOf(),
+                  // max: moment
+                  //   .utc(maxDate, "YYYY-MM-DD HH:mm:ss")
+                  //   .format("l LT")
+                  //   .valueOf(),
+                  // min: moment
+                  //   .utc("2021-02-01 00:00:00", "YYYY-MM-DD HH:mm:ss")
+                  //   .format("l LT")
+                  //   .valueOf(),
+                  // max: moment
+                  //   .utc("2021-10-10 23:59:00", "YYYY-MM-DD HH:mm:ss")
+                  //   .format("l LT")
+                  //   .valueOf(),
                 },
               },
             ],

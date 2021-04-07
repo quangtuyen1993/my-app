@@ -15,6 +15,7 @@ import {
 import { Search } from "@material-ui/icons";
 import Pagination from "@material-ui/lab/Pagination";
 import React, { useEffect, useState } from "react";
+import StringUtils from "../utils/StringConvert";
 const StyledTableCell = withStyles((theme) => ({
   root: {
     border: "1px solid white",
@@ -86,11 +87,12 @@ const MTableMaterial = ({
     var mPerPage = rowsPerPage ? rowsPerPage : dataSource.length;
     var startIndex = (state.page - 1) * mPerPage;
     var endIndex = state.page * mPerPage;
-    var dataFilter = dataSource.filter((item) =>
-      fieldArray.find((f) => {
+    var dataFilter = dataSource.filter((item) => {
+      if (state.search === "") return true;
+      return fieldArray.find((f) => {
         return item[f].toUpperCase().includes(state.search.toUpperCase());
-      })
-    );
+      });
+    });
     var count = Math.ceil(dataFilter.length / rowsPerPage);
     var mDataShow = dataFilter.slice(startIndex, endIndex);
 
@@ -155,13 +157,13 @@ const MTableMaterial = ({
             <StyledTableRow>
               {fieldArray.map((item) => (
                 <StyledTableCell width={`${state.percentW}%`} key={item}>
-                  {item.toUpperCase()}
+                  {StringUtils.convertCamelToTextNormal(item)}
                 </StyledTableCell>
               ))}
               {state.additionalFields &&
                 state.additionalFields.map((item) => (
                   <StyledTableCell width={`${state.percentW}%`} key={item}>
-                    {item.toUpperCase()}
+                    {StringUtils.convertCamelToTextNormal(item)}
                   </StyledTableCell>
                 ))}
             </StyledTableRow>

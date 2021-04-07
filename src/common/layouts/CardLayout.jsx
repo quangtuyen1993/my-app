@@ -5,11 +5,15 @@ import {
   Grid,
   CardContent,
   Typography,
+  Box,
+  Button,
 } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Camera } from "react-feather";
+import StringUtils from "../../utils/StringConvert";
+import IconApp from "../icons";
+import FileSaver from "file-saver";
 const useStyles = makeStyles((theme) => ({
   header: {
     padding: theme.spacing(2),
@@ -33,6 +37,14 @@ const useStyles = makeStyles((theme) => ({
 const CardLayout = (props) => {
   const classes = useStyles();
   const themes = useTheme();
+
+  const onExport = () => {
+    const { data, name } = props.export;
+    const csv = StringUtils.convertArrayToCSV(data);
+    const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    FileSaver.saveAs(csvData, `${name}.csv`);
+  };
+
   return (
     <>
       <Card
@@ -55,18 +67,49 @@ const CardLayout = (props) => {
                 alignItems="center"
                 spacing={1}
               >
-                <Grid item>
-                  <FontAwesomeIcon
-                    icon={props.icon ? props.icon : faTachometerAlt}
-                    size={"2x"}
-                  />
+                <Grid item lg={3} md={4} sm={6} xs={6}>
+                  <Box
+                    display="flex"
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    alignContent="center"
+                  >
+                    <Box mr={1}>
+                      <FontAwesomeIcon
+                        icon={props.icon ? props.icon : faTachometerAlt}
+                        style={{ fontSize: "24px" }}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="body1">
+                        {props.title &&
+                          StringUtils.capitalize(
+                            props.title.replaceAll("_", " ")
+                          )}
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Grid>
-                <Grid item>
-                  <Typography variant="body1">
-                    {" "}
-                    {props.title ? props.title : "SkyBlack"}
-                  </Typography>
-                </Grid>
+                {props.export && (
+                  <Grid item lg={9} md={8} sm={6} xs={6}>
+                    <Box
+                      pr={1}
+                      display="flex"
+                      flex="3"
+                      justifyContent="flex-end"
+                    >
+                      <Button
+                        onClick={onExport}
+                        style={{ padding: "10px" }}
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<FontAwesomeIcon icon={IconApp.CSV} />}
+                      >
+                        Download
+                      </Button>
+                    </Box>
+                  </Grid>
+                )}
               </Grid>
             </div>
           )}
