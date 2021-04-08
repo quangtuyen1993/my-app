@@ -33,6 +33,7 @@ import {
   faClock,
   faFileCsv,
   faArrowAltCircleDown,
+  faSync,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -68,7 +69,8 @@ library.add(
   faUsers,
   faClock,
   faFileCsv,
-  faArrowAltCircleDown
+  faArrowAltCircleDown,
+  faSync
 );
 
 export const PUBLIC_ICON =
@@ -113,6 +115,7 @@ const IconApp = {
   CLOCK: faClock,
   DOWNLOAD:faArrowAltCircleDown,
   CSV:  faFileCsv,
+  SYNC:faSync
 
 };
 export default IconApp;

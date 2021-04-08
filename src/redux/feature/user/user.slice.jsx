@@ -9,6 +9,8 @@ const init = {
   isLoading: false,
   isSuccess: false,
   isLoginComplete: false,
+  message: "",
+
   //get when re-fresh token
   userProfile: {
     jwtToken: "",
@@ -16,7 +18,6 @@ const init = {
     role: "",
     username: "",
   },
-  message: "",
 };
 
 const onLogin = createAsyncThunk(
@@ -34,6 +35,9 @@ const onLogin = createAsyncThunk(
       );
       return userData.data;
     } catch (e) {
+      if (!e.response) {
+        throw e;
+      }
       return rejectWithValue(e.response.data);
     }
   }
@@ -51,8 +55,11 @@ const onRefreshToken = createAsyncThunk(
       refreshHeader(jwtToken)
       CookieManger.SetRefreshCookie(refreshToken, expires);
       return userData.data;
-    } catch (e) {
-      return rejectWithValue(e);
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(!err.response);
     }
   }
 );
@@ -106,7 +113,7 @@ export const authorSlice = createSlice({
       return {
         ...state,
         isLoading: false,
-        message: action.payload.message,
+        message: action.payload,
         isError: true,
       };
     },

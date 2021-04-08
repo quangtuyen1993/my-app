@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { id } from "date-fns/locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ColorsApp from "../../../common/colors";
@@ -8,6 +9,7 @@ import IconApp from "../../../common/icons";
 import CardLayout from "../../../common/layouts/CardLayout";
 import MCircleProgress from "../../../components/MCircleProgress";
 import OverviewService from "../../../service/overview.service";
+import PRService from "../../../service/pr.service";
 
 const useStyles = makeStyles((themes) => ({
   root: {},
@@ -25,10 +27,6 @@ const useStyles = makeStyles((themes) => ({
 export default function Overview() {
   const classes = useStyles();
   const { stationSelected } = useSelector((state) => state.stationReducer);
-
-  const { jwtToken, isLoginComplete } = useSelector(
-    (state) => state.authorReducer.userProfile
-  );
   const timer = useRef(null);
   const [state, setState] = useState({
     listPr: [],
@@ -36,6 +34,25 @@ export default function Overview() {
     max: 100,
     values: [1, 1, 1],
   });
+
+  const onFetchPR = useCallback(async () => {
+    let day = await PRService.getPRofDay(stationSelected.id);
+    let month = await PRService.getPRofMonth(stationSelected.id);
+
+    day.name = "PR Day";
+    month.name = "PR Month";
+    var newList = [day, month];
+    setState((pre) => {
+      return {
+        ...pre,
+        listPr: newList,
+      };
+    });
+  }, [stationSelected.id]);
+
+  useEffect(() => {
+    console.info(state.listPr, "PR list");
+  }, [state.listPr]);
 
   const onFetchData = useCallback(async () => {
     var response = await OverviewService.fetchOverview(stationSelected.id);
@@ -55,16 +72,17 @@ export default function Overview() {
       clearInterval(timer.current);
     }
     onFetchData();
-
+    onFetchPR();
     timer.current = setInterval(async () => {
-      console.info("overview run timer")
+      console.info("overview run timer");
       onFetchData();
+      onFetchPR();
     }, 10000);
 
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchData, stationSelected]);
+  }, [onFetchData, onFetchPR, stationSelected]);
 
   const renderItem = (item, index) => {
     return (
@@ -117,8 +135,8 @@ export default function Overview() {
         <MCircleProgress
           max={max}
           item={item}
-          value={state.values[index]}
-          progress={state.values[index]}
+          value={item.pR_Correct}
+          progress={item.pR_Correct}
           size={100}
         />
       </Grid>

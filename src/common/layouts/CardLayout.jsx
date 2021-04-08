@@ -39,7 +39,21 @@ const CardLayout = (props) => {
   const themes = useTheme();
 
   const onExport = () => {
-    const { data, name } = props.export;
+    var arrayData = [];
+    var check = Array.isArray(props.export);
+    var name=props.title
+    
+    if (!check) {
+      arrayData.push(props.export);
+    } else {
+      arrayData = [...props.export];
+    }
+    
+    downloadCSV(arrayData, name);
+    return;
+  };
+
+  const downloadCSV = (data, name) => {
     const csv = StringUtils.convertArrayToCSV(data);
     const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     FileSaver.saveAs(csvData, `${name}.csv`);
@@ -105,7 +119,7 @@ const CardLayout = (props) => {
                         color="secondary"
                         startIcon={<FontAwesomeIcon icon={IconApp.CSV} />}
                       >
-                        Download
+                        Export
                       </Button>
                     </Box>
                   </Grid>

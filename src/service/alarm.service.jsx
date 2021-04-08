@@ -1,4 +1,9 @@
-import { URL_ALARM_HISTORY, URL_ALARM_REALTIME } from "../redux/URL";
+import {
+  URL_ALARM_ACK,
+  URL_ALARM_ALL,
+  URL_ALARM_HISTORY,
+  URL_ALARM_REALTIME,
+} from "../redux/URL";
 import AxiosAuthor from "../utils/AxiosAuthor";
 
 const AlarmService = {
@@ -8,10 +13,27 @@ const AlarmService = {
     });
     return data.data;
   },
-  fetchHistorical: async ({ stationId }) => {
+  fetchHistorical: async ({ stationId, fromTime, toTime }) => {
     var data = await AxiosAuthor.post(URL_ALARM_HISTORY, {
-      fromTime: "2021-04-05 00:00:00",
-      toTime: "2021-04-06 00:00:00",
+      fromTime: fromTime,
+      toTime: toTime,
+      stationId: stationId,
+    });
+    return data.data;
+  },
+  ackAlarm: async (stationId, alarmName, alarmType, incommingTime, comment) => {
+    var data = await AxiosAuthor.post(URL_ALARM_ACK, {
+      stationId: stationId,
+      alarmName: alarmName,
+      alarmType: alarmType,
+      incommingTime: incommingTime,
+      comment: comment,
+    });
+    return data.data;
+  },
+
+  ackAllAlarm: async (stationId) => {
+    var data = await AxiosAuthor.post(URL_ALARM_ALL, {
       stationId: stationId,
     });
     return data.data;

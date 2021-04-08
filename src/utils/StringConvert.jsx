@@ -13,21 +13,33 @@ const StringUtils = {
     return splitStr.join(" ");
   },
   convertArrayToCSV: (objArray) => {
-    var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+    // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
+    var array = objArray;
+    console.info(array);
     var str = "";
-    var fields = Object.keys(array[0]);
-    for (var i = 0; i < array.length; i++) {
+
+    var header = "#, Date,";
+
+    for (let i = 0; i < array.length; i++) {
+
+      header += array[i].name + ",";
+    }
+
+    var childArray = array[0];
+
+    var { data } = childArray;
+
+    for (let i = 0; i < data.length; i++) {
+      // if (line !== "") line += ",";
       var line = "";
-      for (var index in array[i]) {
-        if (line !== "") line += ",";
-
-        line += array[i][index];
+      line += i + "," + data[i].date + ",";
+      for (var n = 0; n < array.length; n++) {
+        line += array[n].data[i].value + ",";
       }
-
       str += line + "\r\n";
     }
 
-    return fields.join(",") + "\r\n" + str;
+    return header + "\r\n" + str;
   },
 };
 export default StringUtils;

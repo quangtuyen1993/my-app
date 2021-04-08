@@ -1,7 +1,7 @@
 /* eslint-disable no-loop-func */
-import { Chip,Link } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import {  Outlet, useNavigate } from "react-router-dom";
+import { Chip, Link } from "@material-ui/core";
+import React, { createRef, useCallback, useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import ColorsApp from "../common/colors";
 import PropTypes from "prop-types";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
@@ -41,6 +41,7 @@ const TableApp = ({
     fieldTitle: [],
     showIndex: false,
     maxLength: 0,
+    listColor: [],
   });
 
   useEffect(() => {
@@ -58,6 +59,18 @@ const TableApp = ({
       };
     });
   }, [field, data, chipField, fieldTitle, showIndex, maxLength, showLink]);
+  
+  useEffect(() => {
+    var list = [];
+    for (var i = 0; i < state.dataShow; i++) {
+      list.push("white");
+    }
+    setState((pre) => ({
+      ...pre,
+      listColor: list,
+    }));
+  }, [state.dataShow]);
+
 
   const onChange = (e, pageNumber) => {
     setState((pre) => {
@@ -132,7 +145,13 @@ const TableApp = ({
   const renderBody = () => {
     if (state.dataShow !== undefined && state.dataShow.length !== 0)
       return state.dataShow.map((item, i) => (
-        <tr style={{ display: "flex" }} key={i}>
+        <tr
+          style={{
+            display: "flex",
+            backgroundColor: state.listColor ? state.listColor[i] : "white",
+          }}
+          key={i}
+        >
           {state.showIndex ? (
             <th style={{ flex: 1 }} className={classes.cell}>
               {data.indexOf(item) + 1}
@@ -140,7 +159,7 @@ const TableApp = ({
           ) : null}
           {state.field.map((f) => (
             <th style={{ flex: 1 }} className={classes.cell} key={f}>
-              {renderCell(item, f)}
+              {renderCell(item, f, i)}
             </th>
           ))}
           {/* render link */}
@@ -165,12 +184,26 @@ const TableApp = ({
     return null;
   };
 
-  const renderCell = (item, f) => {
+  const getColor = (color, i) => {
+    if (state.listColor === undefined) return;
+    var ln = state.listColor;
+    var item = ln[i];
+    if (item !== color) {
+      console.log("COLOR", color);
+      ln[i] = color;
+      setState((pre) => ({
+        ...pre,
+        listColor: ln,
+      }));
+    }
+  };
+
+  const renderCell = (item, f, i) => {
     if (state.chipField === undefined || !state.chipField.includes(f)) {
       return item[f];
     } else {
       if (chipComponent !== undefined) {
-        return chipComponent(item, f);
+        return chipComponent(item, f, i, getColor);
       } else
         return (
           <ChipTag

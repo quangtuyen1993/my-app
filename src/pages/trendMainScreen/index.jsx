@@ -15,6 +15,7 @@ export default function TrendMainScreen() {
     powerTrend: [],
     radiation: [],
     temp: [],
+    summary: [],
     pRHistory: [],
     dateFrom: null,
     dateTo: null,
@@ -37,6 +38,10 @@ export default function TrendMainScreen() {
       dateTo: moment().endOf("day"),
     },
     pRHistory: {
+      dateFrom: moment().startOf("day"),
+      dateTo: moment().endOf("day"),
+    },
+    summary: {
       dateFrom: moment().startOf("day"),
       dateTo: moment().endOf("day"),
     },
@@ -95,6 +100,26 @@ export default function TrendMainScreen() {
     fetchTemp();
   }, [fetchTemp, sensorTable]);
 
+
+
+  //power fetchTemp
+  const fetchSummary = useCallback(async () => {
+    var res = await HistoricalService.fetchData(
+      dateState.summary.dateFrom,
+      dateState.summary.dateTo,
+      sensorTable
+    );
+    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+    setState((pre) => ({
+      ...pre,
+      summary: cols,
+    }));
+  }, [dateState.summary.dateFrom, dateState.summary.dateTo, sensorTable]);
+
+  useEffect(() => {
+    fetchSummary();
+  }, [fetchSummary, fetchTemp, sensorTable]);
+
   //fetchPRHistory
   const fetchPRHistory = useCallback(async () => {
     var res = await HistoricalService.fetchJustTotal(
@@ -152,8 +177,6 @@ export default function TrendMainScreen() {
             </CardLayout>
           </Grid>
 
-   
-
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout
               icon={IconApp.POWER_TREND}
@@ -178,7 +201,6 @@ export default function TrendMainScreen() {
               />
             </CardLayout>
           </Grid>
-
 
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout
@@ -205,7 +227,30 @@ export default function TrendMainScreen() {
             </CardLayout>
           </Grid>
 
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <CardLayout
+              icon={IconApp.POWER_TREND}
+              title="Power Trend"
+              export={state.summary}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={6}>
+                  <MDateTimePicker
+                    name="summary"
+                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    isSingleDate={false}
+                    onRangeDateChange={handleChangeDate}
+                  />
+                </Grid>
+              </Grid>
 
+              <GraphLineApp
+                minDate={dateState.summary.dateFrom}
+                maxDate={dateState.summary.dateTo}
+                data={state.summary}
+              />
+            </CardLayout>
+          </Grid>
 
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout icon={IconApp.BROADCAST_TOWER} title="PR History ">
@@ -265,8 +310,6 @@ const listData_1 = {
       date: "2021-04-01 12:47:00",
       value: 1408.34691682212,
     },
-   
-    
   ],
 };
 // const listData_2 = {

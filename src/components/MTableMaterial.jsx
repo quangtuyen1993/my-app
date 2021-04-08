@@ -1,5 +1,8 @@
 import {
   Box,
+  Button,
+  Grid,
+  IconButton,
   InputAdornment,
   makeStyles,
   Table,
@@ -14,8 +17,11 @@ import {
 } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import Pagination from "@material-ui/lab/Pagination";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import StringUtils from "../utils/StringConvert";
+import IconApp from "../common/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const StyledTableCell = withStyles((theme) => ({
   root: {
     border: "1px solid white",
@@ -49,12 +55,10 @@ const MTableMaterial = ({
   addControlColumns,
   rowsPerPage,
   showSearch,
+  addControlFirst,
+  refresh,
+  askAll,
 }) => {
-  const theme = useTheme();
-  const classes = useStyle();
-  const matchesDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const matchesDownMD = useMediaQuery(theme.breakpoints.down("md"));
-
   const [state, setState] = useState({
     renderControl: null,
     percentW: 0,
@@ -64,6 +68,7 @@ const MTableMaterial = ({
     count: 1,
     additionalFields: [],
     search: "",
+    listComponentBody: [],
   });
 
   useEffect(() => {
@@ -82,7 +87,7 @@ const MTableMaterial = ({
     }));
   }, [addControlColumns, fieldArray]);
 
-  //pagingnation
+  //pagination
   useEffect(() => {
     var mPerPage = rowsPerPage ? rowsPerPage : dataSource.length;
     var startIndex = (state.page - 1) * mPerPage;
@@ -103,7 +108,7 @@ const MTableMaterial = ({
     }));
   }, [dataSource, fieldArray, rowsPerPage, state.page, state.search]);
 
-  const renderControl = (user) => {
+  const renderControl = (user, index) => {
     return addControlColumns.map((item, index) => item.component(user, index));
   };
 
@@ -122,45 +127,98 @@ const MTableMaterial = ({
   };
 
   return (
-    <Box style={{ overflowX: "auto" }}>
-      {showSearch && (
-        <Box
-          pt={1}
-          mb={2}
-          className={classes.box}
-          style={{
-            width: !matchesDownMD ? "24%" : !matchesDownSM ? "49.3%" : "100%",
-          }}
-        >
-          <TextField
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            name="search"
-            value={state.search}
-            onChange={handleChangeText}
-            fullWidth
-            label="Search"
-            variant="outlined"
-            holder="search"
-          />
-        </Box>
-      )}
+    <>
+      <Grid container spacing={2} direction="column">
+        {/* Utils Bar */}
+        <Grid item lg={12} md={12} sm={12}>
+          <Grid
+            container
+            direction="row"
+            justify="flex-start"
+            alignContent="center"
+            alignItems="center"
+            spacing={2}
+          >
+            <Grid
+              item
+              lg={3}
+              sm={refresh ? 10 :12}
+              xs={refresh ? 10 :12}
+              md={6}
+              style={{ display: "flex" }}
+            >
+              {showSearch && (
+                <TextField
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                  name="search"
+                  fullWidth
+                  value={state.search}
+                  onChange={handleChangeText}
+                  label="Search"
+                  variant="outlined"
+                  holder="search"
+                />
+              )}
+            </Grid>
+            {refresh && (
+              <Grid
+                onClick={() => {
+                  refresh();
+                }}
+                item
+                style={{ display: "flex ", flexGrow: 2 }}
+              >
+                <IconButton color="secondary" variant="contained">
+                  <FontAwesomeIcon icon={IconApp.SYNC} />
+                </IconButton>
+              </Grid>
+            )}
 
-      <Box mb={2}>
+            {askAll && (
+              <Grid
+                onClick={() => {
+                  askAll();
+                }}
+                item
+              >
+                <Button color="secondary" variant="contained">
+                  Ack all
+                </Button>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+      </Grid>
+
+      {/* table */}
+      {/* <Grid item> */}
+      <Box mt={2} overflow="auto">
         <Table style={{ border: "1px rgba(0,0,0,0.4) solid" }}>
           <TableHead>
             <StyledTableRow>
+              {addControlFirst &&
+                addControlFirst &&
+                state.additionalFields &&
+                state.additionalFields.map((item) => (
+                  <StyledTableCell width={`${state.percentW}%`} key={item}>
+                    {StringUtils.convertCamelToTextNormal(item)}
+                  </StyledTableCell>
+                ))}
+
               {fieldArray.map((item) => (
                 <StyledTableCell width={`${state.percentW}%`} key={item}>
                   {StringUtils.convertCamelToTextNormal(item)}
                 </StyledTableCell>
               ))}
-              {state.additionalFields &&
+
+              {!addControlFirst &&
+                state.additionalFields &&
                 state.additionalFields.map((item) => (
                   <StyledTableCell width={`${state.percentW}%`} key={item}>
                     {StringUtils.convertCamelToTextNormal(item)}
@@ -173,12 +231,28 @@ const MTableMaterial = ({
             {state.dataShow &&
               state.dataShow.map((dataRow, index) => (
                 <StyledTableRow key={index}>
+                  {addControlFirst &&
+                    state.additionalFields.map((f, index) => (
+                      <StyledTableCell key={index}>
+                        <Box
+                          justifyContent="space-between"
+                          alignContent="center"
+                          alignItems="center"
+                          display="flex"
+                          flexDirection="row"
+                          alignSelf="center"
+                        >
+                          {renderControl(dataRow)}
+                        </Box>
+                      </StyledTableCell>
+                    ))}
                   {fieldArray.map((f) => (
                     <StyledTableCell size="small" key={f}>
                       {dataRow[f]}
                     </StyledTableCell>
                   ))}
-                  {state.additionalFields &&
+                  {!addControlFirst &&
+                    state.additionalFields &&
                     state.additionalFields.map((f, index) => (
                       <StyledTableCell key={index}>
                         <Box
@@ -198,6 +272,7 @@ const MTableMaterial = ({
           </TableBody>
         </Table>
       </Box>
+      {/* </Grid> */}
 
       {rowsPerPage && (
         <Box m={2}>
@@ -210,7 +285,7 @@ const MTableMaterial = ({
           />
         </Box>
       )}
-    </Box>
+    </>
   );
 };
 

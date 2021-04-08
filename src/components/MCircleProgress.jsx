@@ -29,7 +29,6 @@ export default function MCircleProgress(props) {
       process: percentProcess,
       color: LIST_COLOR_ACCENT[positionColor],
     }));
-    // startTimeout()
   }, [props.value, props.max]);
 
   useLayoutEffect(() => {

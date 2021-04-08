@@ -10,18 +10,18 @@ import {
   useTheme,
   withStyles,
 } from "@material-ui/core";
+import { blue, red, yellow } from "@material-ui/core/colors";
+import moment from "moment";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router";
-import ColorsApp from "../../../common/colors";
 import IconApp from "../../../common/icons";
 import CardLayout from "../../../common/layouts/CardLayout";
+import GraphLineApp from "../../../components/GraphLineApp";
 import MDatePicker from "../../../components/MDatePicker";
 import TableApp from "../../../components/TableApp";
 import DeviceService from "../../../service/device.service";
 import { CookieManger } from "../../../utils/CookieManager";
-import GraphLineApp from "../../../components/GraphLineApp";
-import moment from "moment";
 import DataTrendParser from "../../../utils/DataTrenParser";
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
@@ -53,7 +53,6 @@ export default function DetailScreen() {
     tableName: "",
     stationSelected: null,
     temp: {},
-
     dataTrend: [],
     dateFrom: moment().startOf("day"),
     dateTo: moment().endOf("day"),
@@ -105,8 +104,8 @@ export default function DetailScreen() {
     var general = [];
 
     var obj = await DeviceService.fetchInverterDetail(state.deviceId);
+    console.info("Detail",obj)
     var fields = Object.keys(obj);
-    console.log("detail", fields);
     fields.forEach((f) => {
       if (f === "tableName") {
         setState((pre) => ({
@@ -233,15 +232,16 @@ export default function DetailScreen() {
                 <TableApp
                   showIndex={true}
                   chipField={["name"]}
-                  chipComponent={(item, f) => {
+                  chipComponent={(item, f, i, getColor) => {
                     var color;
                     if (item.type === "A") {
-                      color = ColorsApp.POWER_LIGHT;
+                      color = red[400];
                     } else if (item.type === "B") {
-                      color = ColorsApp.ENERGY;
+                      color = yellow[400];
                     } else {
-                      color = ColorsApp.RUNNING;
+                      color = blue[400];
                     }
+                    getColor(color, i);
                     return (
                       <Chip
                         label={item.name}
@@ -352,9 +352,9 @@ const filterGeneral = (f, obj, general) => {
     infoType = {
       type: GENERAL_TYPE.INTERNAL_TEMP,
     };
-  } else if (f.includes("total_reactive_power")) {
+  } else if (f.includes("yearly_power_yields")) {
     infoType = {
-      type: GENERAL_TYPE.TOTAL_ENERGY_PRODUCTION,
+      type: GENERAL_TYPE.ENERGY_THIS_YEAR,
     };
   } else if (f.includes("grid_frequency")) {
     infoType = {
@@ -370,7 +370,7 @@ const filterGeneral = (f, obj, general) => {
     };
   } else if (f.includes("total_power_yields")) {
     infoType = {
-      type: GENERAL_TYPE.ENERGY_THIS_YEAR,
+      type: GENERAL_TYPE.TOTAL_ENERGY_PRODUCTION,
     };
   }
   if (infoType === null) return;

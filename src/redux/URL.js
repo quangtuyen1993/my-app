@@ -16,3 +16,9 @@ export const URL_MCCB = "/MccbAcbs/GetMccbAcbOfStation/";
 
 export const URL_ALARM_REALTIME = "/Alarms/GetRealtimeAlarmOfStation";
 export const URL_ALARM_HISTORY = "/Alarms/GetHistoricalAlarmOfStation";
+
+export const URL_ALARM_ACK = "/Alarms/AckAlarm";
+export const URL_ALARM_ALL = "/Alarms/AckAll";
+
+export const URL_PR_MONTH = "/PR/GetPrOfMonth";
+export const URL_PR_DATE = "/PR/GetPrOfDay";

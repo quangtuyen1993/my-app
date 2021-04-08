@@ -10,7 +10,7 @@ import DeviceService from "../../service/device.service";
 export default function DeviceScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
 
-  const interval = useRef(null);
+  const timer = useRef(null);
 
   const [state, setState] = useState({
     Inverters: [],
@@ -20,6 +20,10 @@ export default function DeviceScreen() {
   });
 
   useEffect(() => {
+    if (timer !== null) {
+      clearInterval(timer.current);
+    }
+
     const onFetchData = async () => {
       var inverters = await DeviceService.fetchAllInverterDevice(
         stationSelected.id
@@ -32,22 +36,16 @@ export default function DeviceScreen() {
 
     const onFetchSensorService = async () => {
       var sensors = await DeviceService.fetchAllSensor(stationSelected.id);
-      console.info(sensors);
       setState((pre) => ({
         ...pre,
         Sensors: sensors,
       }));
     };
 
-    if (interval !== null) {
-      clearInterval(interval.current);
-    }
-
     const onFetchPowerMeter = async () => {
       var powerMeters = await DeviceService.fetchAllPowerMeter(
         stationSelected.id
       );
-      console.info("POWER", powerMeters);
       setState((pre) => ({
         ...pre,
         Power_meters: powerMeters,
@@ -55,21 +53,26 @@ export default function DeviceScreen() {
     };
 
     const onFetchMCCB = async () => {
-      var mccbs = await DeviceService.fetchAllMCCB(stationSelected.id);
-      console.log(mccbs);
+      var mccb = await DeviceService.fetchAllMCCB(stationSelected.id);
+      setState((pre) => ({
+        ...pre,
+        MCCB_ABC: mccb,
+      }));
     };
 
     onFetchData();
     onFetchSensorService();
     onFetchPowerMeter();
     onFetchMCCB();
-    interval.current = setInterval(() => {
+
+    timer.current = setInterval(() => {
       onFetchData();
       onFetchSensorService();
       onFetchPowerMeter();
+      onFetchMCCB();
     }, 10000);
     return () => {
-      clearInterval(interval.current);
+      clearInterval(timer.current);
     };
   }, [stationSelected]);
 
@@ -90,7 +93,6 @@ export default function DeviceScreen() {
                     path="/device/inverter"
                     chipComponent={(item, f) => {
                       var color = "";
-
                       switch (item[f]) {
                         case "danger":
                           color = red[500];
@@ -103,28 +105,39 @@ export default function DeviceScreen() {
                           label={item[f]}
                           style={{
                             backgroundColor: color,
-                            color:"white"
+                            color: "white",
                           }}
                         />
                       );
                     }}
-                    maxLength={Math.max(
-                      state.Inverters.length,
-                      state.MCCB_ABC.length
-                    )}
                   />
                 </CardLayout>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="MCCB_ABC">
                   <TableApp
-                    maxLength={Math.max(
-                      state.Inverters.length,
-                      state.MCCB_ABC.length
-                    )}
+                    chipComponent={(item, f) => {
+                      var color = "";
+                      switch (item[f]) {
+                        case "danger":
+                          color = red[500];
+                          break;
+                        default:
+                          color = green[500];
+                      }
+                      return (
+                        <Chip
+                          label={item[f]}
+                          style={{
+                            backgroundColor: color,
+                            color: "white",
+                          }}
+                        />
+                      );
+                    }}
                     data={state.MCCB_ABC}
-                    chipField={["Status"]}
-                    field={["Name", "Status"]}
+                    chipField={["status"]}
+                    field={["name", "status"]}
                     fieldTitle={["Name", "Status"]}
                   />
                 </CardLayout>
@@ -151,8 +164,8 @@ export default function DeviceScreen() {
                   <TableApp
                     data={state.Sensors}
                     chipField={["status"]}
-                    field={["name", "status"]}
-                    fieldTitle={["Name", "Status"]}
+                    field={["name", "status", "value", "unit"]}
+                    fieldTitle={["Name", "Status", "Values", "Unit"]}
                   />
                 </CardLayout>
               </Grid>
@@ -163,28 +176,3 @@ export default function DeviceScreen() {
     </>
   );
 }
-
-const createItem = (
-  id,
-  logInterval,
-  manufacturer,
-  maxPower,
-  model,
-  nominalPower,
-  state,
-  stateBackground,
-  stationId,
-  tagPrefix
-) => {
-  return {
-    logInterval,
-    manufacturer,
-    maxPower,
-    model,
-    nominalPower,
-    state,
-    stateBackground,
-    stationId,
-    tagPrefix,
-  };
-};

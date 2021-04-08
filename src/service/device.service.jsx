@@ -40,7 +40,7 @@ const DeviceService = {
 
   fetchAllPowerMeterDetail: async (idPowerMeter) => {
     let response = await AxiosAuthor.post(URL_POWER_METER_DETAIL, {
-      id: idPowerMeter,
+      powerMeterId: idPowerMeter,
     });
     return response.data;
   },

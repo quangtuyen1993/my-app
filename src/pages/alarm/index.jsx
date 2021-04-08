@@ -1,72 +1,98 @@
-import {
-  Box,
-  Button,
-  Chip,
-  Container,
-  Grid,
-  useTheme,
-} from "@material-ui/core";
-import { useEffect, useRef, useState } from "react";
+import { Box, Button, Container, Grid } from "@material-ui/core";
+import moment from "moment";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
-import MDatePicker from "../../components/MDatePicker";
+import MDateTimePicker from "../../components/MDateTimePicker";
 import MTableMaterial from "../../components/MTableMaterial";
-import SearchBar from "../../components/SearchBar";
-import TableAppOverSize from "../../components/TableAppOverSize";
 import AlarmService from "../../service/alarm.service";
 
 export default function AlarmScreen() {
-  const theme = useTheme();
-  const boundTable = useRef(null);
   const { stationSelected } = useSelector((state) => state.stationReducer);
+  const timer = useRef(null);
   const [state, setState] = useState({
     fromDate: null,
     toDate: null,
-    heightTable: 100,
+    alarmRealTime: [],
+    alarmHistorical: [],
+    historical: {
+      dateFrom: moment().startOf("day"),
+      dateTo: moment().endOf("day"),
+    },
   });
 
-  useEffect(() => {
-    const fetchRealTimeData = async () => {
-      var data = await AlarmService.fetchRealTime({
-        stationId: stationSelected.id,
-      });
-      return data;
-    };
-
-    const fetchHistoricalData = async () => {
-      var data = await AlarmService.fetchHistorical({
-        stationId: stationSelected.id,
-      });
-      console.info("HISTORY CALL", data);
-      return data;
-    };
-
-    fetchRealTimeData();
-    fetchHistoricalData();
-  });
-
-  useEffect(() => {
-    try {
-      var newHeight = boundTable.current.getBoundingClientRect();
-      if (state.heightTable !== newHeight.height + theme.spacing(2) * 2)
-        setState((pre) => {
-          return {
-            ...pre,
-            heightTable: newHeight.height + theme.spacing(2) * 2,
-          };
-        });
-    } catch (e) {}
-  }, [state.heightTable, theme]);
-
-  const handleRangeDateChange = (from, to) => {
+  const handleChangeDate = ({ name, value }) => {
     setState((pre) => {
       return {
         ...pre,
-        fromDate: from,
-        toDate: to,
+        [name]: value,
       };
     });
+  };
+  const fetchRealTimeData = useCallback(async () => {
+    var data = await AlarmService.fetchRealTime({
+      stationId: stationSelected.id,
+    });
+    console.info(data);
+    setState((pre) => ({
+      ...pre,
+      alarmRealTime: data,
+    }));
+  }, [stationSelected.id]);
+
+  const fetchHistoricalData = useCallback(async () => {
+    var data = await AlarmService.fetchHistorical({
+      stationId: stationSelected.id,
+      fromTime: state.historical.dateFrom,
+      toTime: state.historical.dateTo,
+    });
+
+    setState((pre) => ({
+      ...pre,
+      alarmHistorical: data,
+    }));
+  }, [state.historical.dateFrom, state.historical.dateTo, stationSelected.id]);
+
+  useEffect(() => {
+    fetchRealTimeData();
+    fetchHistoricalData();
+  }, [fetchHistoricalData, fetchRealTimeData, stationSelected.id]);
+
+  //timer
+  useEffect(() => {
+    if (timer.current !== null) clearInterval(timer.current);
+    timer.current = setInterval(() => {
+      fetchRealTimeData();
+      fetchHistoricalData();
+    }, 10000);
+    return () => {
+      clearInterval(timer.current);
+    };
+  }, [fetchHistoricalData, fetchRealTimeData]);
+
+  const ackAlarm = useCallback(
+    async (item) => {
+      var data = await AlarmService.ackAlarm(
+        stationSelected.id,
+        item.name,
+        item.incommingTime,
+        "comment"
+      );
+      if (data.success) {
+        fetchRealTimeData();
+        fetchHistoricalData();
+      }
+    },
+    [fetchHistoricalData, fetchRealTimeData, stationSelected.id]
+  );
+
+  const ackAlarmAll = async () => {
+    var data = await AlarmService.ackAllAlarm(stationSelected.id);
+    if (data.success) {
+      fetchRealTimeData();
+      fetchHistoricalData();
+    }
   };
 
   const ackAction = {
@@ -82,11 +108,13 @@ export default function AlarmScreen() {
         alignSelf="center"
       >
         <Button
+          disabled={item.state === "out"}
+          onClick={() => ackAlarm(item)}
           color="secondary"
           style={{ borderRadius: 50, color: "white" }}
           variant="contained"
         >
-          {item.State}
+          Ack
         </Button>
       </Box>
     ),
@@ -104,31 +132,37 @@ export default function AlarmScreen() {
                 </Grid>
               </Grid>
               <MTableMaterial
+                askAll={ackAlarmAll}
+                addControlFirst={true}
                 showSearch={true}
                 rowsPerPage={5}
-                dataSource={historical}
+                dataSource={state.alarmRealTime}
                 addControlColumns={[ackAction]}
                 fieldArray={[
-                  "Name",
-                  "Incomming Time",
-                  "Alarm Text",
-                  "Value",
-                  "Limit",
-                  "Compare Mode",
-                  "Outgoing Time",
-                  "Ack Time",
-                  "State",
+                  "name",
+                  "incommingTime",
+                  "alarmText",
+                  "value",
+                  "limit",
+                  "compareMode",
+                  "outgoingTime",
+                  "ackTime",
+                  "state",
                 ]}
               />
             </CardLayout>
           </Grid>
+
+          {/*history  */}
           <Grid item sm={12} md={12} xs={12} lg={12}>
             <CardLayout title="Historical Ack" icon={IconApp.CLOCK}>
               <Grid container spacing={2}>
                 <Grid item sm={12} lg={6}>
-                  <MDatePicker
+                  <MDateTimePicker
+                    name="historical"
+                    typeFormat="MM/dd/yyyy HH:mm:ss"
                     isSingleDate={false}
-                    onRangeDateChange={handleRangeDateChange}
+                    onRangeDateChange={handleChangeDate}
                   />
                 </Grid>
                 <Grid item sm={12} xs={12}>
@@ -136,20 +170,23 @@ export default function AlarmScreen() {
                 </Grid>
               </Grid>
               <MTableMaterial
+                refresh={fetchHistoricalData}
+                askAll={ackAlarmAll}
+                addControlFirst={true}
                 showSearch={true}
                 rowsPerPage={5}
-                dataSource={historical}
+                dataSource={state.alarmHistorical}
                 addControlColumns={[ackAction]}
                 fieldArray={[
-                  "Name",
-                  "Incomming Time",
-                  "Alarm Text",
-                  "Value",
-                  "Limit",
-                  "Compare Mode",
-                  "Outgoing Time",
-                  "Ack Time",
-                  "State",
+                  "name",
+                  "incommingTime",
+                  "alarmText",
+                  "value",
+                  "limit",
+                  "compareMode",
+                  "outgoingTime",
+                  "ackTime",
+                  "state",
                 ]}
               />
             </CardLayout>
@@ -159,160 +196,3 @@ export default function AlarmScreen() {
     </>
   );
 }
-const historical = [
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:29:23",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:29:25",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:31:37",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:31:38",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:32:58",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:32:59",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:33:16",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:33:18",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:39:46",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:39:47",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:40:23",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:40:26",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:43:06",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:43:07",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:29:23",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:29:25",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:31:37",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:31:38",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:32:58",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:32:59",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:33:16",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:33:18",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:39:46",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:39:47",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:40:23",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:40:26",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-  {
-    State: "Ack",
-    Name: "Quality_Sensor_Wind",
-    "Incomming Time": "2021-03-23 16:43:06",
-    "Alarm Text": "Wind sensor was disconnected",
-    Value: "Bad",
-    Limit: "Bad",
-    "Compare Mode": "Equal",
-    "Outgoing Time": "2021-03-23 16:43:07",
-    "Ack Time": "2021-03-23 16:56:28",
-  },
-];
