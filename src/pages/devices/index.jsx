@@ -88,7 +88,7 @@ export default function DeviceScreen() {
                     data={state.Inverters}
                     chipField={["state"]}
                     field={["name", "state"]}
-                    fieldTitle={["Name", "Status", "Operate"]}
+                    fieldTitle={["Name", "Status", "Action"]}
                     showLink={true}
                     path="/device/inverter"
                     chipComponent={(item, f) => {
@@ -123,8 +123,8 @@ export default function DeviceScreen() {
                     }}
                     data={state.MCCB_ABC}
                     chipField={["status"]}
-                    field={["name", "status"]}
-                    fieldTitle={["Name", "Status"]}
+                    field={["name", "status", ""]}
+                    fieldTitle={["Name", "Status", "Action"]}
                   />
                 </CardLayout>
               </Grid>
@@ -152,7 +152,7 @@ export default function DeviceScreen() {
                     data={state.Power_meters}
                     chipField={["status"]}
                     field={["name", "status"]}
-                    fieldTitle={["Name", "Status", "Operate"]}
+                    fieldTitle={["Name", "Status", "Action"]}
                     showLink={true}
                     path="/device/power_meter"
                   />
