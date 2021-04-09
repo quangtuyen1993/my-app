@@ -7,7 +7,10 @@ const init = {
   message: "",
   isError: false,
   stations: [],
-  stationSelected: { },
+  stationSelected: {
+    stationId: -1,
+    sensorTable:""
+   },
 };
 
 const fetchStation = createAsyncThunk(

@@ -21,10 +21,12 @@ import React, { Fragment, useEffect, useState } from "react";
 import StringUtils from "../utils/StringConvert";
 import IconApp from "../common/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getColorCell } from "../common/colors";
+import { grey } from "@material-ui/core/colors";
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
-    border: "1px solid white",
+    border: `1px solid ${grey[300]}`,
   },
   head: {
     backgroundColor: theme.palette.secondary.main,
@@ -58,6 +60,8 @@ const MTableMaterial = ({
   addControlFirst,
   refresh,
   askAll,
+  showIndex,
+  multiColor,
 }) => {
   const [state, setState] = useState({
     renderControl: null,
@@ -78,14 +82,15 @@ const MTableMaterial = ({
         additionalFields.push(item.name);
       });
     }
-    var sumCols = additionalFields.length + fieldArray.length;
+    var colIndex = showIndex ? 1 : 0;
+    var sumCols = additionalFields.length + fieldArray.length + colIndex;
     var w = Math.round(100 / sumCols);
     setState((pre) => ({
       ...pre,
       additionalFields: additionalFields,
       percentW: w,
     }));
-  }, [addControlColumns, fieldArray]);
+  }, [addControlColumns, fieldArray, showIndex]);
 
   //pagination
   useEffect(() => {
@@ -142,8 +147,8 @@ const MTableMaterial = ({
             <Grid
               item
               lg={3}
-              sm={refresh ? 10 :12}
-              xs={refresh ? 10 :12}
+              sm={refresh ? 10 : 12}
+              xs={refresh ? 10 : 12}
               md={6}
               style={{ display: "flex" }}
             >
@@ -202,12 +207,17 @@ const MTableMaterial = ({
         <Table style={{ border: "1px rgba(0,0,0,0.4) solid" }}>
           <TableHead>
             <StyledTableRow>
+              {showIndex && (
+                <StyledTableCell width={`${state.percentW}%`}>
+                  #
+                </StyledTableCell>
+              )}
               {addControlFirst &&
                 addControlFirst &&
                 state.additionalFields &&
-                state.additionalFields.map((item) => (
-                  <StyledTableCell width={`${state.percentW}%`} key={item}>
-                    {StringUtils.convertCamelToTextNormal(item)}
+                state.additionalFields.map((field) => (
+                  <StyledTableCell width={`${state.percentW}%`} key={field}>
+                    {StringUtils.convertCamelToTextNormal(field)}
                   </StyledTableCell>
                 ))}
 
@@ -230,7 +240,19 @@ const MTableMaterial = ({
           <TableBody>
             {state.dataShow &&
               state.dataShow.map((dataRow, index) => (
-                <StyledTableRow key={index}>
+                <StyledTableRow
+                  key={index}
+                  style={{
+                    backgroundColor: multiColor
+                      ? getColorCell(dataRow.name)
+                      : "white",
+                  }}
+                >
+                  {showIndex && (
+                    <StyledTableCell width={`${state.percentW}%`}>
+                      {index + 1}
+                    </StyledTableCell>
+                  )}
                   {addControlFirst &&
                     state.additionalFields.map((f, index) => (
                       <StyledTableCell key={index}>

@@ -123,24 +123,6 @@ export default function TrendMainScreen() {
     fetchSummary();
   }, [fetchSummary]);
 
-  // //fetchPRHistory
-  // const fetchPRHistory = useCallback(async () => {
-  //   var res = await HistoricalService.fetchJustTotal(
-  //     dateState.pRHistory.dateFrom,
-  //     dateState.pRHistory.dateTo,
-  //     sensorTable
-  //   );
-  //   var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-  //   alert(JSON.stringify(cols));
-  //   setState((pre) => ({
-  //     ...pre,
-  //     pRHistory: cols[0],
-  //   }));
-  // }, [dateState.pRHistory.dateFrom, dateState.pRHistory.dateTo, sensorTable]);
-  // useEffect(() => {
-  //   fetchPRHistory();
-  //   return () => {};
-  // }, [fetchPRHistory, sensorTable]);
 
   const handleChangeDate = ({ name, value }) => {
     setDateState((pre) => {
@@ -255,22 +237,6 @@ export default function TrendMainScreen() {
             </CardLayout>
           </Grid>
 
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <CardLayout icon={IconApp.BROADCAST_TOWER} title="PR History ">
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={6} lg={6}>
-                  <AppDatePicker
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
-                    isSingleDate={false}
-                    onRangeDateChange={handleChangeDate}
-                  />
-                </Grid>
-              </Grid>
-              <GraphBar data={[listData_1]} typeView={MONTH_IN_YEAR} />
-
-              {/* <GraphLineApp data={[listData_1]} /> */}
-            </CardLayout>
-          </Grid>
           {/* <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout icon={IconApp.BROADCAST_TOWER} title="Cell Temperature ">
               <Grid container spacing={2}>

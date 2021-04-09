@@ -3,11 +3,15 @@ import axiosAuthor from "../utils/AxiosAuthor";
 
 const OverviewService = {
   fetchOverview: async (idStation) => {
-    var response = await axiosAuthor.post(URL_OVERVIEW, {
-      stationId: idStation,
-    });
-    var data = response.data
-    return data;
+    try {
+      var response = await axiosAuthor.post(URL_OVERVIEW, {
+        stationId: idStation,
+      });
+      var data = response.data;
+      return data;
+    } catch (err) {
+      console.error(err.message);
+    }
   },
 };
 export default OverviewService;

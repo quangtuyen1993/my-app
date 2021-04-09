@@ -2,59 +2,49 @@ import { fade } from "@material-ui/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import { LIST_COLOR } from "../common/colors";
+import { getColorTrend } from "../common/colors";
 
 export const MONTH_IN_YEAR = "month";
 export const DAY_IN_MONTH = "day";
 
-const dataSetPattern = {
-  fill: true,
-  borderWidth: 2,
-};
-
-export default function GraphBar({ data, typeView, minDate, maxDate }) {
+export default function GraphBar({ data }) {
   const initialState = {
-    yAxisLabel: [],
+    yAxis: [],
     dataSet: [],
     typeView: DAY_IN_MONTH,
   };
-
   const [state, setState] = useState(initialState);
-  const convertDataToDataGraph = (data) => {
-    let label = [];
+
+  useEffect(() => {
+    if (data.length === 0) return;
+    console.log("DATA", data);
+    let yAxis = [];
     let dataSet = [];
     data.forEach((item, index) => {
       var value = [];
       if (item.data === undefined) return;
-      item.data.forEach((da) => {
+      item.data.forEach((da, i) => {
         if (index === 0) {
-          var date = moment.utc(da.date, "YYYY-MM").format("l LT").valueOf();
-          label.push(date);
+          yAxis.push(da.date);
         }
         value.push(da.value);
       });
-
+      var colorLine = getColorTrend(item.name);
       dataSet.push({
-        ...dataSetPattern,
-        lineTension: 0.5,
-        borderColor: LIST_COLOR[index],
-        backgroundColor: fade(LIST_COLOR[index], 0.1),
         label: item.name,
+        lineTension: 0.5,
+        fill: true,
+        borderColor: colorLine,
+        backgroundColor: fade(colorLine, 0.8),
+        borderWidth: 2,
         data: value,
       });
     });
-    return {
-      label: label,
-      dataSet: dataSet,
-    };
-  };
-  useEffect(() => {
-    var { label, dataSet } = convertDataToDataGraph(data);
 
     setState((pre) => {
       return {
         ...pre,
-        yAxisLabel: label,
+        yAxis: yAxis,
         dataSet: dataSet,
       };
     });
@@ -71,7 +61,7 @@ export default function GraphBar({ data, typeView, minDate, maxDate }) {
     >
       <Bar
         data={{
-          labels: ["2021-02","2021-03","2021-04",],
+          labels: state.yAxis,
           datasets: state.dataSet,
         }}
         options={{
@@ -100,47 +90,16 @@ export default function GraphBar({ data, typeView, minDate, maxDate }) {
             xAxes: [
               {
                 offset: true,
-                type: "time",
-                time: {
-                  adapters: moment,
-                  displayFormats: {
-                    month: "MMM",
-                    // year: "YYYY",
-                    // day: "MMM DD",
-                  },
-                  unit: "month",
-                  // round:"month"
-                },
-                scaleLabel: {
-                  display: true,
-                  labelString: "Date",
-                },
                 gridLines: {
                   display: true,
                 },
+               
                 distribution: "linear",
                 bounds: "tick",
                 ticks: {
                   source: "auto",
                   scaleOverride: true,
                   stepSize: 1,
-                  // autoSkip: true,
-                  // min: moment
-                  //   .utc(minDate, "YYYY-MM-DD HH:mm:ss")
-                  //   .format("l LT")
-                  //   .valueOf(),
-                  // max: moment
-                  //   .utc(maxDate, "YYYY-MM-DD HH:mm:ss")
-                  //   .format("l LT")
-                  //   .valueOf(),
-                  // min: moment
-                  //   .utc("2021-02-01 00:00:00", "YYYY-MM-DD HH:mm:ss")
-                  //   .format("l LT")
-                  //   .valueOf(),
-                  // max: moment
-                  //   .utc("2021-10-10 23:59:00", "YYYY-MM-DD HH:mm:ss")
-                  //   .format("l LT")
-                  //   .valueOf(),
                 },
               },
             ],

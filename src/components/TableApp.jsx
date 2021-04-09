@@ -59,7 +59,7 @@ const TableApp = ({
       };
     });
   }, [field, data, chipField, fieldTitle, showIndex, maxLength, showLink]);
-  
+
   useEffect(() => {
     var list = [];
     for (var i = 0; i < state.dataShow; i++) {
@@ -70,7 +70,6 @@ const TableApp = ({
       listColor: list,
     }));
   }, [state.dataShow]);
-
 
   const onChange = (e, pageNumber) => {
     setState((pre) => {
@@ -175,7 +174,7 @@ const TableApp = ({
                 });
               }}
             >
-              <Link>See Detail</Link>
+              <Link style={{ cursor: "pointer" }}>See Detail</Link>
             </th>
           ) : null}
           <Outlet />

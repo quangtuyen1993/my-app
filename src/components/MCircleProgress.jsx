@@ -2,6 +2,7 @@ import { Box, Typography } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { LIST_COLOR_ACCENT } from "../common/colors";
+import StringUtils from "../utils/StringConvert";
 
 const initState = {
   max: 100,
@@ -19,17 +20,20 @@ export default function MCircleProgress(props) {
   const [state, setState] = useState(initState);
 
   useEffect(() => {
-    var percent = props.value / props.max;
+    
+    var percent = state.value/100;
     var positionColor = Math.round(5 * percent);
     var percentProcess = Math.round(percent * 100 * 100) / 100;
+    var value = props.value.replace(" %","")
+
     setState((pre) => ({
       ...pre,
       max: props.max,
-      value: props.value,
+      value: value,
       process: percentProcess,
       color: LIST_COLOR_ACCENT[positionColor],
     }));
-  }, [props.value, props.max]);
+  }, [props.value, props.max, state.value]);
 
   useLayoutEffect(() => {
     var w = document.getElementById("svg").clientWidth;

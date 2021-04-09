@@ -79,13 +79,12 @@ export default function AppBadge({ handleClickOpen }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLoginComplete)
+    if (isLoginComplete && stationSelected.id !== undefined)
       dispatch(fetchAlarmRealtime({ stationSelected: stationSelected.id }));
   }, [dispatch, isLoginComplete, stationSelected.id]);
 
   useEffect(() => {
     if (alarmNotifications) {
-      console.log(alarmNotifications);
       setState((pre) => ({
         ...pre,
         alarmNotifications: alarmNotifications,

@@ -53,7 +53,8 @@ const Weather = () => {
   const { stationSelected } = useSelector((state) => state.stationReducer);
 
   const fetchSensor = useCallback(async () => {
-    var res = await DeviceService.fetchAllSensor(stationSelected.id);
+    if (stationSelected.id !== undefined)
+      var res = await DeviceService.fetchAllSensor(stationSelected.id);
     setState((pre) => ({
       ...pre,
       dataSource: res,

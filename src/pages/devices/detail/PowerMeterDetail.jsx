@@ -11,9 +11,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import CardLayout from "../../../common/layouts/CardLayout";
+import MTableMaterial from "../../../components/MTableMaterial";
 import TableApp from "../../../components/TableApp";
 import DeviceService from "../../../service/device.service";
 import { CookieManger } from "../../../utils/CookieManager";
+import StringUtils from "../../../utils/StringConvert";
 
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
@@ -81,7 +83,6 @@ export default function PowerMeterDetail() {
 
   const onFetchData = useCallback(async () => {
     var pws = await DeviceService.fetchAllPowerMeterDetail(state.deviceId);
-    //parser
     const {
       voltage,
       current,
@@ -102,7 +103,6 @@ export default function PowerMeterDetail() {
     onFetchData();
   }, [onFetchData]);
 
-  // timer run
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
     timer.current = setInterval(() => {
@@ -133,9 +133,7 @@ export default function PowerMeterDetail() {
                       <CardContent>
                         <Grid container spacing={2} alignContent="stretch">
                           <Grid item xs={12} md={12} lg={12}>
-                            <Typography variant="body1">
-                              {item.type.name}
-                            </Typography>
+                            <Typography variant="body1">{item.name}</Typography>
                           </Grid>
                           <Grid item xs={12} sm={12} md={12} lg={12}>
                             <Typography variant="body2">
@@ -156,21 +154,21 @@ export default function PowerMeterDetail() {
           <Grid container spacing={2} direction="row">
             <Grid item lg={6} md={6} xs={12} sm={12}>
               <CardLayout title="Voltage">
-                <TableApp
-                  showIndex={true}
-                  data={state.voltage}
-                  fieldTitle={["name", "value"]}
-                  field={["name", "value"]}
+                <MTableMaterial
+                  multiColor
+                  showIndex
+                  dataSource={state.voltage}
+                  fieldArray={["name", "value"]}
                 />
               </CardLayout>
             </Grid>
             <Grid item lg={6} md={6} xs={12} sm={12}>
               <CardLayout title="Current">
-                <TableApp
-                  showIndex={true}
-                  data={state.current}
-                  fieldTitle={["Name", "Value"]}
-                  field={["name", "value"]}
+                <MTableMaterial
+                  multiColor
+                  showIndex
+                  dataSource={state.current}
+                  fieldArray={["name", "value"]}
                 />
               </CardLayout>
             </Grid>
@@ -181,21 +179,22 @@ export default function PowerMeterDetail() {
           <Grid container spacing={2} direction="row">
             <Grid item lg={6} md={6} xs={12} sm={12}>
               <CardLayout title="Active Power">
-                <TableApp
-                  showIndex={true}
-                  data={state.activePower}
-                  fieldTitle={["Name", "Value"]}
-                  field={["name", "value"]}
+                <MTableMaterial
+                  multiColor
+                  showIndex
+                  dataSource={state.activePower}
+                  fieldArray={["name", "value"]}
                 />
               </CardLayout>
             </Grid>
 
             <Grid item lg={6} md={6} xs={12} sm={12}>
               <CardLayout title="Reactive Power">
-                <TableApp
-                  data={state.reactivePower}
-                  fieldTitle={["Name", "Value"]}
-                  field={["name", "value"]}
+                <MTableMaterial
+                  multiColor
+                  showIndex
+                  dataSource={state.reactivePower}
+                  fieldArray={["name", "value"]}
                 />
               </CardLayout>
             </Grid>
@@ -225,7 +224,21 @@ const parserData = (pws) => {
 
   for (let index = 0; index < fields.length; index++) {
     var f = fields[index];
-    if (f.toString().match(/^(voltage)_./)) {
+
+    let isGeneral = checkIncludesArray(f, [
+      "active_power_total",
+      "reactive_power_total",
+      "active_energy_delivered",
+      "frequency",
+    ]);
+    if (isGeneral) {
+      var name = f.toString().replace("_total").replace("_delivered").replaceAll("_"," ");
+      var value = pws[f];
+      general.push({
+        name: StringUtils.capitalize(name),
+        value: value,
+      });
+    } else if (f.toString().match(/^(voltage)_./)) {
       let check = checkIncludesArray(f, ["ab", "bc", "ca", "ll"]);
       if (check) {
         let name = f.replace("voltage_", "").replace("ll_", "");

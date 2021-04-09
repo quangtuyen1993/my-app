@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { red, grey } from "@material-ui/core/colors";
+import { fade, makeStyles } from "@material-ui/core/styles";
 import { id } from "date-fns/locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -36,9 +37,9 @@ export default function Overview() {
   });
 
   const onFetchPR = useCallback(async () => {
+    if (stationSelected.id === undefined) return;
     let day = await PRService.getPRofDay(stationSelected.id);
     let month = await PRService.getPRofMonth(stationSelected.id);
-
     day.name = "PR Day";
     month.name = "PR Month";
     var newList = [day, month];
@@ -55,6 +56,7 @@ export default function Overview() {
   }, [state.listPr]);
 
   const onFetchData = useCallback(async () => {
+    if (stationSelected.id === undefined) return;
     var response = await OverviewService.fetchOverview(stationSelected.id);
     var dataNormal = [];
     response.forEach((item) => {
@@ -118,7 +120,11 @@ export default function Overview() {
                   alignContent="center"
                   alignItems="center"
                 >
-                  <FontAwesomeIcon icon={item.icon} size="3x" />
+                  <FontAwesomeIcon
+                    icon={item.icon}
+                    style={{ color: fade(grey[800], 0.9) }}
+                    size="3x"
+                  />
                 </Box>
               </Grid>
             </Grid>
@@ -130,8 +136,9 @@ export default function Overview() {
 
   const renderCircle = (item, index) => {
     const { max } = state;
+    console.log(item);
     return (
-      <Grid key={index} item xs={12} sm={6} md={4} lg={4}>
+      <Grid key={index} item xs={12} sm={6} md={6} lg={6}>
         <MCircleProgress
           max={max}
           item={item}

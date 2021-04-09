@@ -21,7 +21,6 @@ const StringUtils = {
     var header = "#, Date,";
 
     for (let i = 0; i < array.length; i++) {
-
       header += array[i].name + ",";
     }
 
@@ -32,7 +31,7 @@ const StringUtils = {
     for (let i = 0; i < data.length; i++) {
       // if (line !== "") line += ",";
       var line = "";
-      line += (i+1) + "," + data[i].date + ",";
+      line += i + 1 + "," + data[i].date + ",";
       for (var n = 0; n < array.length; n++) {
         line += array[n].data[i].value + ",";
       }
@@ -40,6 +39,12 @@ const StringUtils = {
     }
 
     return header + "\r\n" + str;
+  },
+  numberFromString: (str) => {
+    var regex = /\d/g;
+    var numS = str.match(/(\d)/g);
+    var result = numS.join("");
+    return result
   },
 };
 export default StringUtils;

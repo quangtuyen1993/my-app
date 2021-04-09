@@ -2,14 +2,14 @@ import { fade } from "@material-ui/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { LIST_COLOR } from "../common/colors";
+import { LIST_COLOR, getColorTrend } from "../common/colors";
 
 const initialState = {
   yAxisLabel: [],
   dataSet: [],
 };
 
-const GraphLineApp = ({ data, typeView,minDate, maxDate }) => {
+const GraphLineApp = ({ data, typeView, minDate, maxDate }) => {
   const [state, setState] = useState(initialState);
 
   useEffect(() => {
@@ -29,12 +29,13 @@ const GraphLineApp = ({ data, typeView,minDate, maxDate }) => {
         }
         value.push(da.value);
       });
+      var colorLine = getColorTrend(item.name);
       dataSet.push({
         label: item.name,
         lineTension: 0.5,
         fill: true,
-        borderColor: LIST_COLOR[index],
-        backgroundColor: fade(LIST_COLOR[index], 0.1),
+        borderColor: colorLine,
+        backgroundColor: fade(colorLine, 0.1),
         borderWidth: 2,
         data: value,
       });
@@ -137,7 +138,7 @@ const GraphLineApp = ({ data, typeView,minDate, maxDate }) => {
                 bounds: "ticks",
                 ticks: {
                   beginAtZero: false,
-                  suggestedMin:0
+                  suggestedMin: 0,
                 },
               },
             ],

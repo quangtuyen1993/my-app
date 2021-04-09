@@ -5,43 +5,63 @@ import {
   FormLabel,
   Grid,
   Radio,
-  RadioGroup
+  RadioGroup,
 } from "@material-ui/core";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 
-
 export const YEAR = "year";
 export const MONTH = "month";
 
-export default function MYearMonthPicker({ type, showControl }) {
-  const [selectedDate, handleDateChange] = useState(new Date());
+export default function MYearMonthPicker({
+  defaultType,
+  showControl,
+  onTypeChange,
+  onDateChange,
+  defaultDate,
+}) {
+  // const [selectedDate, handleDateChange] = useState(new Date());
   const [state, setState] = React.useState({
     type: YEAR,
+    selectedDate: new Date(),
   });
 
   useEffect(() => {
-    if (type !== undefined) {
-      setState({ type: type });
+    if (defaultType !== undefined) {
+      setState({ type: defaultType });
     }
-  }, [type]);
+  }, [defaultType]);
+
+  useEffect(() => {
+    if (defaultDate) {
+      setState((pre) => ({
+        ...pre,
+        selectedDate: defaultDate,
+      }));
+    }
+  }, [defaultDate]);
 
   const handleTypeChange = (event) => {
-    setState((pre) => {
-      return {
-        ...pre,
-        type: event.target.value,
-      };
-    });
+    if (onTypeChange) onTypeChange(event.target.value);
+    else
+      setState((pre) => {
+        return {
+          ...pre,
+          type: event.target.value,
+        };
+      });
   };
 
   const onHandleDateChange = (date, value) => {
-    handleDateChange(date, value);
+    if (onDateChange) onDateChange(date, value);
   };
+
+
+
 
   const renderFormControl = () => {
     if (showControl) {
@@ -84,7 +104,7 @@ export default function MYearMonthPicker({ type, showControl }) {
               views={state.type === YEAR ? ["year"] : ["month"]}
               label={state.type === YEAR ? "Year" : "Month"}
               helperText="Choose date"
-              value={selectedDate}
+              value={state.selectedDate}
               inputVariant="outlined"
               onChange={onHandleDateChange}
             />

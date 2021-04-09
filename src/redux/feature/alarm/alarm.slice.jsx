@@ -8,7 +8,6 @@ const init = {
 const fetchAlarmRealtime = createAsyncThunk(
   "alarmRedux",
   async (data, thunkApi) => {
-    console.info(data);
     var res = await AlarmService.fetchRealTime({
       stationId: data.stationSelected,
     });

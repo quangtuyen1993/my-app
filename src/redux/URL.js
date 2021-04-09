@@ -24,3 +24,7 @@ export const URL_PR_MONTH = "/PR/GetPrOfMonth";
 export const URL_PR_DATE = "/PR/GetPrOfDay";
 
 export const URL_CLIENT = "/Accounts";
+
+
+
+export const URL_ENERGY = "/Energy/GetEnergy";

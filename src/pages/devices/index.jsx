@@ -92,19 +92,11 @@ export default function DeviceScreen() {
                     showLink={true}
                     path="/device/inverter"
                     chipComponent={(item, f) => {
-                      var color = "";
-                      switch (item[f]) {
-                        case "danger":
-                          color = red[500];
-                          break;
-                        default:
-                          color = green[500];
-                      }
                       return (
                         <Chip
                           label={item[f]}
                           style={{
-                            backgroundColor: color,
+                            backgroundColor: item.stateBackground,
                             color: "white",
                           }}
                         />
@@ -117,19 +109,11 @@ export default function DeviceScreen() {
                 <CardLayout icon={IconApp.TABLE} title="MCCB_ABC">
                   <TableApp
                     chipComponent={(item, f) => {
-                      var color = "";
-                      switch (item[f]) {
-                        case "danger":
-                          color = red[500];
-                          break;
-                        default:
-                          color = green[500];
-                      }
                       return (
                         <Chip
                           label={item[f]}
                           style={{
-                            backgroundColor: color,
+                            backgroundColor: item.background,
                             color: "white",
                           }}
                         />
@@ -150,6 +134,18 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="POWER_METER">
                   <TableApp
+                    chipComponent={(item, f) => {
+                      console.log(item);
+                      return (
+                        <Chip
+                          label={item[f]}
+                          style={{
+                            backgroundColor: item.background,
+                            color: "white",
+                          }}
+                        />
+                      );
+                    }}
                     data={state.Power_meters}
                     chipField={["status"]}
                     field={["name", "status"]}
@@ -162,6 +158,18 @@ export default function DeviceScreen() {
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="Sensors">
                   <TableApp
+                    chipComponent={(item, f) => {
+                      console.log(item);
+                      return (
+                        <Chip
+                          label={item[f]}
+                          style={{
+                            backgroundColor: item.background,
+                            color: "white",
+                          }}
+                        />
+                      );
+                    }}
                     data={state.Sensors}
                     chipField={["status"]}
                     field={["name", "status", "value", "unit"]}

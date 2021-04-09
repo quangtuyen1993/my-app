@@ -41,7 +41,7 @@ const AlarmService = {
       incommingTime: incommingTime,
       comment: comment,
     });
-    await alert(JSON.stringify(data.data));
+    alert(JSON.stringify(data.data))
     return data.data;
   },
 

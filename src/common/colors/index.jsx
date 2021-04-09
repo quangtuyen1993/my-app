@@ -29,6 +29,46 @@ const ColorsApp = {
   RUNNING: blue[500],
 };
 
+const power = "#d50000";
+const radiation = "#48b461";
+const cell = "#ff9800";
+const pr = indigo[600];
+const en="#64dd17"
+export const getColorTrend = (str) => {
+  var name = str.toString().toLowerCase();
+  if (name.includes("power")) {
+    return power;
+  } else if (name.includes("radiation")) {
+    return radiation;
+  } else if (name.includes("temp")) {
+    return cell;
+  } else if (name.includes("energy")) {
+    return en;
+  } else {
+    return pr;
+  }
+};
+
+export const getColorCell = (str) => {
+  if (str.length > 2) return "white";
+  var name = str.charAt(0).toUpperCase();
+
+  switch (name) {
+    case "A": {
+      return "#ff8a80";
+    }
+    case "B": {
+      return "#ffee58";
+    }
+    case "C": {
+      return "#81d4fa";
+    }
+    default: {
+      return "white";
+    }
+  }
+};
+
 export const LIST_COLOR = [
   green[900],
   red[900],

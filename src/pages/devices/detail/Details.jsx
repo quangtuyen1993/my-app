@@ -104,7 +104,6 @@ export default function DetailScreen() {
     var general = [];
 
     var obj = await DeviceService.fetchInverterDetail(state.deviceId);
-    console.info("Detail",obj)
     var fields = Object.keys(obj);
     fields.forEach((f) => {
       if (f === "tableName") {
@@ -197,14 +196,6 @@ export default function DetailScreen() {
                               {item.value}
                             </Typography>
                           </Grid>
-                          {item.type.showProgress && (
-                            <Grid item xs={12} md={12} lg={12}>
-                              <BorderLinearProgress
-                                variant="determinate"
-                                value={50}
-                              />
-                            </Grid>
-                          )}
                         </Grid>
                       </CardContent>
                     </Card>

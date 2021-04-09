@@ -155,14 +155,12 @@ export default function Station(props) {
           style={{ backgroundColor: theme.palette.primary.main }}
           id="max-width-dialog-title"
         >
-          <Typography variant="h5">Station</Typography>
+          <Typography variant="h5"> Select Station</Typography>
         </DialogTitle>
         <DialogContent>
           <form className={classes.form} noValidate>
             {stations.length > 0 ? (
               <FormControl className={classes.formControl}>
-                <InputLabel htmlFor="max-width">Choose Device</InputLabel>
-
                 <Select
                   fullWidth
                   autoFocus
@@ -177,7 +175,11 @@ export default function Station(props) {
                 </Select>
               </FormControl>
             ) : (
-              <TextField fullWidth variant="outlined" value="None device to select" />
+              <TextField
+                fullWidth
+                variant="outlined"
+                value="None device to select"
+              />
             )}
           </form>
         </DialogContent>

@@ -111,8 +111,8 @@ export default function AlarmScreen() {
         alignSelf="center"
       >
         <Button
-          disabled={item.state === "out"}
-          onClick={() => ackAlarm(item)}
+          disabled={item.state !== "out"}
+          onClick={()=>ackAlarm(item)}
           color="secondary"
           style={{ borderRadius: 50, color: "white" }}
           variant="contained"
