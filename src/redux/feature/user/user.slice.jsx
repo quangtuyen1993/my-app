@@ -35,7 +35,6 @@ const onLogin = createAsyncThunk(
       );
       return userData.data;
     } catch (e) {
-      console.log(e);
       if (!e.response) {
         throw e;
       }

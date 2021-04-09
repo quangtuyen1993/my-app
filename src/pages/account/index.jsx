@@ -97,7 +97,6 @@ export default function AccountScreen(props) {
 
   const onFetchUser = useCallback(async () => {
     var data = await ClientService.fetchAll();
-    console.info("users", data);
     setState((pre) => ({
       ...pre,
       users: data,

@@ -9,7 +9,7 @@ const init = {
   stations: [],
   stationSelected: {
     stationId: -1,
-    sensorTable:""
+    sensorTable:"",
    },
 };
 
@@ -21,7 +21,6 @@ const fetchStation = createAsyncThunk(
         var currentStation;
         var stations = response.data;
         var stringCookie = CookieManger.GetStationCurrent();
-        console.info("ATAT", response.data);
         if (response.data.length<=0) {
           throw new Error("No Have Station Available");
         }
@@ -80,7 +79,6 @@ export const stationSlice = createSlice({
       };
     },
     [fetchStation.rejected]: (state, action) => {
-      console.info(action)
       return {
         ...state,
         isLoading: false,

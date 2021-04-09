@@ -35,7 +35,6 @@ export default function AlarmScreen() {
     var data = await AlarmService.fetchRealTime({
       stationId: stationSelected.id,
     });
-    console.info(data);
     setState((pre) => ({
       ...pre,
       alarmRealTime: data,

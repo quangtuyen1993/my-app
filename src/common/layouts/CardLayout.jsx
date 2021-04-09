@@ -41,14 +41,14 @@ const CardLayout = (props) => {
   const onExport = () => {
     var arrayData = [];
     var check = Array.isArray(props.export);
-    var name=props.title
-    
+    var name = props.title;
+
     if (!check) {
       arrayData.push(props.export);
     } else {
       arrayData = [...props.export];
     }
-    
+
     downloadCSV(arrayData, name);
     return;
   };
@@ -97,9 +97,11 @@ const CardLayout = (props) => {
                     <Box>
                       <Typography variant="body1">
                         {props.title &&
-                          StringUtils.capitalize(
-                            props.title.replaceAll("_", " ")
-                          )}
+                          (props.isCap
+                            ? props.title.replaceAll("_", " ")
+                            : StringUtils.capitalize(
+                                props.title.replaceAll("_", " ")
+                              ))}
                       </Typography>
                     </Box>
                   </Box>
@@ -114,7 +116,6 @@ const CardLayout = (props) => {
                     >
                       <Button
                         onClick={onExport}
-                        style={{ padding: "10px" }}
                         variant="contained"
                         color="secondary"
                         startIcon={<FontAwesomeIcon icon={IconApp.CSV} />}

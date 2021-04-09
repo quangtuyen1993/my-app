@@ -20,7 +20,6 @@ export default function MCircleProgress(props) {
   const [state, setState] = useState(initState);
 
   useEffect(() => {
-    
     var percent = state.value/100;
     var positionColor = Math.round(5 * percent);
     var percentProcess = Math.round(percent * 100 * 100) / 100;

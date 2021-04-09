@@ -33,9 +33,9 @@ const GraphLineApp = ({ data, typeView, minDate, maxDate }) => {
       dataSet.push({
         label: item.name,
         lineTension: 0.5,
-        fill: true,
+        fill: data.length > 1 ? false:true,
         borderColor: colorLine,
-        backgroundColor: fade(colorLine, 0.1),
+        backgroundColor:   fade(colorLine, 0.4),
         borderWidth: 2,
         data: value,
       });

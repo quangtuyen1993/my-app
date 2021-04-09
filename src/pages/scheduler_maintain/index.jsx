@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Box, Button, Container } from "@material-ui/core";
 import CardLayout from "../../common/layouts/CardLayout";
 import IconApp from "../../common/icons";
 import MTableMaterial from "../../components/MTableMaterial";
 import { Edit } from "react-feather";
+import SchedulerService from "../../service/scheduler.service";
+import { useSelector } from "react-redux";
 const createSchedulerTask = (id, startDate, endDate, deviceId, note) => {
   return {
     id: id,
@@ -13,110 +15,13 @@ const createSchedulerTask = (id, startDate, endDate, deviceId, note) => {
     note: note,
   };
 };
-const listTask = [
-  createSchedulerTask(
-    1,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix update",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    2,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix ",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    3,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    " update",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    4,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix update",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    5,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix ",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    6,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    " update",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    11,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix update",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    22,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix ",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    33,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    " update",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    44,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix update",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    55,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    "fix ",
-    "12",
-    ""
-  ),
-  createSchedulerTask(
-    66,
-    "2021-04-05 00:00:00",
-    "2021-05-05 00:00:00",
-    " update",
-    "12",
-    ""
-  ),
-];
 
 const renderControl = {
   name: "Controls",
   component: (data, index) => {
     return (
       <Box
+        key={index}
         style={{
           flex: 1,
           justifyContent: "center",
@@ -133,15 +38,41 @@ const renderControl = {
 };
 
 export default function SchedulerMaintain() {
+  const { stationSelected } = useSelector((state) => state.stationReducer);
+  const [state, setState] = useState({
+    data: [],
+  });
+  const onFetchScheduler = useCallback(async () => {
+    if (stationSelected.id === undefined) return;
+    var res = await SchedulerService.fetchAll(stationSelected.id);
+    console.log(res);
+    setState((pre) => ({
+      ...pre,
+      data: res.data,
+    }));
+  }, [stationSelected.id]);
+
+  useEffect(() => {
+    onFetchScheduler();
+    return () => {};
+  }, [onFetchScheduler]);
+
   return (
     <Container maxWidth={false}>
       <CardLayout title="Scheduler Task" icon={IconApp.CALENDAR}>
         <MTableMaterial
           // showSearch={true}
+          isHover
           rowsPerPage={5}
           addControlColumns={[renderControl]}
-          dataSource={listTask}
-          fieldArray={["id", "deviceId", "startDate", "endDate", "note"]}
+          dataSource={state.data}
+          fieldArray={[
+            "createByUser",
+            "startTime",
+            "endTime",
+            "status",
+            "content",
+          ]}
         />
         Scheduler Maintain
       </CardLayout>

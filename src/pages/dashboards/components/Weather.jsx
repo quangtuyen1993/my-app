@@ -7,6 +7,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import ColorsApp from "../../../common/colors";
 import { useSelector } from "react-redux";
 import DeviceService from "../../../service/device.service";
+import { TIMER_TREND } from "../../../const/TimerUpdateConst";
 
 const title = "Weather";
 // var list = [
@@ -70,10 +71,9 @@ const Weather = () => {
     if (timer.current !== null) {
       clearInterval(timer.current);
     }
-
     timer.current = setInterval(() => {
       fetchSensor();
-    }, 10000);
+    }, TIMER_TREND);
     return () => {
       clearInterval(timer.current);
     };
