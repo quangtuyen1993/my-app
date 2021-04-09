@@ -177,7 +177,7 @@ export default function DeviceScreen() {
                     data={state.Sensors}
                     chipField={["status"]}
                     field={["name", "status", "value", "unit"]}
-                    fieldTitle={["Name", "Status", "Values", "Unit"]}
+                    fieldTitle={["Name", "Status", "Value", "Unit"]}
                   />
                 </CardLayout>
               </Grid>
