@@ -20,11 +20,10 @@ const useStyles = makeStyles((theme) => ({
   },
   lineHeader: {
     backgroundColor: theme.palette.secondary.main,
-    height: "5px",
+    height: "3px",
   },
   form: {
-    padding: "10px",
-    borderRadius: "2px",
+    borderRadius: "1px",
     backgroundColor: "white",
     boxShadow: " 1px 1px 0.5px #9E9E9E;",
   },
@@ -97,9 +96,7 @@ const CardLayout = (props) => {
                     <Box>
                       <Typography variant="body1">
                         {props.title &&
-                          StringUtils.capitalize(
-                            props.title.replaceAll("_", " ")
-                          )}
+                          props.title.replaceAll("_", " ")}
                       </Typography>
                     </Box>
                   </Box>
@@ -114,7 +111,11 @@ const CardLayout = (props) => {
                     >
                       <Button
                         onClick={onExport}
-                        style={{ padding: "10px" }}
+                        style={{        
+                          paddingLeft: "10px",
+                          paddingRight: "10px",
+                          paddingTop: "4px",
+                          paddingBottom: "4px", }}
                         variant="contained"
                         color="secondary"
                         startIcon={<FontAwesomeIcon icon={IconApp.CSV} />}

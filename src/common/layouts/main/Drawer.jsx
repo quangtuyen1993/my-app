@@ -86,7 +86,7 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
             >
               <ListItem button>
                 <ListItemIcon>
-                  <Box paddingLeft={1}>
+                  <Box paddingLeft={1.3}>
                     <FontAwesomeIcon
                       icon={route.iconItem}
                       style={{

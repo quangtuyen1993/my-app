@@ -34,7 +34,7 @@ const StyledTableCell = withStyles((theme) => ({
     textAlign: "center",
   },
   body: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "center",
   },
 }))(TableCell);
@@ -179,9 +179,9 @@ const MTableMaterial = ({
                 item
                 style={{ display: "flex ", flexGrow: 2 }}
               >
-                <IconButton color="secondary" variant="contained">
-                  <FontAwesomeIcon icon={IconApp.SYNC} />
-                </IconButton>
+              <Button color="secondary" variant="contained">
+                  Refresh
+                </Button>
               </Grid>
             )}
 
@@ -299,7 +299,7 @@ const MTableMaterial = ({
       {rowsPerPage && (
         <Box m={2}>
           <Pagination
-            size="large"
+            size="medium"
             color="secondary"
             count={state.count}
             onChange={handleChangePage}

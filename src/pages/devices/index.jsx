@@ -94,6 +94,7 @@ export default function DeviceScreen() {
                     chipComponent={(item, f) => {
                       return (
                         <Chip
+                        size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.stateBackground,
@@ -106,11 +107,12 @@ export default function DeviceScreen() {
                 </CardLayout>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout icon={IconApp.TABLE} title="MCCB_ABC">
+                <CardLayout icon={IconApp.TABLE} title="ACB - MCCB">
                   <TableApp
                     chipComponent={(item, f) => {
                       return (
                         <Chip
+                        size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,
@@ -132,12 +134,13 @@ export default function DeviceScreen() {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout icon={IconApp.TABLE} title="POWER_METER">
+                <CardLayout icon={IconApp.TABLE} title="Power Meters">
                   <TableApp
                     chipComponent={(item, f) => {
                       console.log(item);
                       return (
                         <Chip
+                        size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,
@@ -162,6 +165,7 @@ export default function DeviceScreen() {
                       console.log(item);
                       return (
                         <Chip
+                          size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,

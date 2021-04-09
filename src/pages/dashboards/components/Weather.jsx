@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     display: "flex",
-    grow: 1,
+    grow: 0,
     background: ColorsApp.RUNNING_GRADIENT,
   },
 }));
@@ -106,12 +106,12 @@ const Weather = () => {
             var itemSensor = createSensor(item);
             return (
               <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                <Card className={classes.root}>
+                <Card className={classes.root} variant="outlined">
                   <CardContent className={classes.icon}>
                     <FontAwesomeIcon
                       color="white"
                       icon={itemSensor.icon}
-                      size={"4x"}
+                      size={"3x"}
                     />
                   </CardContent>
                   <div className={classes.details}>

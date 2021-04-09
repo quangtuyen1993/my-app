@@ -69,7 +69,6 @@ export default function MYearMonthPicker({
         <Grid item>
           <FormControl component="fieldset">
             <FormLabel color="primary" component="legend" filled>
-              View
             </FormLabel>
             <RadioGroup
               row
@@ -101,9 +100,9 @@ export default function MYearMonthPicker({
               variant="dialog"
               autoOk={true}
               openTo="year"
+              format={state.type === YEAR ? "yyyy" : "yyyy-MM"}
               views={state.type === YEAR ? ["year"] : ["month"]}
               label={state.type === YEAR ? "Year" : "Month"}
-              helperText="Choose date"
               value={state.selectedDate}
               inputVariant="outlined"
               onChange={onHandleDateChange}

@@ -30,10 +30,16 @@ const GraphLineApp = ({ data, typeView, minDate, maxDate }) => {
         value.push(da.value);
       });
       var colorLine = getColorTrend(item.name);
+
+      let enabledFill = true;
+      if (data.length > 1) {
+        enabledFill = false;
+      }
+
       dataSet.push({
         label: item.name,
         lineTension: 0.5,
-        fill: true,
+        fill: enabledFill,
         borderColor: colorLine,
         backgroundColor: fade(colorLine, 0.1),
         borderWidth: 2,

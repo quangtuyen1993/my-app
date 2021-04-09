@@ -163,7 +163,7 @@ export default function AlarmScreen() {
                 <Grid item sm={12} lg={6}>
                   <MDateTimePicker
                     name="historical"
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    typeFormat="dd/MM/yyyy HH:mm:ss"
                     isSingleDate={false}
                     onRangeDateChange={handleChangeDate}
                   />
@@ -177,7 +177,7 @@ export default function AlarmScreen() {
                 askAll={ackAlarmAll}
                 addControlFirst={true}
                 showSearch={true}
-                rowsPerPage={5}
+                rowsPerPage={50}
                 dataSource={state.alarmHistorical}
                 addControlColumns={[ackAction]}
                 fieldArray={[

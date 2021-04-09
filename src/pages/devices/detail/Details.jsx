@@ -219,18 +219,18 @@ export default function DetailScreen() {
               </CardLayout>
             </Grid>
             <Grid item lg={6} md={6} xs={12} sm={12}>
-              <CardLayout title="DC OutPut">
+              <CardLayout title="DC Output">
                 <TableApp
                   showIndex={true}
                   chipField={["name"]}
                   chipComponent={(item, f, i, getColor) => {
                     var color;
                     if (item.type === "A") {
-                      color = red[400];
+                      color = "#ff8a80";
                     } else if (item.type === "B") {
-                      color = yellow[400];
+                      color = "#ffee58";
                     } else {
-                      color = blue[400];
+                      color = "#81d4fa";
                     }
                     getColor(color, i);
                     return (
