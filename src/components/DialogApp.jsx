@@ -10,15 +10,10 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { makeStyles, useTheme, withStyles } from "@material-ui/core/styles";
-import {
-  Fingerprint,
-  Lock,
-  Person,
-  SupervisorAccount,
-} from "@material-ui/icons";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { Label, Lock, Person, SupervisorAccount } from "@material-ui/icons";
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -46,7 +41,12 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
+const initialState = {
+  username: "",
+  email: "",
+  password: "",
+  passwordConfirmation: "",
+};
 export default function DialogApp({
   userDefault,
   onSubmit,
@@ -55,31 +55,34 @@ export default function DialogApp({
 }) {
   const theme = useTheme();
 
-  const onHandleSubmit = (data) => {
-    alert(JSON.stringify(data));
-  };
-  //handler form
-  const { handleSubmit, register, setValue, errors, getValues } = useForm({
+  const { handleSubmit, register, errors, watch, reset } = useForm({
+    defaultValues: initialState,
     mode: "onBlur",
-    shouldUnregister: false,
+    // shouldUnregister: false,
   });
+
+  const onHandleSubmit = (data) => {
+    onSubmit({
+      username: userDefault.username,
+      role: userDefault.role,
+      password: data.password,
+      confirmPassword: data.confirmPassword,
+    });
+    onHandleClose();
+  };
+
   useEffect(() => {
-    setValue("username", userDefault.username);
-    setValue("role", userDefault.role);
-  }, [setValue, userDefault]);
-  const DarkerDisabledTextField = withStyles({
-    root: {
-      marginRight: 8,
-      "& .MuiInputBase-root.Mui-disabled": {
-        color: "rgba(0, 0, 0, 1)",
-        backgroundColor: "white",
-      },
-    },
-  })(TextField);
+    reset(userDefault);
+  }, [reset, userDefault]);
+
+  const onHandleClose = () => {
+    reset();
+    handleClose();
+  };
 
   return (
     <>
-      <Dialog fullWidth maxWidth={"xs"} open={open} onClose={handleClose}>
+      <Dialog fullWidth maxWidth={"xs"} open={open} onClose={onHandleClose}>
         <form>
           <DialogTitle
             disableTypography
@@ -93,13 +96,11 @@ export default function DialogApp({
             <Box p={2}>
               <Grid spacing={2} container direction="column">
                 <Grid item>
-                  <DarkerDisabledTextField
-                    disabled
+                  <TextField
+                    value={userDefault.username}
                     label="Username"
-           
                     fullWidth
                     name="username"
-                    inputRef={register}
                     variant="outlined"
                     placeholder="Username"
                     InputProps={{
@@ -113,13 +114,11 @@ export default function DialogApp({
                 </Grid>
 
                 <Grid item>
-                  <DarkerDisabledTextField
-                    disabled
-                
+                  <TextField
+                    value={userDefault.role}
                     label="Role"
                     fullWidth
                     name="role"
-                    inputRef={register}
                     variant="outlined"
                     placeholder="role"
                     InputProps={{
@@ -137,9 +136,15 @@ export default function DialogApp({
                     label="Password"
                     fullWidth
                     name="password"
-                    inputRef={register}
+                    inputRef={register({
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password have to least 6 character",
+                      },
+                    })}
                     variant="outlined"
-                    error={errors.username ? true : false}
+                    error={errors.password ? true : false}
                     placeholder="Update Password"
                     InputProps={{
                       startAdornment: (
@@ -149,6 +154,38 @@ export default function DialogApp({
                       ),
                     }}
                   />
+                  {errors.password && (
+                    <Typography variant="subtitle2" style={{ color: "red" }}>
+                      {errors.password.message}
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item>
+                  <TextField
+                    autoFocus
+                    label="Confirm Password"
+                    fullWidth
+                    name="confirmPassword"
+                    inputRef={register({
+                      required: "confirm is require",
+                      validate: (value) => value === watch("password"),
+                    })}
+                    variant="outlined"
+                    error={errors.confirmPassword ? true : false}
+                    placeholder="Update Password"
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <Lock color="action" />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  {errors.confirmPassword && (
+                    <Typography variant="subtitle2" style={{ color: "red" }}>
+                      {errors.confirmPassword.message}
+                    </Typography>
+                  )}
                 </Grid>
               </Grid>
             </Box>
@@ -163,7 +200,7 @@ export default function DialogApp({
               Apply
             </Button>
 
-            <Button variant="outlined" onClick={handleClose} color="primary">
+            <Button variant="outlined" onClick={onHandleClose} color="primary">
               Cancel
             </Button>
           </DialogActions>

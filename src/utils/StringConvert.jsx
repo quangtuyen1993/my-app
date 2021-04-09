@@ -32,7 +32,7 @@ const StringUtils = {
     for (let i = 0; i < data.length; i++) {
       // if (line !== "") line += ",";
       var line = "";
-      line += i + "," + data[i].date + ",";
+      line += (i+1) + "," + data[i].date + ",";
       for (var n = 0; n < array.length; n++) {
         line += array[n].data[i].value + ",";
       }

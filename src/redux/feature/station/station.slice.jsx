@@ -1,44 +1,49 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import StationService from "../../../service/station.service";
-import axiosApp from "../../../utils/AxiosApp";
 import { CookieManger } from "../../../utils/CookieManager";
-import { URL_STATIONS } from "../../URL";
 
 const init = {
+  isLoading: false,
+  message: "",
+  isError: false,
   stations: [],
-  stationSelected: {
-    id: 1,
-    sensorTable: "",
-  },
+  stationSelected: { },
 };
 
 const fetchStation = createAsyncThunk(
   "/fetch_station",
   async (data, { getState, rejectWithValue }) => {
-    try {
-      return StationService.getStation().then((response) => {
+    return StationService.getStation()
+      .then((response) => {
         var currentStation;
         var stations = response.data;
         var stringCookie = CookieManger.GetStationCurrent();
+        console.info("ATAT", response.data);
+        if (response.data.length<=0) {
+          throw new Error("No Have Station Available");
+        }
         if (stringCookie !== "" && stringCookie !== undefined) {
           currentStation = response.data.find(
             (d) => d.id === JSON.parse(stringCookie).id
           );
+          if (currentStation === undefined) {
+            CookieManger.revokeCurrentDevice();
+            currentStation = response.data[0];
+          }
         } else {
           currentStation = response.data[0];
-          console.info("current station", currentStation);
         }
         return {
           stations: stations,
           stationSelected: currentStation,
         };
+      })
+      .catch((err) => {
+        if (!err.response) {
+          throw err;
+        }
+        return rejectWithValue(err.response.data);
       });
-    } catch (err) {
-      if (!err.response) {
-        throw err;
-      }
-      rejectWithValue(err.response.data);
-    }
   }
 );
 
@@ -60,8 +65,27 @@ export const stationSlice = createSlice({
         ...state,
         stations: [...action.payload.stations],
         stationSelected: action.payload.stationSelected,
+        isLoading: false,
+        isError: false,
+        message: "",
       };
     },
+    [fetchStation.pending]: (state, action) => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    },
+    [fetchStation.rejected]: (state, action) => {
+      console.info(action)
+      return {
+        ...state,
+        isLoading: false,
+        isError: true,
+        message: action.error.message,
+      };
+    },
+
     [onSelected.fulfilled]: (state, action) => {
       return {
         ...state,

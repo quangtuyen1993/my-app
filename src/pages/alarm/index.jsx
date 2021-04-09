@@ -31,6 +31,7 @@ export default function AlarmScreen() {
     });
   };
   const fetchRealTimeData = useCallback(async () => {
+    if (stationSelected.id === undefined) return;
     var data = await AlarmService.fetchRealTime({
       stationId: stationSelected.id,
     });
@@ -39,9 +40,11 @@ export default function AlarmScreen() {
       ...pre,
       alarmRealTime: data,
     }));
-  }, [stationSelected.id]);
+  }, [stationSelected]);
 
   const fetchHistoricalData = useCallback(async () => {
+    if (stationSelected.id === undefined) return;
+
     var data = await AlarmService.fetchHistorical({
       stationId: stationSelected.id,
       fromTime: state.historical.dateFrom,
@@ -52,7 +55,7 @@ export default function AlarmScreen() {
       ...pre,
       alarmHistorical: data,
     }));
-  }, [state.historical.dateFrom, state.historical.dateTo, stationSelected.id]);
+  }, [state.historical.dateFrom, state.historical.dateTo, stationSelected]);
 
   useEffect(() => {
     fetchRealTimeData();
@@ -64,7 +67,6 @@ export default function AlarmScreen() {
     if (timer.current !== null) clearInterval(timer.current);
     timer.current = setInterval(() => {
       fetchRealTimeData();
-      fetchHistoricalData();
     }, 10000);
     return () => {
       clearInterval(timer.current);
@@ -76,7 +78,8 @@ export default function AlarmScreen() {
       var data = await AlarmService.ackAlarm(
         stationSelected.id,
         item.name,
-        item.incommingTime,
+        item.alarmType,
+        item.incommingTime.replace("T", " "),
         "comment"
       );
       if (data.success) {

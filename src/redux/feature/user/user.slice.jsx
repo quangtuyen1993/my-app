@@ -35,6 +35,7 @@ const onLogin = createAsyncThunk(
       );
       return userData.data;
     } catch (e) {
+      console.log(e);
       if (!e.response) {
         throw e;
       }
@@ -52,7 +53,7 @@ const onRefreshToken = createAsyncThunk(
         RefreshToken: refresh,
       });
       const { refreshToken, expires, jwtToken } = userData.data;
-      refreshHeader(jwtToken)
+      refreshHeader(jwtToken);
       CookieManger.SetRefreshCookie(refreshToken, expires);
       return userData.data;
     } catch (err) {
@@ -65,7 +66,7 @@ const onRefreshToken = createAsyncThunk(
 );
 const onLogOut = createAsyncThunk(
   "/logOut",
-  async (api, { getState, dispatch }) => {
+  async (api, { getState, dispatch, rejectWithValue }) => {
     try {
       let jwtToken = getState().authorReducer.userProfile.jwtToken;
       let refresh = Cookies.get("refreshToken");
@@ -82,8 +83,11 @@ const onLogOut = createAsyncThunk(
       );
       CookieManger.RevokeAllCookies();
       return result.data;
-    } catch (e) {
-      return e.message;
+    } catch (err) {
+      if (!err.response) {
+        throw err;
+      }
+      return rejectWithValue(!err.response);
     }
   }
 );
@@ -113,7 +117,7 @@ export const authorSlice = createSlice({
       return {
         ...state,
         isLoading: false,
-        message: action.payload,
+        message: action.payload.message,
         isError: true,
       };
     },

@@ -22,3 +22,5 @@ export const URL_ALARM_ALL = "/Alarms/AckAll";
 
 export const URL_PR_MONTH = "/PR/GetPrOfMonth";
 export const URL_PR_DATE = "/PR/GetPrOfDay";
+
+export const URL_CLIENT = "/Accounts";

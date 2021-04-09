@@ -49,6 +49,7 @@ export default function TrendMainScreen() {
 
   //power trend
   const fetchPowerTrend = useCallback(async () => {
+    if (sensorTable === "") return;
     var res = await HistoricalService.fetchJustPower(
       dateState.powerTrend.dateFrom,
       dateState.powerTrend.dateTo,
@@ -62,10 +63,11 @@ export default function TrendMainScreen() {
   }, [dateState.powerTrend.dateFrom, dateState.powerTrend.dateTo, sensorTable]);
   useEffect(() => {
     fetchPowerTrend();
-  }, [fetchPowerTrend, sensorTable]);
+  }, [fetchPowerTrend]);
 
   //power fetchPowerRadiation
   const fetchPowerRadiation = useCallback(async () => {
+    if (sensorTable === "") return;
     var res = await HistoricalService.fetchJustRadiation(
       dateState.radiation.dateFrom,
       dateState.radiation.dateTo,
@@ -80,10 +82,12 @@ export default function TrendMainScreen() {
 
   useEffect(() => {
     fetchPowerRadiation();
-  }, [fetchPowerRadiation, sensorTable]);
+  }, [fetchPowerRadiation]);
 
   //power fetchTemp
   const fetchTemp = useCallback(async () => {
+    if (sensorTable === "") return;
+
     var res = await HistoricalService.fetchJustTemp(
       dateState.temp.dateFrom,
       dateState.temp.dateTo,
@@ -98,12 +102,11 @@ export default function TrendMainScreen() {
 
   useEffect(() => {
     fetchTemp();
-  }, [fetchTemp, sensorTable]);
-
-
+  }, [fetchTemp]);
 
   //power fetchTemp
   const fetchSummary = useCallback(async () => {
+    if (sensorTable === "") return;
     var res = await HistoricalService.fetchData(
       dateState.summary.dateFrom,
       dateState.summary.dateTo,
@@ -118,26 +121,26 @@ export default function TrendMainScreen() {
 
   useEffect(() => {
     fetchSummary();
-  }, [fetchSummary, fetchTemp, sensorTable]);
+  }, [fetchSummary]);
 
-  //fetchPRHistory
-  const fetchPRHistory = useCallback(async () => {
-    var res = await HistoricalService.fetchJustTotal(
-      dateState.pRHistory.dateFrom,
-      dateState.pRHistory.dateTo,
-      sensorTable
-    );
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    alert(JSON.stringify(cols));
-    setState((pre) => ({
-      ...pre,
-      pRHistory: cols[0],
-    }));
-  }, [dateState.pRHistory.dateFrom, dateState.pRHistory.dateTo, sensorTable]);
-  useEffect(() => {
-    fetchPRHistory();
-    return () => {};
-  }, [fetchPRHistory, sensorTable]);
+  // //fetchPRHistory
+  // const fetchPRHistory = useCallback(async () => {
+  //   var res = await HistoricalService.fetchJustTotal(
+  //     dateState.pRHistory.dateFrom,
+  //     dateState.pRHistory.dateTo,
+  //     sensorTable
+  //   );
+  //   var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+  //   alert(JSON.stringify(cols));
+  //   setState((pre) => ({
+  //     ...pre,
+  //     pRHistory: cols[0],
+  //   }));
+  // }, [dateState.pRHistory.dateFrom, dateState.pRHistory.dateTo, sensorTable]);
+  // useEffect(() => {
+  //   fetchPRHistory();
+  //   return () => {};
+  // }, [fetchPRHistory, sensorTable]);
 
   const handleChangeDate = ({ name, value }) => {
     setDateState((pre) => {
@@ -230,7 +233,7 @@ export default function TrendMainScreen() {
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout
               icon={IconApp.POWER_TREND}
-              title="Power Trend"
+              title="Sensor Trend"
               export={state.summary}
             >
               <Grid container spacing={2}>

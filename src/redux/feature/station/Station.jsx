@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Divider, Grid, TextField, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -55,7 +55,7 @@ export default function Station(props) {
   const [open, setOpen] = React.useState(false);
 
   const dispatch = useDispatch();
-  const { stations, stationSelected } = useSelector(
+  const { stations, stationSelected, message } = useSelector(
     (state) => state.stationReducer
   );
   const { isLoginComplete } = useSelector((state) => state.authorReducer);
@@ -69,7 +69,6 @@ export default function Station(props) {
       selected: stationSelected,
     });
   }, [stationSelected]);
-
 
   useEffect(() => {
     if (isLoginComplete) dispatch(fetchStation());
@@ -109,6 +108,7 @@ export default function Station(props) {
         className={classes.chip}
         onClick={handleOpen}
       >
+        <Grid item></Grid>
         <Grid item>
           <IconNotify
             chipColor={theme.palette.primary.main}
@@ -120,25 +120,32 @@ export default function Station(props) {
           />
         </Grid>
         <Grid item>
-          <Box display={{ xs: "none", sm: "none", md: "flex", lg: "flex" }}>
-            <Box>
-              {stations.length !== 0 && (
-                <Typography style={{ textAlign: "center" }} variant="subtitle1">
-                  {stationSelected.name}
-                </Typography>
-              )}
-            </Box>
+          {message ? (
+            <Typography variant="subtitle1">{message}</Typography>
+          ) : (
+            <Box display={{ xs: "none", sm: "none", md: "flex", lg: "flex" }}>
+              <Box>
+                {stations.length !== 0 && (
+                  <Typography
+                    style={{ textAlign: "center" }}
+                    variant="subtitle1"
+                  >
+                    {message ? message : stationSelected.name}
+                  </Typography>
+                )}
+              </Box>
 
-            <Box
-              ml={1}
-              display="flex"
-              justifyContent="center"
-              alignContent="center"
-              alignItems="center"
-            >
-              <FontAwesomeIcon icon={IconApp.ARROW_DOWN} />
+              <Box
+                ml={1}
+                display="flex"
+                justifyContent="center"
+                alignContent="center"
+                alignItems="center"
+              >
+                <FontAwesomeIcon icon={IconApp.ARROW_DOWN} />
+              </Box>
             </Box>
-          </Box>
+          )}
         </Grid>
       </Grid>
 
@@ -152,21 +159,26 @@ export default function Station(props) {
         </DialogTitle>
         <DialogContent>
           <form className={classes.form} noValidate>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="max-width">Choose Device</InputLabel>
-              <Select
-                fullWidth
-                autoFocus
-                value={state.selected}
-                onChange={onChange}
-              >
-                {stations.map((sta, index) => (
-                  <MenuItem key={sta.id} value={sta}>
-                    {sta.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            {stations.length > 0 ? (
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="max-width">Choose Device</InputLabel>
+
+                <Select
+                  fullWidth
+                  autoFocus
+                  value={state.selected}
+                  onChange={onChange}
+                >
+                  {stations.map((sta, index) => (
+                    <MenuItem key={sta.id} value={sta}>
+                      {sta.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : (
+              <TextField fullWidth variant="outlined" value="None device to select" />
+            )}
           </form>
         </DialogContent>
         <DialogActions>

@@ -2,22 +2,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Avatar,
   Box,
-  Button,
   Container,
   Grid,
-  Icon,
   IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Table,
-  TableBody,
   TableCell,
-  TableHead,
   TableRow,
-  useMediaQuery,
-  useTheme,
   withStyles,
 } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
@@ -26,6 +19,7 @@ import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
 import DialogApp from "../../components/DialogApp";
 import MTableMaterial from "../../components/MTableMaterial";
+import ClientService from "../../service/client.service";
 const users = [
   {
     id: 1,
@@ -79,6 +73,7 @@ export default function AccountScreen(props) {
   const [state, setState] = useState({
     open: false,
     users: [],
+    userChange: {},
     fields: [],
     widthPercent: 10,
     userSelected: {
@@ -100,79 +95,30 @@ export default function AccountScreen(props) {
     }));
   };
 
-  useEffect(() => {
-    var fields = Object.keys(users[0]);
-    fields.push("Controls");
-
-    var widthPercent = round5(100 / fields.length);
-
+  const onFetchUser = useCallback(async () => {
+    var data = await ClientService.fetchAll();
+    console.info("users", data);
     setState((pre) => ({
       ...pre,
-      users: users,
-      fields: fields,
-      widthPercent: widthPercent,
+      users: data,
     }));
-
-    return () => {};
   }, []);
 
-  const onSubmit = (data) => {};
+  const onChangePassword = async (newUser) => {
+    var data = await ClientService.changePassword(newUser);
+    await alert(data);
+  };
+
+  const onSubmit = (newUser) => {
+    onChangePassword(newUser);
+  };
+
+  useEffect(() => {
+    onFetchUser();
+  }, [onFetchUser]);
 
   const { userProfile } = useSelector((state) => state.authorReducer);
 
-  const renderTable = (fields, users) => {
-    return (
-      <Table style={{ border: "1px rgba(0,0,0,0.2) solid" }}>
-        <TableHead>
-          <StyledTableRow>
-            {state.fields.map((item) => (
-              <StyledTableCell
-                // style={{ width: `30%` }}
-                key={item}
-              >
-                {item.toUpperCase()}
-              </StyledTableCell>
-            ))}
-          </StyledTableRow>
-        </TableHead>
-
-        <TableBody>
-          {state.users.map((user, index) => (
-            <StyledTableRow key={user.id}>
-              {state.fields.map((f) =>
-                f === "Controls" ? (
-                  <StyledTableCell key={f}>
-                    <Box
-                      justifyContent="space-between"
-                      alignContent="center"
-                      alignItems="center"
-                      display="flex"
-                      flexDirection="row"
-                    >
-                      <Box flex={1}>
-                        <IconButton onClick={() => onOpen(user)}>
-                          <FontAwesomeIcon icon={IconApp.UPDATE} />
-                        </IconButton>
-                      </Box>
-                      <Box flex={1}>
-                        <IconButton onClick={() => onOpen(user)}>
-                          <FontAwesomeIcon icon={IconApp.REMOVE} />
-                        </IconButton>
-                      </Box>
-                    </Box>
-                  </StyledTableCell>
-                ) : (
-                  <StyledTableCell size="small" key={f}>
-                    {user[f]}
-                  </StyledTableCell>
-                )
-              )}
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    );
-  };
   const renderUserControl = () => {
     return (
       <Grid
@@ -305,6 +251,7 @@ export default function AccountScreen(props) {
       <DialogApp
         userDefault={state.userSelected}
         open={state.open}
+        onSubmit={onSubmit}
         handleClose={() => onClose()}
       />
     </Container>

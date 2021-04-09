@@ -22,6 +22,18 @@ const AlarmService = {
     return data.data;
   },
   ackAlarm: async (stationId, alarmName, alarmType, incommingTime, comment) => {
+    alert(
+      stationId +
+        "\t " +
+        alarmName +
+        "\t " +
+        alarmType +
+        "\t " +
+        incommingTime +
+        "\t" +
+        comment
+    );
+
     var data = await AxiosAuthor.post(URL_ALARM_ACK, {
       stationId: stationId,
       alarmName: alarmName,
@@ -29,6 +41,7 @@ const AlarmService = {
       incommingTime: incommingTime,
       comment: comment,
     });
+    await alert(JSON.stringify(data.data));
     return data.data;
   },
 
