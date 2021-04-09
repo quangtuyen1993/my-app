@@ -128,7 +128,7 @@ export default function AlarmScreen() {
       <Container disableGutters direction="row" maxWidth={false}>
         <Grid container spacing={2}>
           <Grid item sm={12} md={12} xs={12} lg={12}>
-            <CardLayout title="Real Time Ack">
+            <CardLayout title="Realtime Alarms" icon={IconApp.ALARM}>
               <Grid container spacing={2}>
                 <Grid item sm={12} xs={12}>
                   <Box style={{ overflowX: "auto" }}></Box>
@@ -158,7 +158,7 @@ export default function AlarmScreen() {
 
           {/*history  */}
           <Grid item sm={12} md={12} xs={12} lg={12}>
-            <CardLayout title="Historical Ack" icon={IconApp.CLOCK}>
+            <CardLayout title="Historical Alarms" icon={IconApp.CLOCK}>
               <Grid container spacing={2}>
                 <Grid item sm={12} lg={6}>
                   <MDateTimePicker
