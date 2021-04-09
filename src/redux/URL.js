@@ -5,6 +5,7 @@ export const URL_LOGIN = BASE_URL + "accounts/authenticate";
 export const URL_REFRESH_TOKEN = BASE_URL + "accounts/refresh-token";
 export const URL_REVOKE_TOKEN = BASE_URL + "accounts/revoke-token";
 export const URL_STATIONS = "/Stations/GetAccountStations";
+export const URL_GET_STATION = "/Stations/";
 export const URL_OVERVIEW = "/Overview";
 export const URL_DEVICES = "/Inverters/GetInvertersOfStation";
 export const URL_DEVICES_DETAIL = "/Inverters/GetInverterDetail";
