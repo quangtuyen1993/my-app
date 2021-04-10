@@ -63,7 +63,7 @@ export default function ConfirmDialog({
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Grid container direction="column" spacing={2}>
+            <Grid container direction="column" spacing={2} style={{marginTop:theme.spacing(1)}}>
               <Grid item>
                 <TextField
                   InputProps={{

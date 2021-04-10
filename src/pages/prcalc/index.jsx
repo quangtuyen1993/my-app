@@ -40,6 +40,7 @@ export default function PRCalculationScreen() {
   });
 
   const handleInputChange = (e) => {
+    console.log(e.target);
     setState((pre) => ({
       ...pre,
       [e.target.name]: e.target.value,
@@ -51,11 +52,11 @@ export default function PRCalculationScreen() {
     var res = await PRService.getPRParam({
       stationId: stationSelected.id,
     });
-    console.info(res);
+    console.log(res);
     setState((pre) => ({
       ...pre,
       g_inc: res.ginc,
-      g_hor: res.ghor,
+      g_hor: res.gHor,
       t_ref: res.tRef,
     }));
   }, [stationSelected.id]);
@@ -120,6 +121,7 @@ export default function PRCalculationScreen() {
                 </Grid>
                 <Grid item xs={12} sm={12} md={4} lg={4}>
                   <TextField
+                    type="number"
                     name="t_ref"
                     onChange={handleInputChange}
                     value={state.t_ref}
@@ -129,9 +131,11 @@ export default function PRCalculationScreen() {
                     placeholder="ref"
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={12} md={4} lg={4}>
                   <TextField
                     name="g_hor"
+                    type="number"
                     value={state.g_hor}
                     onChange={handleInputChange}
                     label="G_hor_sim"
@@ -140,9 +144,11 @@ export default function PRCalculationScreen() {
                     placeholder="G_hor_sim"
                   />
                 </Grid>
+
                 <Grid item xs={12} sm={12} md={4} lg={4}>
                   <TextField
                     name="g_inc"
+                    type="number"
                     value={state.g_inc}
                     onChange={handleInputChange}
                     label="G_inc_sim"
@@ -151,6 +157,7 @@ export default function PRCalculationScreen() {
                     placeholder="G_inc_sim"
                   />
                 </Grid>
+
                 {/* button group */}
                 <Grid item xs={12} lg={4} md={4}>
                   <Grid
