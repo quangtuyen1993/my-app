@@ -22,7 +22,7 @@ export const alarmSlice = createSlice({
   extraReducers: {
     [fetchAlarmRealtime.fulfilled]: (state, action) => ({
       ...state,
-      alarmNotifications: action.payload,
+      alarmNotifications:[...action.payload],
     }),
   },
 });

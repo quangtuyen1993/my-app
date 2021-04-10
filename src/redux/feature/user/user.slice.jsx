@@ -116,7 +116,7 @@ export const authorSlice = createSlice({
       return {
         ...state,
         isLoading: false,
-        message: action.payload.message,
+        message: action.payload.message ? action.payload.message : "Unknown",
         isError: true,
       };
     },

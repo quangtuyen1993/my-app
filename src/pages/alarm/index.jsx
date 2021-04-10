@@ -1,15 +1,19 @@
 import { Box, Button, Container, Grid } from "@material-ui/core";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
 import MDateTimePicker from "../../components/MDateTimePicker";
 import MTableMaterial from "../../components/MTableMaterial";
+import { fetchAlarmRealtime } from "../../redux/feature/alarm/alarm.slice";
 import AlarmService from "../../service/alarm.service";
 
 export default function AlarmScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
+  const { alarmNotification } = useSelector((state) => state.alarmReducer);
+  const dispatch = useDispatch();
   const timer = useRef(null);
   const [state, setState] = useState({
     fromDate: null,
@@ -22,6 +26,8 @@ export default function AlarmScreen() {
     },
   });
 
+  
+
   const handleChangeDate = ({ name, value }) => {
     setState((pre) => {
       return {
@@ -30,7 +36,7 @@ export default function AlarmScreen() {
       };
     });
   };
-  const fetchRealTimeData = useCallback(async () => {
+  const refreshAlarmRealtime = useCallback(async () => {
     if (stationSelected.id === undefined) return;
     var data = await AlarmService.fetchRealTime({
       stationId: stationSelected.id,
@@ -57,20 +63,20 @@ export default function AlarmScreen() {
   }, [state.historical.dateFrom, state.historical.dateTo, stationSelected]);
 
   useEffect(() => {
-    fetchRealTimeData();
+    refreshAlarmRealtime();
     fetchHistoricalData();
-  }, [fetchHistoricalData, fetchRealTimeData, stationSelected.id]);
+  }, [fetchHistoricalData, refreshAlarmRealtime, stationSelected.id]);
 
   //timer
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
     timer.current = setInterval(() => {
-      fetchRealTimeData();
+      refreshAlarmRealtime();
     }, 10000);
     return () => {
       clearInterval(timer.current);
     };
-  }, [fetchHistoricalData, fetchRealTimeData]);
+  }, [fetchHistoricalData, refreshAlarmRealtime]);
 
   const ackAlarm = useCallback(
     async (item) => {
@@ -82,18 +88,21 @@ export default function AlarmScreen() {
         "comment"
       );
       if (data.success) {
-        fetchRealTimeData();
+        refreshAlarmRealtime();
         fetchHistoricalData();
+        dispatch(fetchAlarmRealtime(stationSelected.id))
       }
     },
-    [fetchHistoricalData, fetchRealTimeData, stationSelected.id]
+    [fetchHistoricalData, refreshAlarmRealtime, stationSelected.id]
   );
 
   const ackAlarmAll = async () => {
     var data = await AlarmService.ackAllAlarm(stationSelected.id);
     if (data.success) {
-      fetchRealTimeData();
+      refreshAlarmRealtime();
       fetchHistoricalData();
+      dispatch(fetchAlarmRealtime(stationSelected.id))
+
     }
   };
 
@@ -111,7 +120,7 @@ export default function AlarmScreen() {
       >
         <Button
           disabled={item.state !== "Out"}
-          onClick={()=>ackAlarm(item)}
+          onClick={() => ackAlarm(item)}
           color="secondary"
           style={{ borderRadius: 50, color: "white" }}
           variant="contained"

@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
-import ConfirmDialog from "../../components/ConfirmDialog";
+import WarningDialog from "../../components/WarningDialog";
 import DialogNote from "../../components/DialogNote";
 import MTableMaterial from "../../components/MTableMaterial";
 import SchedulerService from "../../service/scheduler.service";
@@ -204,7 +204,7 @@ export default function SchedulerMaintain() {
         handleClose={onClose}
         onComplete={onFetchScheduler}
       />
-      <ConfirmDialog
+      <WarningDialog
         noteDefault={state.noteSelected}
         open={state.openConfirm}
         title="Waring"

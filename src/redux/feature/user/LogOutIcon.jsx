@@ -13,11 +13,11 @@ import { onLogOut } from "./user.slice";
 
 export default function LogOutIcon() {
   const dispatch = useDispatch();
-  const onLogin = () => {
+  const onLogout = () => {
     dispatch(onLogOut());
   };
   return (
-    <ListItem onClick={() => onLogin()} button>
+    <ListItem onClick={() => onLogout()} button>
       <ListItemIcon>
         <Box paddingLeft={1}>
           <FontAwesomeIcon

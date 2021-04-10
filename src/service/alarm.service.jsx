@@ -38,5 +38,11 @@ const AlarmService = {
     });
     return data.data;
   },
+  alarmNotification: async (stationId) => {
+    var data = await AxiosAuthor.post(URL_ALARM_ALL, {
+      stationId: stationId,
+    });
+    return data.data;
+  },
 };
 export default AlarmService;

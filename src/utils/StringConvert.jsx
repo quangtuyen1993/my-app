@@ -28,14 +28,18 @@ const StringUtils = {
     // console.log(array)
     var fields = Object.keys(array[0]);
     var str = "";
-    array.forEach((element,index) => {
-      var lint = `${index+1} ,`;
+    array.forEach((element, index) => {
+      var lint = `${index + 1} ,`;
       fields.forEach((f) => {
-        lint += element[f] + ",";
+        if (f.toLocaleLowerCase().includes("datetime")) {
+          lint += element[f].replace("T", " ") + "";
+        } else {
+          lint += element[f] + ",";
+        }
       });
       str += lint + "\r\n";
     });
-    fields.unshift("#")
+    fields.unshift("#");
     return fields.join(",") + "\r\n" + str;
 
     // var csv = array
@@ -69,7 +73,11 @@ const StringUtils = {
       var line = "";
       line += i + 1 + "," + data[i].date + ",";
       for (var n = 0; n < array.length; n++) {
-        line += array[n].data[i].value + ",";
+        if (array[n].data[i].toLocaleLowerCase().includes("datetime")) {
+          line += array[n].data[i].value.replace("T", " ") + ",";
+        } else {
+          line += array[n].data[i].value + ",";
+        }
       }
       str += line + "\r\n";
     }
