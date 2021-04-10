@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from "@material-ui/core";
+import { Container, Grid } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import {
   GoogleMap,
@@ -9,6 +9,7 @@ import {
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
+import MTableInfo from "../../components/MTableInfo";
 import MTableMaterial from "../../components/MTableMaterial";
 import StationService from "../../service/station.service";
 import StringUtils from "../../utils/StringConvert";
@@ -35,16 +36,20 @@ export default function SystemInfoScreen() {
     LNG: 106.93676260189989,
     Station: null,
     data: [],
+    headers: [],
+    bodyRows: [],
+    bodyFooter: [],
+    bodyLabel: [],
     stationInfo: {
       address: "",
       contact: "",
-      lat:"",
-      lng:""
+      lat: "",
+      lng: "",
     },
   });
 
   useEffect(() => {
-    if (stationSelected === undefined) return;
+    if (stationSelected.id === undefined) return;
     var data = getArrayFromField(
       [
         "ratedDccapacity",
@@ -61,17 +66,22 @@ export default function SystemInfoScreen() {
     }));
   }, [stationSelected]);
 
-
-
   useEffect(() => {
     const fetchStationInfo = async () => {
-      if (stationSelected.id !== undefined)
-        var data = await StationService.getStationInfo(stationSelected.id);
-      console.log(data, "station info");
+      if (stationSelected.id === undefined) return;
+      var data = await StationService.getStationInfo(stationSelected.id);
+      var pvInfoModel = data.pvInfoModel;
+      var bodyFooter = [];
+      bodyFooter.push(pvInfoModel.stC_Description);
+      bodyFooter.push(pvInfoModel.noC_Description);
+      console.log(data)
       setState((pre) => ({
         ...pre,
         stationInfo: data,
-      
+        headers: pvInfoModel.columns,
+        bodyRows: pvInfoModel.rows,
+        bodyFooter: bodyFooter,
+        bodyLabel: ["ModelNumber", pvInfoModel.model_Number],
       }));
     };
     fetchStationInfo();
@@ -90,19 +100,19 @@ export default function SystemInfoScreen() {
             </CardLayout>
           </Grid>
 
+          <Grid item xs={12} lg={12} md={12}>
+            <CardLayout title="PV Information">
+              <MTableInfo
+                bodyRows={state.bodyRows}
+                bodyFooter={state.bodyFooter}
+                bodyLabel={state.bodyLabel}
+              />
+            </CardLayout>
+          </Grid>
           {/* Chỗ này để đia chỉ của trạm và thông tin liên hệ */}
           <Grid item xs={12} lg={12} md={12}>
             <CardLayout title="Contact" icon={IconApp.INFO}>
-              <Grid container direction="column">
-                <Grid item>
-                  <p>Address: {state.stationInfo.address}</p>{" "}
-                  <p>
-                    Contact:{" "}
-                    {state.stationInfo.contact
-                      ? state.stationInfo.contact
-                      : "Updating..."}
-                  </p>{" "}
-                </Grid>
+              <Grid container direction="column" spacing={2}>
                 <Grid item>
                   <MyMapComponent
                     isMarkerShown
@@ -116,11 +126,18 @@ export default function SystemInfoScreen() {
                     mapElement={<div style={{ height: `100%` }} />}
                   />
                 </Grid>
+                <Grid item>
+                  <p>Address: {state.stationInfo.address}</p>{" "}
+                  <p>
+                    Contact:{" "}
+                    {state.stationInfo.contact
+                      ? state.stationInfo.contact
+                      : "Updating..."}
+                  </p>{" "}
+                </Grid>
               </Grid>
             </CardLayout>
           </Grid>
-
-          <Grid item xs={12} lg={12} md={12}></Grid>
         </Grid>
       </Container>
     </>

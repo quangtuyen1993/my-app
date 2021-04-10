@@ -1,23 +1,20 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    Container,
+    Grid,
+    InputAdornment,
+    TextField,
+    useTheme
+} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { grey } from "@material-ui/core/colors";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import {
-  Box,
-  Container,
-  Grid,
-  InputAdornment,
-  TextField,
-  useTheme,
-} from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useCallback, useEffect, useState } from "react";
 import IconApp from "../common/icons";
-import ColorsApp from "../common/colors";
-import { grey } from "@material-ui/core/colors";
-import { Key } from "react-feather";
 
 export default function ConfirmDialog({
   title,
