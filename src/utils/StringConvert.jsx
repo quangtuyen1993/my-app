@@ -73,11 +73,7 @@ const StringUtils = {
       var line = "";
       line += i + 1 + "," + data[i].date + ",";
       for (var n = 0; n < array.length; n++) {
-        if (array[n].data[i].toLocaleLowerCase().includes("datetime")) {
-          line += array[n].data[i].value.replace("T", " ") + ",";
-        } else {
-          line += array[n].data[i].value + ",";
-        }
+        line += array[n].data[i].value + ",";
       }
       str += line + "\r\n";
     }
