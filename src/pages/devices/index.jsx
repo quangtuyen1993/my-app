@@ -1,4 +1,13 @@
-import { Chip, Container, Grid } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  Chip,
+  Container,
+  Grid,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
@@ -9,8 +18,11 @@ import DeviceService from "../../service/device.service";
 
 export default function DeviceScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
-
+  const { userProfile } = useSelector((state) => state.authorReducer);
+  const theme = useTheme();
   const timer = useRef(null);
+
+  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [state, setState] = useState({
     Inverters: [],
@@ -81,6 +93,31 @@ export default function DeviceScreen() {
     };
   }, [stationSelected]);
 
+  const renderControl = (item) => {
+    return (
+      <Box
+        onClick={() => console.log(item)}
+        display="flex"
+        justifyContent="center"
+        justifyItems="center"
+        alignSelf="center"
+        ml={2}
+        mr={2}
+      >
+        <Box
+          width={smDown ? "100%" : "50%"}
+          style={{
+            cursor: "pointer",
+            backgroundColor: theme.palette.secondary.main,
+            borderRadius: "5px",
+            color: "white",
+          }}
+        >
+          <Typography style={{ color: "white" }}>Action</Typography>
+        </Box>
+      </Box>
+    );
+  };
   return (
     <>
       <Container disableGutters direction="row" maxWidth={false}>
@@ -99,7 +136,7 @@ export default function DeviceScreen() {
                     chipComponent={(item, f) => {
                       return (
                         <Chip
-                        size="small"
+                          size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.stateBackground,
@@ -113,12 +150,11 @@ export default function DeviceScreen() {
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="ACB - MCCB">
-
                   <TableApp
                     chipComponent={(item, f) => {
                       return (
                         <Chip
-                        size="small"
+                          size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,
@@ -127,10 +163,16 @@ export default function DeviceScreen() {
                         />
                       );
                     }}
+                    // addControlComponent
+                    addControlComponent={
+                      userProfile.role === "Admin"
+                        ? (item, f) => renderControl(item, f)
+                        : false
+                    }
                     data={state.MCCB_ABC}
                     chipField={["status"]}
-                    field={["name", "status", ""]}
-                    fieldTitle={["Name", "Status", "Action"]}
+                    field={["name", "status"]}
+                    fieldTitle={["Name", "Status"]}
                   />
                 </CardLayout>
               </Grid>
@@ -141,12 +183,11 @@ export default function DeviceScreen() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="Power Meters">
-
                   <TableApp
                     chipComponent={(item, f) => {
                       return (
                         <Chip
-                        size="small"
+                          size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,

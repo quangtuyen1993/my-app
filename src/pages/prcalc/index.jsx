@@ -21,18 +21,20 @@ import TableApp from "../../components/TableApp";
 import PRService from "../../service/pr.service";
 import StringUtils from "../../utils/StringConvert";
 import FileSaver from "file-saver";
+import { useSelector } from "react-redux";
 
 export default function PRCalculationScreen() {
   const theme = useTheme();
   const sm = useMediaQuery(theme.breakpoints.down("sm"));
+  const { stationSelected } = useSelector((state) => state.stationReducer);
   const [state, setState] = useState({
     date: {
       toTime: "",
       fromTime: "",
     },
-    g_hor: 100,
-    g_inc: 100,
-    t_ref: 100,
+    g_hor: 0,
+    g_inc: 0,
+    t_ref: 0,
     results: [],
     dataTable: [],
   });
@@ -44,16 +46,35 @@ export default function PRCalculationScreen() {
     }));
   };
 
+  const getPrParam = useCallback(async () => {
+    if (stationSelected.id === undefined) return;
+    var res = await PRService.getPRParam({
+      stationId: stationSelected.id,
+    });
+    console.info(res);
+    setState((pre) => ({
+      ...pre,
+      g_inc: res.ginc,
+      g_hor: res.ghor,
+      t_ref: res.tRef,
+    }));
+  }, [stationSelected.id]);
+
+  useEffect(() => {
+    getPrParam();
+  }, [getPrParam]);
+
   const onFetchData = async () => {
+    if (stationSelected.id === undefined) return;
     var res = await PRService.getPRofTime({
-      stationId: 1,
+      stationId: stationSelected.id,
       fromTime: state.date.fromTime,
       toTime: state.date.toTime,
       g_hor: state.g_hor,
       g_inc: state.g_inc,
       t_ref: state.t_ref,
     });
-    console.log(res);
+
     var fields = Object.keys(res).filter((i) => i !== "datas");
     var result = getArrayFromField(fields, res);
     var dataTable = res.datas;
@@ -81,6 +102,7 @@ export default function PRCalculationScreen() {
     const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     FileSaver.saveAs(csvData, `${name}.csv`);
   };
+
   return (
     <>
       <Container disableGutters maxWidth={false}>

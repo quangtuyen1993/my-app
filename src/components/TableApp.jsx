@@ -24,6 +24,7 @@ const TableApp = ({
   onChipClick,
   chipComponent,
   maxLength,
+  addControlComponent,
 }) => {
   const classes = useStyles();
   const themes = useTheme();
@@ -109,6 +110,11 @@ const TableApp = ({
               {f}
             </th>
           ))}
+           {addControlComponent && (
+            <th className={classes.cell} style={{ flex: 1 }}>
+              Controls
+            </th>
+          )}
         </tr>
       );
     return null;
@@ -136,6 +142,7 @@ const TableApp = ({
                 &nbsp;
               </th>
             ) : null}
+            
           </tr>
         );
       }
@@ -177,6 +184,14 @@ const TableApp = ({
               <Link style={{ cursor: "pointer" }}>See Detail</Link>
             </th>
           ) : null}
+          {addControlComponent && (
+            <th
+              style={{ flex: 1 }}
+              className={classes.cell}
+            >
+              {addControlComponent(item)}
+            </th>
+          )}
           <Outlet />
         </tr>
       ));
@@ -206,9 +221,7 @@ const TableApp = ({
         return (
           <ChipTag
             name={item[f]}
-            onClick={(e) =>
-              onChipClick && onChipClick(item, f) 
-            }
+            onClick={(e) => onChipClick && onChipClick(item, f)}
           />
         );
     }
