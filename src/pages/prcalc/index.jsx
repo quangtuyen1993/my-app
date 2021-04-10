@@ -76,16 +76,7 @@ export default function PRCalculationScreen() {
   };
 
   const onExport = () => {
-    var arrayData = [];
-    var check = Array.isArray(state.results);
     var name = "PR Calculate";
-    alert(JSON.stringify(state.results));
-
-    // if (!check) {
-    //   arrayData.push(state.results);
-    // } else {
-    //   arrayData = [...state.results];
-    // }
     const csv = StringUtils.convertDataToCsv(state.results);
     const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     FileSaver.saveAs(csvData, `${name}.csv`);

@@ -1,10 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Box, Button, Container } from "@material-ui/core";
+import { Box, Button, Container, IconButton } from "@material-ui/core";
+import { indigo, red } from "@material-ui/core/colors";
 import React, { useCallback, useEffect, useState } from "react";
-import { Edit } from "react-feather";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import DialogNote from "../../components/DialogNote";
 import MTableMaterial from "../../components/MTableMaterial";
 import SchedulerService from "../../service/scheduler.service";
@@ -17,6 +18,8 @@ export default function SchedulerMaintain() {
     noteSelected: {},
     open: false,
     isUpdating: false,
+    isDeleting: false,
+    openConfirm: false,
   });
 
   const onFetchScheduler = useCallback(async () => {
@@ -34,9 +37,6 @@ export default function SchedulerMaintain() {
     return () => {};
   }, [onFetchScheduler]);
 
-  const onSubmit = () => {
-    alert("submit");
-  };
   const onClose = () => {
     setState((pre) => ({
       ...pre,
@@ -45,7 +45,7 @@ export default function SchedulerMaintain() {
   };
 
   const onUpdate = (nodeSelected) => {
-    if(!checkAuthor(nodeSelected)) return
+    if (!checkAuthor(nodeSelected)) return;
     setState((pre) => {
       return {
         ...pre,
@@ -66,9 +66,37 @@ export default function SchedulerMaintain() {
   };
 
   const onDelete = async (item) => {
-    if(!checkAuthor(item)) return
     await SchedulerService.remove({ id: item.id });
     onFetchScheduler();
+  };
+
+  const openConfirm = (item) => {
+    if (!checkAuthor(item)) return;
+    setState((pre) => ({
+      ...pre,
+      noteSelected: item,
+      isDeleting: true,
+    }));
+  };
+
+  useEffect(() => {
+    if (!state.isDeleting) return;
+    setState((pre) => ({
+      ...pre,
+      openConfirm: true,
+      isDeleting: false,
+    }));
+  }, [state.isDeleting]);
+
+  const closeConfirm = () => {
+    setState((pre) => ({
+      ...pre,
+      openConfirm: false,
+    }));
+  };
+
+  const confirmSubmit = (item) => {
+    onDelete(item);
   };
 
   const checkAuthor = (item) => {
@@ -104,27 +132,36 @@ export default function SchedulerMaintain() {
             justifyItems: "center",
           }}
         >
-          <Box p={1} width="100%">
-            <Button
-              fullWidth
-              startIcon={<Edit />}
-              onClick={() => onUpdate(data)}
-              variant="contained"
-              color="primary"
-            >
-              Note
-            </Button>
-          </Box>
-          <Box p={1} width="100%">
-            <Button
-              fullWidth
-              startIcon={<Edit />}
-              onClick={() => onDelete(data)}
-              variant="contained"
-              color="primary"
-            >
-              Delete
-            </Button>
+          <Box display="flex" flexDirection="row" justifyContent="center">
+            <Box p={1} width="100%">
+              <IconButton
+                size="medium"
+                style={{
+                  backgroundColor: indigo[500],
+                }}
+                onClick={() => onUpdate(data)}
+              >
+                <FontAwesomeIcon
+                  style={{ color: "white" }}
+                  icon={IconApp.EDIT}
+                />
+              </IconButton>
+            </Box>
+            <Box p={1} width="100%">
+              <IconButton
+                size="medium"
+                style={{
+                  backgroundColor: red[500],
+                }}
+                onClick={() => openConfirm(data)}
+                variant="contained"
+              >
+                <FontAwesomeIcon
+                  style={{ color: "white" }}
+                  icon={IconApp.DELETE}
+                />
+              </IconButton>
+            </Box>
           </Box>
         </Box>
       );
@@ -159,9 +196,16 @@ export default function SchedulerMaintain() {
       <DialogNote
         noteDefault={state.noteSelected}
         open={state.open}
-        onSubmit={onSubmit}
         handleClose={onClose}
         onComplete={onFetchScheduler}
+      />
+      <ConfirmDialog
+        noteDefault={state.noteSelected}
+        open={state.openConfirm}
+        title="Waring"
+        content="Are you sure delete item"
+        onSubmit={confirmSubmit}
+        onClose={closeConfirm}
       />
     </Container>
   );

@@ -35,6 +35,8 @@ import {
   faArrowAltCircleDown,
   faSync,
   faPlus,
+  faEdit,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -115,9 +117,11 @@ const IconApp = {
   PERSON: faPersonBooth,
   USERS: faUsers,
   CLOCK: faClock,
-  DOWNLOAD:faArrowAltCircleDown,
-  CSV:  faFileCsv,
-  SYNC:faSync,
-  ADD:faPlus
+  DOWNLOAD: faArrowAltCircleDown,
+  CSV: faFileCsv,
+  SYNC: faSync,
+  ADD: faPlus,
+  EDIT: faEdit,
+  DELETE: faTrash,
 };
 export default IconApp;

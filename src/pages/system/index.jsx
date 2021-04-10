@@ -38,6 +38,8 @@ export default function SystemInfoScreen() {
     stationInfo: {
       address: "",
       contact: "",
+      lat:"",
+      lng:""
     },
   });
 
@@ -59,28 +61,7 @@ export default function SystemInfoScreen() {
     }));
   }, [stationSelected]);
 
-  useEffect(() => {
-    const onFetchData = async () => {
-      if (stationSelected.id !== undefined)
-        var station = await StationService.getStationById(stationSelected.id);
-      if (station != null) {
-        console.log("info_station", station.data.geoLocation);
-      }
 
-      setState((pre) => ({
-        ...pre,
-        LAT: 10.715632448971512,
-      }));
-      setState((pre) => ({
-        ...pre,
-        LNG: 106.93676260189989,
-      }));
-    };
-
-    onFetchData();
-
-    return () => {};
-  }, [stationSelected]);
 
   useEffect(() => {
     const fetchStationInfo = async () => {
@@ -90,6 +71,7 @@ export default function SystemInfoScreen() {
       setState((pre) => ({
         ...pre,
         stationInfo: data,
+      
       }));
     };
     fetchStationInfo();
@@ -125,8 +107,8 @@ export default function SystemInfoScreen() {
                   <MyMapComponent
                     isMarkerShown
                     zoom={16}
-                    lat={state.LAT}
-                    lng={state.LNG}
+                    lat={state.stationInfo.lat}
+                    lng={state.stationInfo.lng}
                     googleMapsApiKey="AIzaSyBZGTmCYONTRG6a304G1NtC8slduyCUcXk"
                     googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyBZGTmCYONTRG6a304G1NtC8slduyCUcXk"
                     loadingElement={<div style={{ height: `100%` }} />}

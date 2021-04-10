@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SchedulerService from "../service/scheduler.service";
+import ConfirmDialog from "./ConfirmDialog";
 
 const initialState = {
   id: "",
@@ -24,7 +25,7 @@ const initialState = {
   mode: "Insert",
   status: 0,
 };
-
+export const TYPE_HOUR_DATE = "dd/MM/yyyy HH:mm:ss";
 export default function DialogNote({
   noteDefault,
   handleClose,
@@ -122,7 +123,9 @@ export default function DialogNote({
               style={{ backgroundColor: theme.palette.primary.main }}
               id="max-width-dialog-title"
             >
-              <Typography variant="h6">Update Note</Typography>
+              <Typography variant="h6">
+                {state.mode === "Insert" ? "Create Task" : "Update Task"}
+              </Typography>
             </DialogTitle>
 
             <DialogContent>
@@ -130,9 +133,11 @@ export default function DialogNote({
                 <Grid spacing={2} container direction="column">
                   <Grid item>
                     <KeyboardDateTimePicker
+                      label="Start Date"
                       value={dateFrom}
                       onChange={handleDateFromChange}
                       okLabel="Done"
+                      format={TYPE_HOUR_DATE}
                       inputVariant="outlined"
                       fullWidth
                       variant="dialog"
@@ -141,9 +146,11 @@ export default function DialogNote({
 
                   <Grid item>
                     <KeyboardDateTimePicker
+                      label="End Date"
                       value={dateTo}
                       onChange={handleDateToChange}
                       okLabel="Done"
+                      format={TYPE_HOUR_DATE}
                       inputVariant="outlined"
                       fullWidth
                       variant="dialog"
