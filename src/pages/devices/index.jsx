@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import TableApp from "../../components/TableApp";
 import { TIMER_TABLE } from "../../const/TimerUpdateConst";
 import DeviceService from "../../service/device.service";
@@ -29,7 +30,33 @@ export default function DeviceScreen() {
     MCCB_ABC: [],
     Power_meters: [],
     Sensors: [],
+    isOpenAdminDialog: false,
+    isLoadingItem: false,
+    itemSelected: {},
   });
+
+  const onOpen = (item) => {
+    setState((pre) => ({
+      ...pre,
+      itemSelected: item,
+      isLoadingItem: true,
+    }));
+  };
+
+  const onClose = (item) => {
+    setState((pre) => ({
+      ...pre,
+      isOpenAdminDialog: false,
+    }));
+  };
+
+  useEffect(() => {
+    setState((pre) => ({
+      ...pre,
+      isOpenAdminDialog: true,
+      isLoadingItem: false,
+    }));
+  }, [state.isLoadingItem]);
 
   useEffect(() => {
     if (timer.current !== null) {
@@ -96,7 +123,7 @@ export default function DeviceScreen() {
   const renderControl = (item) => {
     return (
       <Box
-        onClick={() => console.log(item)}
+        onClick={() => onOpen(item)}
         display="flex"
         justifyContent="center"
         justifyItems="center"
@@ -113,7 +140,7 @@ export default function DeviceScreen() {
             color: "white",
           }}
         >
-          <Typography style={{ color: "white" }}>Action</Typography>
+          <Typography style={{ color: "white" }}>Open</Typography>
         </Box>
       </Box>
     );
@@ -230,6 +257,7 @@ export default function DeviceScreen() {
             </Grid>
           </Grid>
         </Grid>
+        <ConfirmDialog open={state.isOpenAdminDialog} onClose={onClose} deviceDefault={state.itemSelected} />
       </Container>
     </>
   );

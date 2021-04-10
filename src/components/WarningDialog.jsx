@@ -5,21 +5,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import {
-  Box,
-  Container,
-  Grid,
-  InputAdornment,
-  TextField,
-  useTheme,
-} from "@material-ui/core";
+import { Box, Container, useTheme } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import IconApp from "../common/icons";
 import ColorsApp from "../common/colors";
 import { grey } from "@material-ui/core/colors";
-import { Key } from "react-feather";
 
-export default function ConfirmDialog({
+export default function WarningDialog({
   title,
   content,
   onSubmit,
@@ -43,7 +35,7 @@ export default function ConfirmDialog({
 
   const submit = useCallback(() => {
     onSubmit(state.noteDefault);
-    onClose();
+    onClose()
   }, [onClose, onSubmit, state.noteDefault]);
 
   return (
@@ -59,44 +51,29 @@ export default function ConfirmDialog({
           style={{ backgroundColor: theme.palette.primary.main }}
           id="alert-dialog-title"
         >
-          Confirm Password
+          {title}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Grid container direction="column" spacing={2}>
-              <Grid item>
-                <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FontAwesomeIcon icon={IconApp.SECURITY} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder="Password"
-                  type="password"
-                  fullWidth
-                  variant="outlined"
-                  label="Password"
+            <Box
+              display="flex"
+              minHeight="100px"
+              justifyContent="center"
+              //   justifyItem="flex-around"
+              alignItems="center"
+            >
+              <Box m={2}>
+                <FontAwesomeIcon
+                  icon={IconApp.INFO}
+                  size="4x"
+                  color={ColorsApp.POWER}
                 />
-              </Grid>
-              <Grid item>
-                <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FontAwesomeIcon icon={IconApp.CONFIRM} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  placeholder="Confirm Password"
-                  type="password"
-                  variant="outlined"
-                  fullWidth
-                  label="Confirm Password"
-                />
-              </Grid>
-            </Grid>
+              </Box>
+              <Box m={2}>
+                {content}
+                {state.noteDefault.id && state.noteDefault.id}
+              </Box>
+            </Box>
           </DialogContentText>
         </DialogContent>
         <DialogActions style={{ background: grey[300] }}>

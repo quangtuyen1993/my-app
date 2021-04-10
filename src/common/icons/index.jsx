@@ -37,6 +37,7 @@ import {
   faPlus,
   faEdit,
   faTrash,
+  faCheckDouble,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -123,5 +124,6 @@ const IconApp = {
   ADD: faPlus,
   EDIT: faEdit,
   DELETE: faTrash,
+  CONFIRM:faCheckDouble
 };
 export default IconApp;
