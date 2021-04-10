@@ -1,5 +1,5 @@
 import { Container, Grid } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   GoogleMap,
   Marker,
@@ -18,8 +18,8 @@ const MyMapComponent = withScriptjs(
   withGoogleMap((props) => (
     <GoogleMap
       defaultZoom={props.zoom}
-      // 10.715632448971512, 106.93676260189989
       defaultCenter={{ lat: props.lat, lng: props.lng }}
+      center={{ lat: props.lat, lng: props.lng }}
     >
       {props.isMarkerShown && (
         <Marker position={{ lat: props.lat, lng: props.lng }} />
@@ -30,7 +30,7 @@ const MyMapComponent = withScriptjs(
 
 export default function SystemInfoScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
-
+  const googleRef = useRef(null);
   const [state, setState] = useState({
     LAT: 10.715632448971512,
     LNG: 106.93676260189989,
@@ -43,10 +43,19 @@ export default function SystemInfoScreen() {
     stationInfo: {
       address: "",
       contact: "",
-      lat: "",
-      lng: "",
+      lat: 0.0,
+      lng: 0.0,
     },
   });
+  function handleLoad(map) {
+    googleRef.current = map;
+  }
+
+  function handleCenter() {
+    if (!googleRef.current) return;
+    const newPos = googleRef.current.getCenter().toJSON();
+    setState(newPos);
+  }
 
   useEffect(() => {
     if (stationSelected.id === undefined) return;
@@ -74,7 +83,7 @@ export default function SystemInfoScreen() {
       var bodyFooter = [];
       bodyFooter.push(pvInfoModel.stC_Description);
       bodyFooter.push(pvInfoModel.noC_Description);
-      console.log(data)
+      console.log(data);
       setState((pre) => ({
         ...pre,
         stationInfo: data,
@@ -117,8 +126,8 @@ export default function SystemInfoScreen() {
                   <MyMapComponent
                     isMarkerShown
                     zoom={16}
-                    lat={state.stationInfo.lat}
-                    lng={state.stationInfo.lng}
+                    lat={parseFloat(state.stationInfo.lat)}
+                    lng={parseFloat(state.stationInfo.lng)}
                     googleMapsApiKey="AIzaSyBZGTmCYONTRG6a304G1NtC8slduyCUcXk"
                     googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyBZGTmCYONTRG6a304G1NtC8slduyCUcXk"
                     loadingElement={<div style={{ height: `100%` }} />}
