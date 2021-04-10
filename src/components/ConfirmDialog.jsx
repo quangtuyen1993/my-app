@@ -73,8 +73,6 @@ export default function ConfirmDialog({
                       </InputAdornment>
                     ),
                   }}
-                  value={"Password"}
-                  placeholder="Password"
                   type="password"
                   fullWidth
                   variant="outlined"
@@ -90,7 +88,6 @@ export default function ConfirmDialog({
                       </InputAdornment>
                     ),
                   }}
-                  placeholder="Confirm Password"
                   type="password"
                   variant="outlined"
                   fullWidth
