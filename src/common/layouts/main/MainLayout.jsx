@@ -29,6 +29,7 @@ export default function MainLayout({children,location,navigate}) {
       return;
     }
     if (!isLoading && isError) {
+      CookieManger.RevokeAllCookies()
       history("/login");
       return;
     }

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
 import { fetchAlarmRealtime } from "./alarm.slice";
 import IconApp from "../../../common/icons";
+import AlarmService from "../../../service/alarm.service";
 const useStyles = makeStyles((theme) => ({
   chip: {
     backgroundColor: theme.palette.secondary.main,
@@ -67,30 +68,29 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
 const initState = {
   alarmNotifications: [],
+  alarmCount: 0,
 };
-export default function AppBadge({ handleClickOpen }) {
+const AppBadge=({ handleClickOpen })=> {
   const classes = useStyles();
-  const { isLoginComplete } = useSelector((state) => state.authorReducer);
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const { alarmNotifications } = useSelector((state) => state.alarmReducer);
   const [state, setState] = useState(initState);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (isLoginComplete && stationSelected.id !== undefined)
-      dispatch(fetchAlarmRealtime({ stationSelected: stationSelected.id }));
-  }, [dispatch, isLoginComplete, stationSelected.id]);
-
-  useEffect(() => {
-    if (alarmNotifications) {
+    const fetchAlarm = async () => {
+      if (stationSelected.id === undefined) return;
+      var alarmCount = await AlarmService.alarmNotification(stationSelected.id);
       setState((pre) => ({
         ...pre,
-        alarmNotifications: alarmNotifications,
+        alarmCount: alarmCount,
       }));
-    }
-  }, [alarmNotifications]);
+    };
+    fetchAlarm();
+
+  }, [stationSelected.id]);
+
 
   return (
     <div>
@@ -107,14 +107,14 @@ export default function AppBadge({ handleClickOpen }) {
               }}
               overlap="circle"
               className={classes.chip}
-              badgeContent={state.alarmNotifications.length}
+              badgeContent={state.alarmCount}
               color="error"
             >
               <FontAwesomeIcon
                 className={clsx([
                   classes.icon,
                   {
-                    [classes.animatedItem]: state.alarmNotifications.length > 0,
+                    [classes.animatedItem]: state.alarmCount > 0,
                   },
                 ])}
                 icon={IconApp.ALARM}
@@ -130,3 +130,4 @@ export default function AppBadge({ handleClickOpen }) {
     </div>
   );
 }
+export default React.memo(AppBadge)

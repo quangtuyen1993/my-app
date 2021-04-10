@@ -1,6 +1,7 @@
 import {
   URL_ALARM_ACK,
   URL_ALARM_ALL,
+  URL_ALARM_COUNT,
   URL_ALARM_HISTORY,
   URL_ALARM_REALTIME,
 } from "../redux/URL";
@@ -39,10 +40,11 @@ const AlarmService = {
     return data.data;
   },
   alarmNotification: async (stationId) => {
-    var data = await AxiosAuthor.post(URL_ALARM_ALL, {
+    var data = await AxiosAuthor.post(URL_ALARM_COUNT, {
       stationId: stationId,
     });
-    return data.data;
+    console.log(data)
+    return data.data.count;
   },
 };
 export default AlarmService;

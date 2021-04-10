@@ -87,7 +87,7 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
             <Station device={10} />
           </Box>
           <Box mr={2}>
-            <AppBadge />
+            <AppBadge  />
           </Box>
 
           <Box>
