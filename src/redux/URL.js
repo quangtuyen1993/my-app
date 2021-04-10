@@ -35,3 +35,4 @@ export const URL_SCHEDULER_TASK = "/SchedulerTasks/GetSchedulerTaskOfStation";
 
 export const URL_SCHEDULER = "/SchedulerTasks";
 
+export const URL_STATION_INFO = "/stations";

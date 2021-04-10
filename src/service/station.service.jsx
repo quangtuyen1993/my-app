@@ -1,4 +1,4 @@
-import { URL_STATIONS, URL_GET_STATION } from "../redux/URL";
+import { URL_STATIONS, URL_GET_STATION, URL_STATION_INFO } from "../redux/URL";
 import AxiosAuthor from "../utils/AxiosAuthor";
 
 const StationService = {
@@ -11,5 +11,10 @@ const StationService = {
     var data = await AxiosAuthor.get(url);
     return data;
   },
+  getStationInfo: async (idStation) => {
+    var url = URL_STATION_INFO + "/" + idStation;
+    var data = await AxiosAuthor.get(url);
+    return data.data;
+  },
 };
-export default StationService
+export default StationService;
