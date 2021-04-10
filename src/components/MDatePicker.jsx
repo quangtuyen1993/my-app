@@ -7,8 +7,8 @@ import moment from "moment";
 import DateUtils from "../utils/DateUtils";
 import PropTypes from "prop-types";
 
-export const TYPE_DATE = "MM/dd/yyyy";
-export const TYPE_HOUR_DATE = "MM/dd/yyyy HH:mm:ss";
+export const TYPE_DATE = "dd/MM/yyyy";
+export const TYPE_HOUR_DATE = "dd/MM/yyyy HH:mm:ss";
 
 export default function MDatePicker(props) {
   const [selectedFrom, handleDateFromChange] = useState(

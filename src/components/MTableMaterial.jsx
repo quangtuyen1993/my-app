@@ -32,7 +32,7 @@ const StyledTableCell = withStyles((theme) => ({
     textAlign: "center",
   },
   body: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "center",
   },
 }))(TableCell);
@@ -184,10 +184,9 @@ const MTableMaterial = ({
                 md={2}
                 lg={1}
               >
-                <Button fullWidth color="secondary" variant="contained">
-                  <Typography variant="subtitle2">Refresh</Typography>
+              <Button color="secondary" variant="contained">
+                  Refresh
 
-                  {/* <FontAwesomeIcon icon={IconApp.SYNC} /> */}
                 </Button>
               </Grid>
             )}
@@ -312,7 +311,7 @@ const MTableMaterial = ({
       {rowsPerPage && (
         <Box m={2}>
           <Pagination
-            size="large"
+            size="medium"
             color="secondary"
             count={state.count}
             onChange={handleChangePage}

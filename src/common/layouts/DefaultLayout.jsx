@@ -9,7 +9,7 @@ const useStyles = makeStyles({
         backgroundColor: "#e9ecef"
     },
     form: {
-        padding: "10px",
+
         borderRadius: "2px",
         backgroundColor: "white",
         boxShadow: " 1px 1px 0.5px #9E9E9E;"

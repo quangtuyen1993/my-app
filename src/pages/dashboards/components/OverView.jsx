@@ -22,7 +22,7 @@ const useStyles = makeStyles((themes) => ({
     right: "0%",
     marginRight: themes.spacing(4),
     transform: "translate(0, -50%)",
-    opacity: 0.4,
+    opacity: 0.33,
   },
 }));
 
@@ -118,7 +118,7 @@ export default function Overview() {
                 >
                   <FontAwesomeIcon
                     icon={item.icon}
-                    style={{ color: fade(grey[800], 0.9) }}
+                    style={{ color: fade(grey[800], 0.77) }}
                     size="3x"
                   />
                 </Box>
@@ -157,7 +157,7 @@ export default function Overview() {
 
         <Grid item lg={12} sm={12} md={12} xs={12}>
           <CardLayout
-            title="PR Radio"
+            title="PR Ratio"
             icon={IconApp.CALC}
             className={classes.root}
           >

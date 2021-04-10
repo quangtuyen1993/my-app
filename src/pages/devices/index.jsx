@@ -93,12 +93,13 @@ export default function DeviceScreen() {
                     data={state.Inverters}
                     chipField={["state"]}
                     field={["name", "state"]}
-                    fieldTitle={["Name", "Status", "Operate"]}
+                    fieldTitle={["Name", "Status", "Action"]}
                     showLink={true}
                     path="/device/inverter"
                     chipComponent={(item, f) => {
                       return (
                         <Chip
+                        size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.stateBackground,
@@ -111,11 +112,13 @@ export default function DeviceScreen() {
                 </CardLayout>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout icon={IconApp.TABLE} title="MCCB ACB" isCap>
+                <CardLayout icon={IconApp.TABLE} title="ACB - MCCB">
+
                   <TableApp
                     chipComponent={(item, f) => {
                       return (
                         <Chip
+                        size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,
@@ -126,8 +129,8 @@ export default function DeviceScreen() {
                     }}
                     data={state.MCCB_ABC}
                     chipField={["status"]}
-                    field={["name", "status"]}
-                    fieldTitle={["Name", "Status"]}
+                    field={["name", "status", ""]}
+                    fieldTitle={["Name", "Status", "Action"]}
                   />
                 </CardLayout>
               </Grid>
@@ -137,11 +140,13 @@ export default function DeviceScreen() {
           <Grid item xs={12}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
-                <CardLayout icon={IconApp.TABLE} title="POWER METER">
+                <CardLayout icon={IconApp.TABLE} title="Power Meters">
+
                   <TableApp
                     chipComponent={(item, f) => {
                       return (
                         <Chip
+                        size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,
@@ -153,7 +158,7 @@ export default function DeviceScreen() {
                     data={state.Power_meters}
                     chipField={["status"]}
                     field={["name", "status"]}
-                    fieldTitle={["Name", "Status", "Operate"]}
+                    fieldTitle={["Name", "Status", "Action"]}
                     showLink={true}
                     path="/device/power_meter"
                   />
@@ -165,6 +170,7 @@ export default function DeviceScreen() {
                     chipComponent={(item, f) => {
                       return (
                         <Chip
+                          size="small"
                           label={item[f]}
                           style={{
                             backgroundColor: item.background,
@@ -176,7 +182,7 @@ export default function DeviceScreen() {
                     data={state.Sensors}
                     chipField={["status"]}
                     field={["name", "status", "value", "unit"]}
-                    fieldTitle={["Name", "Status", "Values", "Unit"]}
+                    fieldTitle={["Name", "Status", "Value", "Unit"]}
                   />
                 </CardLayout>
               </Grid>

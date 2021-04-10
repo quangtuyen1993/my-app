@@ -8,8 +8,8 @@ import moment from "moment";
 import PropTypes from "prop-types";
 import { useCallback, useEffect, useState } from "react";
 
-export const TYPE_DATE = "MM/dd/yyyy";
-export const TYPE_HOUR_DATE = "MM/dd/yyyy HH:mm:ss";
+export const TYPE_DATE = "dd/MM/yyyy";
+export const TYPE_HOUR_DATE = "dd/MM/yyyy HH:mm:ss";
 
 export default function MDateTimePicker(props) {
   const [selectedFrom, handleDateFromChange] = useState(

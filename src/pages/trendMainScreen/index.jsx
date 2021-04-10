@@ -139,7 +139,7 @@ export default function TrendMainScreen() {
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout
-              icon={IconApp.POWER_TREND}
+              icon={IconApp.POWER}
               title="Power Trend"
               export={state.powerTrend}
             >
@@ -147,7 +147,7 @@ export default function TrendMainScreen() {
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <MDateTimePicker
                     name="powerTrend"
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    typeFormat="dd/MM/yyyy HH:mm:ss"
                     isSingleDate={false}
                     onRangeDateChange={handleChangeDate}
                   />
@@ -164,7 +164,7 @@ export default function TrendMainScreen() {
 
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout
-              icon={IconApp.POWER_TREND}
+              icon={IconApp.RADIATION}
               title="Radiation"
               export={state.radiation}
             >
@@ -172,7 +172,7 @@ export default function TrendMainScreen() {
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <MDateTimePicker
                     name="radiation"
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    typeFormat="dd/MM/yyyy HH:mm:ss"
                     isSingleDate={false}
                     onRangeDateChange={handleChangeDate}
                   />
@@ -197,7 +197,7 @@ export default function TrendMainScreen() {
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <MDateTimePicker
                     name="temp"
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    typeFormat="dd/MM/yyyy HH:mm:ss"
                     isSingleDate={false}
                     onRangeDateChange={handleChangeDate}
                   />
@@ -215,14 +215,14 @@ export default function TrendMainScreen() {
           <Grid item xs={12} sm={12} md={12} lg={12}>
             <CardLayout
               icon={IconApp.POWER_TREND}
-              title="Sensor Trend"
+              title="Sensors"
               export={state.summary}
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <MDateTimePicker
                     name="summary"
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    typeFormat="dd/MM/yyyy HH:mm:ss"
                     isSingleDate={false}
                     onRangeDateChange={handleChangeDate}
                   />
@@ -243,13 +243,13 @@ export default function TrendMainScreen() {
                 <Grid item xs={12} sm={12} md={6} lg={6}>
                   <MYearMonthPicker
                     type={YEAR}
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    typeFormat="dd/MM/yyyy HH:mm:ss"
                     isSingleDate={false}
                     onRangeDateChange={handleChangeDate}
                   />
                   <MDateTimePicker
                     name="pRHistory"
-                    typeFormat="MM/dd/yyyy HH:mm:ss"
+                    typeFormat="dd/MM/yyyy HH:mm:ss"
                     isSingleDate={false}
                     onRangeDateChange={handleChangeDate}
                   />
