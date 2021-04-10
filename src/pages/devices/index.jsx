@@ -1,10 +1,10 @@
 import { Chip, Container, Grid } from "@material-ui/core";
-import { green, red } from "@material-ui/core/colors";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
 import TableApp from "../../components/TableApp";
+import { TIMER_TABLE } from "../../const/TimerUpdateConst";
 import DeviceService from "../../service/device.service";
 
 export default function DeviceScreen() {
@@ -20,11 +20,12 @@ export default function DeviceScreen() {
   });
 
   useEffect(() => {
-    if (timer !== null) {
+    if (timer.current !== null) {
       clearInterval(timer.current);
     }
 
     const onFetchData = async () => {
+      if (stationSelected.id === undefined) return;
       var inverters = await DeviceService.fetchAllInverterDevice(
         stationSelected.id
       );
@@ -35,6 +36,7 @@ export default function DeviceScreen() {
     };
 
     const onFetchSensorService = async () => {
+      if (stationSelected.id === undefined) return;
       var sensors = await DeviceService.fetchAllSensor(stationSelected.id);
       setState((pre) => ({
         ...pre,
@@ -43,6 +45,8 @@ export default function DeviceScreen() {
     };
 
     const onFetchPowerMeter = async () => {
+      if (stationSelected.id === undefined) return;
+
       var powerMeters = await DeviceService.fetchAllPowerMeter(
         stationSelected.id
       );
@@ -53,6 +57,7 @@ export default function DeviceScreen() {
     };
 
     const onFetchMCCB = async () => {
+      if (stationSelected.id === undefined) return;
       var mccb = await DeviceService.fetchAllMCCB(stationSelected.id);
       setState((pre) => ({
         ...pre,
@@ -70,7 +75,7 @@ export default function DeviceScreen() {
       onFetchSensorService();
       onFetchPowerMeter();
       onFetchMCCB();
-    }, 10000);
+    }, TIMER_TABLE);
     return () => {
       clearInterval(timer.current);
     };
@@ -108,6 +113,7 @@ export default function DeviceScreen() {
               </Grid>
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="ACB - MCCB">
+
                   <TableApp
                     chipComponent={(item, f) => {
                       return (
@@ -135,9 +141,9 @@ export default function DeviceScreen() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6}>
                 <CardLayout icon={IconApp.TABLE} title="Power Meters">
+
                   <TableApp
                     chipComponent={(item, f) => {
-                      console.log(item);
                       return (
                         <Chip
                         size="small"
@@ -162,7 +168,6 @@ export default function DeviceScreen() {
                 <CardLayout icon={IconApp.TABLE} title="Sensors">
                   <TableApp
                     chipComponent={(item, f) => {
-                      console.log(item);
                       return (
                         <Chip
                           size="small"

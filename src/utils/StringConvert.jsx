@@ -1,4 +1,16 @@
 const StringUtils = {
+
+  titleCase: (str) => {
+    var splitStr = str.toLowerCase().split(" ");
+    for (var i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      splitStr[i] =
+        splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    // Directly return the joined string
+    return splitStr.join(" ");
+  },
   convertCamelToTextNormal: (text) => {
     var result = text.replace(/([A-Z])/g, " $1");
     var finalResult = result.charAt(0).toUpperCase() + result.slice(1);
@@ -15,7 +27,6 @@ const StringUtils = {
   convertArrayToCSV: (objArray) => {
     // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;
     var array = objArray;
-    console.info(array);
     var str = "";
 
     var header = "#, Date,";
@@ -44,7 +55,7 @@ const StringUtils = {
     var regex = /\d/g;
     var numS = str.match(/(\d)/g);
     var result = numS.join("");
-    return result
+    return result;
   },
 };
 export default StringUtils;

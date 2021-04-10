@@ -23,9 +23,15 @@ export const URL_ALARM_ALL = "/Alarms/AckAll";
 
 export const URL_PR_MONTH = "/PR/GetPrOfMonth";
 export const URL_PR_DATE = "/PR/GetPrOfDay";
+export const URL_PR_OF_TIME = "/pr/getprbytime";
 
 export const URL_CLIENT = "/Accounts";
 
 
 
 export const URL_ENERGY = "/Energy/GetEnergy";
+
+export const URL_SCHEDULER_TASK = "/SchedulerTasks/GetSchedulerTaskOfStation";
+
+export const URL_SCHEDULER = "/SchedulerTasks";
+

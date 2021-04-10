@@ -1,17 +1,19 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../../common/icons";
 import CardLayout from "../../../common/layouts/CardLayout";
 import GraphBar from "../../../components/GraphBar";
 import MYearMonthPicker, { MONTH } from "../../../components/MYearMonthPicker";
+import { TIMER_TREND } from "../../../const/TimerUpdateConst";
 import EnergyService from "../../../service/energy.service";
 import DataTrendParser from "../../../utils/DataTrenParser";
 
 export default function EnergyTrend() {
+  const timer = useRef(null);
   const [state, setState] = useState({
     type: MONTH,
-    data:[]
+    data: [],
   });
 
   const [selectedDate, handleSelectedDate] = useState(new Date());
@@ -23,28 +25,39 @@ export default function EnergyTrend() {
     }));
   };
 
-  useEffect(() => {
+  const onFetchEnergyData = useCallback(async () => {
     if (stationSelected.id === undefined) return;
-
-    const onFetchEnergyData = async () => {
-      var dateFormat = moment.utc(selectedDate).format("yyyy-MM-DD HH:mm:ss");
-      var res = await EnergyService.onFetchData({
-        time: dateFormat,
-        type: state.type,
-        stationId: stationSelected.id,
-      });
-      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-      setState((pre) => ({
-        ...pre,
-        data: cols,
-      }));
-    };
-    onFetchEnergyData();
-    return () => {};
+    var dateFormat = moment.utc(selectedDate).format("yyyy-MM-DD HH:mm:ss");
+    var res = await EnergyService.onFetchData({
+      time: dateFormat,
+      type: state.type,
+      stationId: stationSelected.id,
+    });
+    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+    setState((pre) => ({
+      ...pre,
+      data: cols,
+    }));
   }, [selectedDate, state.type, stationSelected.id]);
 
+  useEffect(() => {
+    if (timer.current !== null) clearInterval(timer.current);
+    onFetchEnergyData();
+    timer.current = setInterval(() => {
+      onFetchEnergyData();
+    }, TIMER_TREND);
+    return () => {
+      clearInterval(timer.current);
+    };
+  }, [onFetchEnergyData]);
+
+  
   return (
-    <CardLayout icon={IconApp.BOTH} title="Historical Energy Trend" export={state.data}>
+    <CardLayout
+      icon={IconApp.BOTH}
+      title="Historical Energy Trend"
+      export={state.data}
+    >
       <MYearMonthPicker
         showControl={true}
         defaultType={state.type}

@@ -40,14 +40,14 @@ const CardLayout = (props) => {
   const onExport = () => {
     var arrayData = [];
     var check = Array.isArray(props.export);
-    var name=props.title
-    
+    var name = props.title;
+
     if (!check) {
       arrayData.push(props.export);
     } else {
       arrayData = [...props.export];
     }
-    
+
     downloadCSV(arrayData, name);
     return;
   };
@@ -111,6 +111,7 @@ const CardLayout = (props) => {
                     >
                       <Button
                         onClick={onExport}
+
                         style={{        
                           paddingLeft: "10px",
                           paddingRight: "10px",

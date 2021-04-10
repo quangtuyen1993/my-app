@@ -188,7 +188,6 @@ const TableApp = ({
     var ln = state.listColor;
     var item = ln[i];
     if (item !== color) {
-      console.log("COLOR", color);
       ln[i] = color;
       setState((pre) => ({
         ...pre,
@@ -208,7 +207,7 @@ const TableApp = ({
           <ChipTag
             name={item[f]}
             onClick={(e) =>
-              onChipClick ? onChipClick(item, f) : console.log("chip click")
+              onChipClick && onChipClick(item, f) 
             }
           />
         );

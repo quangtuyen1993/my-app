@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Grid,
-  IconButton,
   InputAdornment,
   makeStyles,
   Table,
@@ -11,24 +10,23 @@ import {
   TableHead,
   TableRow,
   TextField,
-  useMediaQuery,
+  Typography,
   useTheme,
   withStyles,
 } from "@material-ui/core";
+import { grey } from "@material-ui/core/colors";
 import { Search } from "@material-ui/icons";
 import Pagination from "@material-ui/lab/Pagination";
-import React, { Fragment, useEffect, useState } from "react";
-import StringUtils from "../utils/StringConvert";
-import IconApp from "../common/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useEffect, useState } from "react";
 import { getColorCell } from "../common/colors";
-import { grey } from "@material-ui/core/colors";
+import StringUtils from "../utils/StringConvert";
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
     border: `1px solid ${grey[300]}`,
   },
   head: {
+
     backgroundColor: theme.palette.secondary.main,
     color: theme.palette.common.white,
     textAlign: "center",
@@ -62,6 +60,7 @@ const MTableMaterial = ({
   askAll,
   showIndex,
   multiColor,
+  isHover,
 }) => {
   const [state, setState] = useState({
     renderControl: null,
@@ -74,7 +73,7 @@ const MTableMaterial = ({
     search: "",
     listComponentBody: [],
   });
-
+  const theme = useTheme();
   useEffect(() => {
     var additionalFields = [];
     if (addControlColumns) {
@@ -147,10 +146,13 @@ const MTableMaterial = ({
             <Grid
               item
               lg={3}
-              sm={refresh ? 10 : 12}
-              xs={refresh ? 10 : 12}
+              sm={12}
+              xs={12}
               md={6}
-              style={{ display: "flex" }}
+              style={{
+                display: "flex",
+                flexGrow: 2,
+              }}
             >
               {showSearch && (
                 <TextField
@@ -177,10 +179,14 @@ const MTableMaterial = ({
                   refresh();
                 }}
                 item
-                style={{ display: "flex ", flexGrow: 2 }}
+                xs={6}
+                sm={6}
+                md={2}
+                lg={1}
               >
               <Button color="secondary" variant="contained">
                   Refresh
+
                 </Button>
               </Grid>
             )}
@@ -191,9 +197,13 @@ const MTableMaterial = ({
                   askAll();
                 }}
                 item
+                xs={6}
+                sm={6}
+                md={2}
+                lg={1}
               >
-                <Button color="secondary" variant="contained">
-                  Ack all
+                <Button fullWidth color="secondary" variant="contained">
+                  <Typography variant="subtitle2">Ack all</Typography>
                 </Button>
               </Grid>
             )}
@@ -215,22 +225,22 @@ const MTableMaterial = ({
               {addControlFirst &&
                 addControlFirst &&
                 state.additionalFields &&
-                state.additionalFields.map((field) => (
-                  <StyledTableCell width={`${state.percentW}%`} key={field}>
+                state.additionalFields.map((field,index) => (
+                  <StyledTableCell width={`${state.percentW}%`} key={index}>
                     {StringUtils.convertCamelToTextNormal(field)}
                   </StyledTableCell>
                 ))}
 
-              {fieldArray.map((item) => (
-                <StyledTableCell width={`${state.percentW}%`} key={item}>
+              {fieldArray.map((item,index) => (
+                <StyledTableCell width={`${state.percentW}%`} key={index}>
                   {StringUtils.convertCamelToTextNormal(item)}
                 </StyledTableCell>
               ))}
 
               {!addControlFirst &&
                 state.additionalFields &&
-                state.additionalFields.map((item) => (
-                  <StyledTableCell width={`${state.percentW}%`} key={item}>
+                state.additionalFields.map((item,index) => (
+                  <StyledTableCell width={`${state.percentW}%`} key={index}>
                     {StringUtils.convertCamelToTextNormal(item)}
                   </StyledTableCell>
                 ))}
@@ -245,7 +255,9 @@ const MTableMaterial = ({
                   style={{
                     backgroundColor: multiColor
                       ? getColorCell(dataRow.name)
-                      : "white",
+                      : (isHover
+                      ? index % 2 === 0 && theme.palette.action.hover
+                      : "white"),
                   }}
                 >
                   {showIndex && (

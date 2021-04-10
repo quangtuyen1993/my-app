@@ -20,6 +20,7 @@ import CardLayout from "../../../common/layouts/CardLayout";
 import GraphLineApp from "../../../components/GraphLineApp";
 import MDatePicker from "../../../components/MDatePicker";
 import TableApp from "../../../components/TableApp";
+import { TIMER_TABLE, TIMER_TREND } from "../../../const/TimerUpdateConst";
 import DeviceService from "../../../service/device.service";
 import { CookieManger } from "../../../utils/CookieManager";
 import DataTrendParser from "../../../utils/DataTrenParser";
@@ -43,7 +44,9 @@ export default function DetailScreen() {
   const theme = useTheme();
   const timer = useRef(null);
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const history = useNavigate();
+
+  const navigate = useNavigate();
+  let location = useLocation();
 
   const [state, setState] = useState({
     mttp: [],
@@ -69,27 +72,28 @@ export default function DetailScreen() {
   };
 
   useEffect(() => {
-    if (stationSelected !== undefined) {
+    if (state.stationSelected === null) {
       setState((pre) => ({
         ...pre,
         stationSelected: stationSelected,
       }));
+    } else if (state.stationSelected.id !== stationSelected.id) {
+      CookieManger.revokeCurrentDevice();
+      navigate("/device", {
+        replace: true,
+      });
+      return;
     }
-    if (
-      state.stationSelected !== null &&
-      state.stationSelected !== stationSelected
-    ) {
-      // navigator
-    }
-  }, [history, state.stationSelected, stationSelected]);
-  let location = useLocation();
+  }, [navigate, state.stationSelected, stationSelected]);
 
   useEffect(() => {
-    let { deviceId } = location.state;
+    let deviceId;
+    if (location.state !== null) {
+      deviceId = location.state.deviceId;
+    }
     if (deviceId === undefined) {
       deviceId = CookieManger.getCurrentDevice();
     } else {
-      CookieManger.revokeCurrentDevice();
       CookieManger.setCurrentDevice(deviceId);
     }
     setState((pre) => ({
@@ -98,7 +102,7 @@ export default function DetailScreen() {
     }));
   }, [location.state]);
 
-  const onFetchData = useCallback(async () => {
+  const onFetchTableData = useCallback(async () => {
     var mppt = [];
     var phases = [];
     var general = [];
@@ -144,7 +148,6 @@ export default function DetailScreen() {
       toDate: state.dateTo,
       tableName: state.tableName,
     });
-    console.info("Details", data);
     var cols = DataTrendParser.parserTrend(data.columns, data.rows);
     setState((pre) => ({
       ...pre,
@@ -155,17 +158,28 @@ export default function DetailScreen() {
   useEffect(() => {
     if (state.deviceId === "" || state.deviceId === undefined) return;
     if (timer.current !== undefined) clearInterval(timer.current);
-    onFetchData();
-    onFetchDataTrend();
+    onFetchTableData();
     timer.current = setInterval(() => {
-      onFetchData();
-      onFetchDataTrend();
-    }, 10000);
+      onFetchTableData();
+    }, TIMER_TABLE);
 
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchData, onFetchDataTrend, state.deviceId]);
+  }, [onFetchTableData, state.deviceId]);
+
+  useEffect(() => {
+    if (state.deviceId === "" || state.deviceId === undefined) return;
+    if (timer.current !== undefined) clearInterval(timer.current);
+    onFetchDataTrend();
+    timer.current = setInterval(() => {
+      onFetchDataTrend();
+    }, TIMER_TREND);
+
+    return () => {
+      clearInterval(timer.current);
+    };
+  }, [onFetchDataTrend, state.deviceId]);
 
   return (
     <Container disableGutters direction="row" maxWidth={false}>
@@ -250,7 +264,11 @@ export default function DetailScreen() {
         </Grid>
 
         <Grid item sm={12}>
-          <CardLayout icon={IconApp.RATIO} title="24h Power Trend">
+          <CardLayout
+            icon={IconApp.RATIO}
+            title="24h Power Trend"
+            export={state.dataTrend}
+          >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={6} lg={6}>
                 <MDatePicker

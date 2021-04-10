@@ -3,63 +3,48 @@ import {
   CardContent,
   Container,
   Grid,
-  LinearProgress,
-  Typography,
-  withStyles,
+  Typography
 } from "@material-ui/core";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import CardLayout from "../../../common/layouts/CardLayout";
 import MTableMaterial from "../../../components/MTableMaterial";
-import TableApp from "../../../components/TableApp";
+import { TIMER_TABLE } from "../../../const/TimerUpdateConst";
 import DeviceService from "../../../service/device.service";
 import { CookieManger } from "../../../utils/CookieManager";
 import StringUtils from "../../../utils/StringConvert";
-
-const BorderLinearProgress = withStyles((theme) => ({
-  root: {
-    height: 10,
-    borderRadius: 5,
-    padding: 10,
-  },
-  colorPrimary: {
-    backgroundColor:
-      theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
-  },
-  bar: {
-    borderRadius: 5,
-    backgroundColor: "#1a90ff",
-  },
-}))(LinearProgress);
 
 export default function PowerMeterDetail() {
   let location = useLocation();
   const { stationSelected } = useSelector((state) => state.stationReducer);
   const timer = useRef(null);
+  const navigate = useNavigate();
   const [state, setState] = useState({
     voltage: [],
     current: [],
     activePower: [],
     reactivePower: [],
     general: [],
+    stationSelected:null
   });
 
+
+
   useEffect(() => {
-    if (stationSelected !== undefined) {
+    if (state.stationSelected === null) {
       setState((pre) => ({
         ...pre,
         stationSelected: stationSelected,
       }));
+    } else if (state.stationSelected.id !== stationSelected.id) {
+      CookieManger.revokeCurrentDevice();
+      navigate("/device", {
+        replace: true,
+      });
+      return;
     }
-    if (
-      state.stationSelected !== null &&
-      state.stationSelected !== stationSelected
-    ) {
-      // navigator
-    }
-  }, [state.stationSelected, stationSelected]);
-
+  }, [navigate, state.stationSelected, stationSelected]);
   //save to cookies
 
   useEffect(() => {
@@ -99,15 +84,14 @@ export default function PowerMeterDetail() {
       general: general,
     }));
   }, [state.deviceId]);
-  useEffect(() => {
-    onFetchData();
-  }, [onFetchData]);
 
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
+    onFetchData();
+
     timer.current = setInterval(() => {
       onFetchData();
-    }, 10000);
+    }, TIMER_TABLE);
     return () => {
       clearInterval(timer.current);
     };
@@ -232,7 +216,11 @@ const parserData = (pws) => {
       "frequency",
     ]);
     if (isGeneral) {
-      var name = f.toString().replace("_total").replace("_delivered").replaceAll("_"," ");
+      var name = f
+        .toString()
+        .replace("_total", "")
+        .replace("_delivered", "")
+        .replaceAll("_", " ");
       var value = pws[f];
       general.push({
         name: StringUtils.capitalize(name),

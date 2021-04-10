@@ -1,4 +1,5 @@
-import { Container, Grid } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Container, Grid, IconButton } from "@material-ui/core";
 import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -122,7 +123,6 @@ export default function TrendMainScreen() {
   useEffect(() => {
     fetchSummary();
   }, [fetchSummary]);
-
 
   const handleChangeDate = ({ name, value }) => {
     setDateState((pre) => {

@@ -11,7 +11,6 @@ const fetchAlarmRealtime = createAsyncThunk(
     var res = await AlarmService.fetchRealTime({
       stationId: data.stationSelected,
     });
-    console.log("Alarm", res);
     return res;
   }
 );

@@ -17,7 +17,6 @@ export default function GraphBar({ data }) {
 
   useEffect(() => {
     if (data.length === 0) return;
-    console.log("DATA", data);
     let yAxis = [];
     let dataSet = [];
     data.forEach((item, index) => {

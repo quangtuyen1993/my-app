@@ -39,7 +39,7 @@ export const getColorTrend = (str) => {
   if (name.includes("power")) {
     return power;
   } else if (name.includes("radiation")) {
-    return radiation;
+    return en;
   } else if (name.includes("temp")) {
     return cell;
   } else if (name.includes("energy")) {

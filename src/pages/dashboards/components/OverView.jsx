@@ -9,6 +9,7 @@ import ColorsApp from "../../../common/colors";
 import IconApp from "../../../common/icons";
 import CardLayout from "../../../common/layouts/CardLayout";
 import MCircleProgress from "../../../components/MCircleProgress";
+import { TIMER_TREND } from "../../../const/TimerUpdateConst";
 import OverviewService from "../../../service/overview.service";
 import PRService from "../../../service/pr.service";
 
@@ -51,10 +52,6 @@ export default function Overview() {
     });
   }, [stationSelected.id]);
 
-  useEffect(() => {
-    console.info(state.listPr, "PR list");
-  }, [state.listPr]);
-
   const onFetchData = useCallback(async () => {
     if (stationSelected.id === undefined) return;
     var response = await OverviewService.fetchOverview(stationSelected.id);
@@ -76,15 +73,14 @@ export default function Overview() {
     onFetchData();
     onFetchPR();
     timer.current = setInterval(async () => {
-      console.info("overview run timer");
       onFetchData();
       onFetchPR();
-    }, 10000);
+    }, TIMER_TREND);
 
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchData, onFetchPR, stationSelected]);
+  }, [onFetchData, onFetchPR]);
 
   const renderItem = (item, index) => {
     return (
@@ -136,7 +132,6 @@ export default function Overview() {
 
   const renderCircle = (item, index) => {
     const { max } = state;
-    console.log(item);
     return (
       <Grid key={index} item xs={12} sm={6} md={6} lg={6}>
         <MCircleProgress

@@ -41,7 +41,7 @@ const GraphLineApp = ({ data, typeView, minDate, maxDate }) => {
         lineTension: 0.5,
         fill: enabledFill,
         borderColor: colorLine,
-        backgroundColor: fade(colorLine, 0.1),
+        backgroundColor:   fade(colorLine, 0.4),
         borderWidth: 2,
         data: value,
       });

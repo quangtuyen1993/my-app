@@ -59,17 +59,20 @@ export default function SystemInfoScreen() {
   }, [stationSelected]);
 
 
+
   return (
     <>
       <Container disableGutters maxWidth={false}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={12} md={12}>
             <CardLayout title="Plant Parameters">
-              <TableApp 
-                data={data} 
-                field={["Name","Value"]}
-                fieldTitle={["Parameter", "Value"]}
-                />
+
+              <MTableMaterial
+                showIndex
+                isHover
+                dataSource={state.data}
+                fieldArray={["name", "value"]}
+              />
             </CardLayout>
           </Grid>
 
@@ -99,29 +102,15 @@ export default function SystemInfoScreen() {
     </>
   );
 }
-const data = [
-  {
-    Name: "Rated DC Capacity (kWp)",
-    Value: 997,
-  },
-  {
-    Name: "Rated AC Capacity (kW)",
-    Value: 880,
-  },
-  {
-    Name: "Module Watt",
-    Value: 445,
-  },
-  {
-    Name: "Total Modules",
-    Value: 2240,
-  },
-  {
-    Name: "Total Inverters",
-    Value: 8,
-  },
-  {
-    Name: "Total energy of inverter per year (kWh)",
-    Value: 187500,
-  },
-];
+const getArrayFromField = (fields, obj) => {
+  var result = [];
+  for (let index = 0; index < fields.length; index++) {
+    const f = fields[index];
+    var name = StringUtils.convertCamelToTextNormal(f);
+    result.push({
+      name: name,
+      value: obj[f],
+    });
+  }
+  return result;
+};
