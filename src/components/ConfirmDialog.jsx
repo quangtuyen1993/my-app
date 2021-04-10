@@ -63,7 +63,7 @@ export default function ConfirmDialog({
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Grid container direction="column" spacing={2} style={{marginTop:theme.spacing(1)}}>
+            <Grid container direction="column" spacing={2} style={{marginTop:theme.spacing()}}>
               <Grid item>
                 <TextField
                   InputProps={{
@@ -73,6 +73,7 @@ export default function ConfirmDialog({
                       </InputAdornment>
                     ),
                   }}
+                  value={"Password"}
                   placeholder="Password"
                   type="password"
                   fullWidth

@@ -51,11 +51,12 @@ export default function DeviceScreen() {
   };
 
   useEffect(() => {
-    setState((pre) => ({
-      ...pre,
-      isOpenAdminDialog: true,
-      isLoadingItem: false,
-    }));
+    if (state.isLoadingItem)
+      setState((pre) => ({
+        ...pre,
+        isOpenAdminDialog: true,
+        isLoadingItem: false,
+      }));
   }, [state.isLoadingItem]);
 
   useEffect(() => {
@@ -257,7 +258,11 @@ export default function DeviceScreen() {
             </Grid>
           </Grid>
         </Grid>
-        <ConfirmDialog open={state.isOpenAdminDialog} onClose={onClose} deviceDefault={state.itemSelected} />
+        <ConfirmDialog
+          open={state.isOpenAdminDialog}
+          onClose={onClose}
+          deviceDefault={state.itemSelected}
+        />
       </Container>
     </>
   );
