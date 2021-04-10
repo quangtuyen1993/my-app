@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    Container,
-    Grid,
-    InputAdornment,
-    TextField,
-    useTheme
+  Container,
+  Grid,
+  InputAdornment,
+  TextField,
+  useTheme,
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { grey } from "@material-ui/core/colors";
@@ -60,7 +60,12 @@ export default function ConfirmDialog({
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Grid container direction="column" spacing={2} style={{marginTop:theme.spacing()}}>
+            <Grid
+              container
+              direction="column"
+              spacing={2}
+              style={{ marginTop: theme.spacing() }}
+            >
               <Grid item>
                 <TextField
                   InputProps={{

@@ -1,6 +1,7 @@
 import DateFnsUtils from "@date-io/date-fns";
 import { Box, Grid, TextareaAutosize, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { red } from "@material-ui/core/colors";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -24,6 +25,7 @@ const initialState = {
   content: "",
   mode: "Insert",
   status: 0,
+  message: "",
 };
 export const TYPE_HOUR_DATE = "dd/MM/yyyy HH:mm:ss";
 export default function DialogNote({
@@ -81,36 +83,59 @@ export default function DialogNote({
   }, [noteDefault]);
 
   const onInsertScheduler = async () => {
-    var dT = moment.utc(dateTo).format("yyyy-hh-DDThh:mm:ss");
-    var dF = moment.utc(dateFrom).format("yyyy-hh-DDThh:mm:ss");
-    var data = await SchedulerService.insert({
-      stationId: stationSelected.id,
-      accountId: accountId,
-      startTime: dF,
-      endTime: dT,
-      content: state.content,
-    });
-    onComplete(data);
+    if (dateTo - dateFrom < 0) {
+      var message = "End Date must be greater than Start Date";
+      setState((pre) => ({
+        message: message,
+      }));
+      return;
+    } else {
+      var dT = moment.utc(dateTo).format("yyyy-hh-DDThh:mm:ss");
+      var dF = moment.utc(dateFrom).format("yyyy-hh-DDThh:mm:ss");
+      var data = await SchedulerService.insert({
+        stationId: stationSelected.id,
+        accountId: accountId,
+        startTime: dF,
+        endTime: dT,
+        content: state.content,
+      });
+      onComplete(data);
+      onFinish();
+    }
   };
 
   const onUpdateScheduler = async () => {
-    var dT = moment.utc(dateTo).format("yyyy-hh-DDThh:mm:ss");
-    var dF = moment.utc(dateFrom).format("yyyy-hh-DDThh:mm:ss");
-    var data = await SchedulerService.update({
-      id: state.id,
-      stationId: stationSelected.id,
-      accountId: accountId,
-      startTime: dF,
-      endTime: dT,
-      content: state.content,
-    });
-    onComplete(data);
+    if (dateTo - dateFrom < 0) {
+      var message = "End Date must be greater than Start Date";
+      alert("wrong", dateTo + "\t" + dateFrom);
+      setState((pre) => ({
+        ...pre,
+        message: message,
+      }));
+      return;
+    } else {
+      var dT = moment.utc(dateTo).format("yyyy-MM-DDThh:mm:ss");
+      var dF = moment.utc(dateFrom).format("yyyy-MM-DDThh:mm:ss");
+      alert(dF + dT);
+      var data = await SchedulerService.update({
+        id: state.id,
+        stationId: stationSelected.id,
+        accountId: accountId,
+        startTime: dF,
+        endTime: dT,
+        content: state.content,
+        message: "",
+      });
+      onComplete(data);
+      onFinish();
+    }
   };
-
-  const onSubmit = async () => {
-    state.mode === "Insert" ? onInsertScheduler() : onUpdateScheduler();
+  const onFinish = () => {
     setState(initialState);
     handleClose();
+  };
+  const onSubmit = async () => {
+    state.mode === "Insert" ? onInsertScheduler() : onUpdateScheduler();
   };
 
   return (
@@ -169,63 +194,16 @@ export default function DialogNote({
                       name="content"
                     />
                   </Grid>
-                  <Grid item>
-                    {/* <TextField
-                    autoFocus
-                    label="Password"
-                    fullWidth
-                    name="password"
-                    inputRef={register({
-                      required: "Password is required",
-                      minLength: {
-                        value: 6,
-                        message: "Password have to least 6 character",
-                      },
-                    })}
-                    variant="outlined"
-                    error={errors.password ? true : false}
-                    placeholder="Update Password"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock color="action" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {errors.password && (
-                    <Typography variant="subtitle2" style={{ color: "red" }}>
-                      {errors.password.message}
-                    </Typography>
-                  )} */}
-                  </Grid>
-                  {/* <Grid item>
-                  <TextField
-                    autoFocus
-                    label="Confirm Password"
-                    fullWidth
-                    name="confirmPassword"
-                    inputRef={register({
-                      required: "confirm is require",
-                      validate: (value) => value === watch("password"),
-                    })}
-                    variant="outlined"
-                    error={errors.confirmPassword ? true : false}
-                    placeholder="Update Password"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Lock color="action" />
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                  {errors.confirmPassword && (
-                    <Typography variant="subtitle2" style={{ color: "red" }}>
-                      {errors.confirmPassword.message}
-                    </Typography>
+                  {state.message !== "" && (
+                    <Grid item>
+                      <Typography
+                        style={{ color: red[600] }}
+                        variant="subtitle1"
+                      >
+                        {state.message}
+                      </Typography>
+                    </Grid>
                   )}
-                </Grid> */}
                 </Grid>
               </Box>
             </DialogContent>

@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Grid,
@@ -15,7 +18,7 @@ import {
   withStyles,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
-import { Search } from "@material-ui/icons";
+import { ExpandLess, PlusOne, Search } from "@material-ui/icons";
 import Pagination from "@material-ui/lab/Pagination";
 import React, { useEffect, useState } from "react";
 import { getColorCell } from "../common/colors";
@@ -23,7 +26,7 @@ import StringUtils from "../utils/StringConvert";
 
 const StyledTableCell = withStyles((theme) => ({
   root: {
-    border: `1px solid ${grey[300]}`,
+    // border: `1px solid ${grey[300]}`,
   },
   head: {
     backgroundColor: theme.palette.secondary.main,
@@ -33,6 +36,7 @@ const StyledTableCell = withStyles((theme) => ({
   body: {
     fontSize: 12,
     textAlign: "center",
+    maxHeight: "20px",
   },
 }))(TableCell);
 
@@ -43,11 +47,18 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-const useStyle = makeStyles((theme) => ({
-  box: {},
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    fontWeight: theme.typography.fontWeightRegular,
+  },
+  cellBorder: (props) => ({
+    border: props.noneBorder ? "0x white" : `1px solid ${grey[300]}`,
+  }),
 }));
-
 const MTableMaterial = ({
   dataSource,
   fieldArray,
@@ -60,6 +71,8 @@ const MTableMaterial = ({
   showIndex,
   multiColor,
   isHover,
+  contentField,
+  noneBorder,
 }) => {
   const [state, setState] = useState({
     renderControl: null,
@@ -73,6 +86,7 @@ const MTableMaterial = ({
     listComponentBody: [],
   });
   const theme = useTheme();
+  const classes = useStyles({noneBorder});
   useEffect(() => {
     var additionalFields = [];
     if (addControlColumns) {
@@ -218,7 +232,10 @@ const MTableMaterial = ({
           <TableHead>
             <StyledTableRow>
               {showIndex && (
-                <StyledTableCell width={`${state.percentW}%`}>
+                <StyledTableCell
+                  className={classes.cellBorder}
+                  width={`${state.percentW}%`}
+                >
                   #
                 </StyledTableCell>
               )}
@@ -226,21 +243,36 @@ const MTableMaterial = ({
                 addControlFirst &&
                 state.additionalFields &&
                 state.additionalFields.map((field, index) => (
-                  <StyledTableCell width={`${state.percentW}%`} key={index}>
+                  <StyledTableCell
+                    className={classes.cellBorder}
+                    width={`${state.percentW}%`}
+                    key={index}
+                  >
                     {StringUtils.convertCamelToTextNormal(field)}
                   </StyledTableCell>
                 ))}
 
-              {fieldArray.map((item, index) => (
-                <StyledTableCell width={`${state.percentW}%`} key={index}>
-                  {StringUtils.convertCamelToTextNormal(item)}
-                </StyledTableCell>
-              ))}
+              {fieldArray.map(
+                (item, index) =>
+                  item !== contentField && (
+                    <StyledTableCell
+                      className={classes.cellBorder}
+                      width={`${state.percentW}%`}
+                      key={index}
+                    >
+                      {StringUtils.convertCamelToTextNormal(item)}
+                    </StyledTableCell>
+                  )
+              )}
 
               {!addControlFirst &&
                 state.additionalFields &&
                 state.additionalFields.map((item, index) => (
-                  <StyledTableCell width={`${state.percentW}%`} key={index}>
+                  <StyledTableCell
+                    className={classes.cellBorder}
+                    width={`${state.percentW}%`}
+                    key={index}
+                  >
                     {StringUtils.convertCamelToTextNormal(item)}
                   </StyledTableCell>
                 ))}
@@ -250,61 +282,106 @@ const MTableMaterial = ({
           <TableBody>
             {state.dataShow &&
               state.dataShow.map((dataRow, index) => (
-                <StyledTableRow
-                  key={index}
-                  style={{
-                    backgroundColor: multiColor
-                      ? getColorCell(dataRow.name)
-                      : isHover
-                      ? index % 2 === 0 && theme.palette.action.hover
-                      : "white",
-                  }}
-                >
-                  {showIndex && (
-                    <StyledTableCell width={`${state.percentW}%`}>
-                      {index + 1}
-                    </StyledTableCell>
+                <>
+                  <StyledTableRow
+                    key={index}
+                    style={{
+                      backgroundColor: multiColor
+                        ? getColorCell(dataRow.name)
+                        : isHover
+                        ? index % 2 === 0 && theme.palette.action.hover
+                        : "white",
+                    }}
+                  >
+                    {showIndex && (
+                      <StyledTableCell
+                        className={classes.cellBorder}
+                        width={`${state.percentW}%`}
+                      >
+                        {index + 1}
+                      </StyledTableCell>
+                    )}
+                    {addControlFirst &&
+                      state.additionalFields.map((f, index) => (
+                        <StyledTableCell
+                          className={classes.cellBorder}
+                          key={index}
+                        >
+                          <Box
+                            justifyContent="space-between"
+                            alignContent="center"
+                            alignItems="center"
+                            display="flex"
+                            flexDirection="row"
+                            alignSelf="center"
+                          >
+                            {renderControl(dataRow)}
+                          </Box>
+                        </StyledTableCell>
+                      ))}
+                    {fieldArray.map(
+                      (f) =>
+                        f !== contentField && (
+                          <StyledTableCell
+                            className={classes.cellBorder}
+                            size="small"
+                            key={f}
+                          >
+                            {f.toLowerCase().includes("date") ||
+                            f.toLowerCase().includes("time")
+                              ? dataRow[f].replace("T", " ")
+                              : dataRow[f]}
+                          </StyledTableCell>
+                        )
+                    )}
+                    {!addControlFirst &&
+                      state.additionalFields &&
+                      state.additionalFields.map((f, index) => (
+                        <StyledTableCell
+                          className={classes.cellBorder}
+                          key={index}
+                        >
+                          <Box
+                            justifyContent="space-between"
+                            alignContent="center"
+                            alignItems="center"
+                            display="flex"
+                            flexDirection="row"
+                            alignSelf="center"
+                          >
+                            {renderControl(dataRow)}
+                          </Box>
+                        </StyledTableCell>
+                      ))}
+                  </StyledTableRow>
+                  {contentField && (
+                    <StyledTableRow>
+                      <StyledTableCell
+                        className={classes.cellBorder}
+                        colSpan={
+                          state.additionalFields?.length + fieldArray?.length
+                        }
+                      >
+                        <Accordion>
+                          <AccordionSummary
+                            expandIcon={<ExpandLess />}
+                            aria-controls="panel2a-content"
+                            id="panel2a-header"
+                          >
+                            <Typography className={classes.heading}>
+                              Content
+                            </Typography>
+                          </AccordionSummary>
+                          <AccordionDetails>
+                            <Typography style={{ textAlign: "start" }}>
+                              {dataRow[contentField]}
+                            </Typography>
+                          </AccordionDetails>
+                        </Accordion>
+                      </StyledTableCell>
+                    </StyledTableRow>
                   )}
-                  {addControlFirst &&
-                    state.additionalFields.map((f, index) => (
-                      <StyledTableCell key={index}>
-                        <Box
-                          justifyContent="space-between"
-                          alignContent="center"
-                          alignItems="center"
-                          display="flex"
-                          flexDirection="row"
-                          alignSelf="center"
-                        >
-                          {renderControl(dataRow)}
-                        </Box>
-                      </StyledTableCell>
-                    ))}
-                  {fieldArray.map((f) => (
-                    <StyledTableCell size="small" key={f}>
-                      {f.toLowerCase().includes("date") ||
-                      f.toLowerCase().includes("time")
-                        ? dataRow[f].replace("T", " ")
-                        : dataRow[f]}
-                    </StyledTableCell>
-                  ))}
-                  {!addControlFirst &&
-                    state.additionalFields &&
-                    state.additionalFields.map((f, index) => (
-                      <StyledTableCell key={index}>
-                        <Box
-                          justifyContent="space-between"
-                          alignContent="center"
-                          alignItems="center"
-                          display="flex"
-                          flexDirection="row"
-                          alignSelf="center"
-                        >
-                          {renderControl(dataRow)}
-                        </Box>
-                      </StyledTableCell>
-                    ))}
-                </StyledTableRow>
+                </>
               ))}
           </TableBody>
         </Table>

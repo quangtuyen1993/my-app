@@ -180,22 +180,23 @@ export default function SchedulerMaintain() {
           New scheduler
         </Button>
         <Box mt={2}>
-        <MTableMaterial
-          showSearch={true}
-          rowsPerPage={10}
-          isHover
-          addControlColumns={[renderControl]}
-          dataSource={state.data}
-          fieldArray={[
-            "createByUser",
-            "startTime",
-            "endTime",
-            "status",
-            "content",
-          ]}
-        />
+          <MTableMaterial
+            noneBorder
+            contentField="content"
+            showSearch={true}
+            rowsPerPage={10}
+            isHover
+            addControlColumns={[renderControl]}
+            dataSource={state.data}
+            fieldArray={[
+              "createByUser",
+              "startTime",
+              "endTime",
+              "status",
+              "content",
+            ]}
+          />
         </Box>
-       
       </CardLayout>
       <DialogNote
         noteDefault={state.noteSelected}
