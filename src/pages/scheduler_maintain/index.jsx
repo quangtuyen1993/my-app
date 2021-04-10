@@ -179,8 +179,10 @@ export default function SchedulerMaintain() {
         >
           New scheduler
         </Button>
+        <Box mt={2}>
         <MTableMaterial
-          // showSearch={true}
+          showSearch={true}
+          rowsPerPage={10}
           isHover
           addControlColumns={[renderControl]}
           dataSource={state.data}
@@ -192,6 +194,8 @@ export default function SchedulerMaintain() {
             "content",
           ]}
         />
+        </Box>
+       
       </CardLayout>
       <DialogNote
         noteDefault={state.noteSelected}

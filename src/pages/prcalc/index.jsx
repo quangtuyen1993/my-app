@@ -8,20 +8,17 @@ import {
   TextField,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
-import { IndeterminateCheckBoxSharp } from "@material-ui/icons";
+import FileSaver from "file-saver";
 import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import CardLayout from "../../common/layouts/CardLayout";
-import MDatePicker from "../../components/MDatePicker";
 import MDateTimePicker from "../../components/MDateTimePicker";
 import MTableMaterial from "../../components/MTableMaterial";
-import TableApp from "../../components/TableApp";
 import PRService from "../../service/pr.service";
 import StringUtils from "../../utils/StringConvert";
-import FileSaver from "file-saver";
-import { useSelector } from "react-redux";
 
 export default function PRCalculationScreen() {
   const theme = useTheme();
@@ -99,7 +96,7 @@ export default function PRCalculationScreen() {
 
   const onExport = () => {
     var name = "PR Calculate";
-    const csv = StringUtils.convertDataToCsv(state.results);
+    const csv = StringUtils.convertDataToCsv(state.dataTable);
     const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     FileSaver.saveAs(csvData, `${name}.csv`);
   };
@@ -114,7 +111,7 @@ export default function PRCalculationScreen() {
                 <Grid item xs={12} sm={12} md={8} lg={8}>
                   <MDateTimePicker
                     name="date"
-                    typeFormat="MM-dd-yyyy HH:mm:ss"
+                    typeFormat="dd-MM-yyyy HH:mm:ss"
                     onRangeDateChange={handleChangeDate}
                     isSingleDate={false}
                   />

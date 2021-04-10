@@ -25,18 +25,29 @@ const StringUtils = {
   },
 
   convertDataToCsv: (array) => {
-    var filed = Object.keys(array[0]);
-    var csv = array
-      .map((item) => {
-        var line = "\n";
-        filed.forEach((f) => {
-          line += item[f].replaceAll(",", " ") + ",";
-        });
-        return ` ${line}`;
-      })
-      .join(",");
-    alert(csv);
-    return `${filed.join(",")} ${csv}`;
+    // console.log(array)
+    var fields = Object.keys(array[0]);
+    var str = "";
+    array.forEach((element,index) => {
+      var lint = `${index+1} ,`;
+      fields.forEach((f) => {
+        lint += element[f] + ",";
+      });
+      str += lint + "\r\n";
+    });
+    fields.unshift("#")
+    return fields.join(",") + "\r\n" + str;
+
+    // var csv = array
+    //   .map((item) => {
+    //     var line = "\n";
+    //     filed.forEach((f) => {
+    //       line += item[f].replaceAll(",", " ") + ",";
+    //     });
+    //     return ` ${line}`;
+    //   })
+    //   .join(",");
+    // return `${filed.join(",")} ${csv}`;
   },
   convertArrayToCSV: (objArray) => {
     // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;

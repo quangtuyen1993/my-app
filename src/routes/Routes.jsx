@@ -39,30 +39,7 @@ export const RouterList = [
       },
     ],
   },
-  {
-    id: 99,
-    iconItem: IconApp.ACCOUNT,
-    name: "Account Manager",
-    linkTo: "/account",
-    path: "/account",
-    priority: PRIVATE,
-    component: (
-      <MainLayout>
-        <SystemInfoScreen />
-      </MainLayout>
-    ),
-    child: [
-      {
-        id: 1,
-        path: "/",
-        component: (
-          <MainLayout>
-            <AccountScreen />
-          </MainLayout>
-        ),
-      },
-    ],
-  },
+
   {
     id: 2,
     iconItem: IconApp.DEVICE,
@@ -183,6 +160,30 @@ export const RouterList = [
         component: (
           <MainLayout>
             <SchedulerScreen />
+          </MainLayout>
+        ),
+      },
+    ],
+  },
+  {
+    id: 99,
+    iconItem: IconApp.ACCOUNT,
+    name: "Account Manager",
+    linkTo: "/account",
+    path: "/account",
+    priority: PRIVATE,
+    component: (
+      <MainLayout>
+        <SystemInfoScreen />
+      </MainLayout>
+    ),
+    child: [
+      {
+        id: 1,
+        path: "/",
+        component: (
+          <MainLayout>
+            <AccountScreen />
           </MainLayout>
         ),
       },

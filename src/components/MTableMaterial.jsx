@@ -98,7 +98,9 @@ const MTableMaterial = ({
     var dataFilter = dataSource.filter((item) => {
       if (state.search === "") return true;
       return fieldArray.find((f) => {
-        return item[f].toUpperCase().includes(state.search.toUpperCase());
+        if (typeof item[f] === "string") {
+          return item[f].toUpperCase().includes(state.search.toUpperCase());
+        }
       });
     });
     var count = Math.ceil(dataFilter.length / rowsPerPage);
