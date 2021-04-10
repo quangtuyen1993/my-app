@@ -5,7 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Box, Container, useTheme } from "@material-ui/core";
+import { Box, Container, Typography, useTheme } from "@material-ui/core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import IconApp from "../common/icons";
 import ColorsApp from "../common/colors";
@@ -39,7 +39,7 @@ export default function WarningDialog({
   }, [onClose, onSubmit, state.noteDefault]);
 
   return (
-    <Container>
+    <>
       <Dialog
         fullWidth
         maxWidth={"xs"}
@@ -70,7 +70,7 @@ export default function WarningDialog({
                 />
               </Box>
               <Box m={2}>
-                {content}
+                <Typography variant="subtitle1" style={{color:"black"}}>{content}</Typography>
               </Box>
             </Box>
           </DialogContentText>
@@ -89,6 +89,6 @@ export default function WarningDialog({
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </>
   );
 }
