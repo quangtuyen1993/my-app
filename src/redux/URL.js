@@ -32,3 +32,5 @@ export const URL_ENERGY = "/Energy/GetEnergy";
 
 export const URL_SCHEDULER_TASK = "/SchedulerTasks/GetSchedulerTaskOfStation";
 
+export const URL_SCHEDULER = "/SchedulerTasks";
+
