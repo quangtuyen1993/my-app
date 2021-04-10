@@ -20,7 +20,7 @@ import {
 import { grey } from "@material-ui/core/colors";
 import { ExpandLess, PlusOne, Search } from "@material-ui/icons";
 import Pagination from "@material-ui/lab/Pagination";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { getColorCell } from "../common/colors";
 import StringUtils from "../utils/StringConvert";
 
@@ -86,7 +86,7 @@ const MTableMaterial = ({
     listComponentBody: [],
   });
   const theme = useTheme();
-  const classes = useStyles({noneBorder});
+  const classes = useStyles({ noneBorder });
   useEffect(() => {
     var additionalFields = [];
     if (addControlColumns) {
@@ -229,6 +229,7 @@ const MTableMaterial = ({
       {/* <Grid item> */}
       <Box mt={2} overflow="auto">
         <Table style={{ border: "1px rgba(0,0,0,0.4) solid" }}>
+          
           <TableHead>
             <StyledTableRow>
               {showIndex && (
@@ -282,7 +283,7 @@ const MTableMaterial = ({
           <TableBody>
             {state.dataShow &&
               state.dataShow.map((dataRow, index) => (
-                <>
+                <Fragment key={index}>
                   <StyledTableRow
                     key={index}
                     style={{
@@ -381,9 +382,10 @@ const MTableMaterial = ({
                       </StyledTableCell>
                     </StyledTableRow>
                   )}
-                </>
+                </Fragment>
               ))}
           </TableBody>
+      
         </Table>
       </Box>
       {/* </Grid> */}
