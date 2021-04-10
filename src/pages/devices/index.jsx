@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
@@ -30,25 +31,15 @@ export default function DeviceScreen() {
     MCCB_ABC: [],
     Power_meters: [],
     Sensors: [],
-    isOpenAdminDialog: false,
-    isLoadingItem: false,
-    itemSelected: {},
+    // isOpenAdminDialog: false,
+    // isLoadingItem: false,
+    // itemSelected: {},
   });
 
-  const onOpen = (item) => {
-    setState((pre) => ({
-      ...pre,
-      itemSelected: item,
-      isLoadingItem: true,
-    }));
-  };
 
-  const onClose = (item) => {
-    setState((pre) => ({
-      ...pre,
-      isOpenAdminDialog: false,
-    }));
-  };
+  const onAlertStatus=(item)=>{
+    console.log(item)
+  }
 
   useEffect(() => {
     if (state.isLoadingItem)
@@ -124,7 +115,6 @@ export default function DeviceScreen() {
   const renderControl = (item) => {
     return (
       <Box
-        onClick={() => onOpen(item)}
         display="flex"
         justifyContent="center"
         justifyItems="center"
@@ -132,17 +122,15 @@ export default function DeviceScreen() {
         ml={2}
         mr={2}
       >
-        <Box
-          width={smDown ? "100%" : "50%"}
+        <Chip
+          onClick={() => onAlertStatus(item)}
+          size="small"
+          color="secondary"
           style={{
             cursor: "pointer",
-            backgroundColor: theme.palette.secondary.main,
-            borderRadius: "5px",
-            color: "white",
           }}
-        >
-          <Typography style={{ color: "white" }}>Open</Typography>
-        </Box>
+          label="Open"
+        />
       </Box>
     );
   };
@@ -258,11 +246,6 @@ export default function DeviceScreen() {
             </Grid>
           </Grid>
         </Grid>
-        <ConfirmDialog
-          open={state.isOpenAdminDialog}
-          onClose={onClose}
-          deviceDefault={state.itemSelected}
-        />
       </Container>
     </>
   );
