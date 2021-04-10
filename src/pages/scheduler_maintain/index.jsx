@@ -11,6 +11,7 @@ import SchedulerService from "../../service/scheduler.service";
 
 export default function SchedulerMaintain() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
+  const { userProfile } = useSelector((state) => state.authorReducer);
   const [state, setState] = useState({
     data: [],
     noteSelected: {},
@@ -44,6 +45,7 @@ export default function SchedulerMaintain() {
   };
 
   const onUpdate = (nodeSelected) => {
+    if(!checkAuthor(nodeSelected)) return
     setState((pre) => {
       return {
         ...pre,
@@ -64,8 +66,19 @@ export default function SchedulerMaintain() {
   };
 
   const onDelete = async (item) => {
+    if(!checkAuthor(item)) return
     await SchedulerService.remove({ id: item.id });
     onFetchScheduler();
+  };
+
+  const checkAuthor = (item) => {
+    if (userProfile.role === "Admin") {
+      return true;
+    }
+    if (item.accountId === userProfile.id) {
+      return true;
+    }
+    return false;
   };
 
   useEffect(() => {

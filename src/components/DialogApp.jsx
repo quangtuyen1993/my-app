@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const initialState = {
+  id:"",
   username: "",
   email: "",
   password: "",
@@ -57,12 +58,13 @@ export default function DialogApp({
 
   const { handleSubmit, register, errors, watch, reset } = useForm({
     defaultValues: initialState,
-    mode: "onBlur",
+    mode: "onSubmit",
     // shouldUnregister: false,
   });
 
   const onHandleSubmit = (data) => {
     onSubmit({
+      id:userDefault.id,
       username: userDefault.username,
       role: userDefault.role,
       password: data.password,

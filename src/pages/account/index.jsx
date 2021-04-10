@@ -88,6 +88,14 @@ export default function AccountScreen(props) {
       userSelected: user,
     }));
   };
+
+  const onDelete = async (user) => {
+    console.log(user);
+    var data = await ClientService.removeUser({ id: user.id });
+    console.log(data);
+    onFetchUser();
+  };
+
   const onClose = () => {
     setState((pre) => ({
       ...pre,
@@ -105,7 +113,7 @@ export default function AccountScreen(props) {
 
   const onChangePassword = async (newUser) => {
     var data = await ClientService.changePassword(newUser);
-    await alert(data);
+    console.log(data);
   };
 
   const onSubmit = (newUser) => {
@@ -187,6 +195,7 @@ export default function AccountScreen(props) {
                     button
                     onClick={() =>
                       onOpen({
+                        id: userProfile.id,
                         username: userProfile.username,
                         role: userProfile.role,
                       })
@@ -221,11 +230,7 @@ export default function AccountScreen(props) {
             <FontAwesomeIcon icon={IconApp.UPDATE} />
           </IconButton>
         </Box>
-        <Box flex={1}>
-          <IconButton onClick={() => onOpen(user)}>
-            <FontAwesomeIcon icon={IconApp.REMOVE} />
-          </IconButton>
-        </Box>
+      
       </React.Fragment>
     );
   }, []);

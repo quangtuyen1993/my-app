@@ -8,7 +8,8 @@ const ClientService = {
   },
   changePassword: async ({id, username, role, password, confirmPassword }) => {
     try {
-      var res = await AxiosAuthor.put(URL_CLIENT+"/?="+id, {
+      console.info("request",id, username, role, password, confirmPassword)
+      var res = await AxiosAuthor.put(URL_CLIENT+"/"+id, {
         username: username,
         role: role,
         password: password,
@@ -16,6 +17,18 @@ const ClientService = {
       });
       return res.data;
     } catch (err) {
+      console.info(err)
+      throw err.response.data;
+    }
+  },
+  removeUser: async ({id }) => {
+    try {
+      var res = await AxiosAuthor.delete(URL_CLIENT+"/"+id, {
+        id:id
+      });
+      return res.data;
+    } catch (err) {
+      console.info(err)
       throw err.response.data;
     }
   },
