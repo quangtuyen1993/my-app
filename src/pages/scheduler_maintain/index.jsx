@@ -192,7 +192,6 @@ export default function SchedulerMaintain() {
               "createByUser",
               "startTime",
               "endTime",
-              "status",
               "content",
             ]}
           />
