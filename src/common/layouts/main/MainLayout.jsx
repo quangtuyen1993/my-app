@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { onRefreshToken } from "../../../redux/feature/user/user.slice";
@@ -18,9 +18,9 @@ export default function MainLayout({children,location,navigate}) {
   const dispatch = useDispatch();
   const history = useNavigate();
 
-  const onRefresh = () => {
+  const onRefresh = useCallback(() => {
     dispatch(onRefreshToken());
-  };
+  },[dispatch]);
 
   useEffect(() => {
     var refreshToken = CookieManger.GetRefreshCookie();
@@ -36,7 +36,7 @@ export default function MainLayout({children,location,navigate}) {
       onRefresh();
       return;
     }
-  }, [isError, isLoginComplete, isLoading]);
+  }, [isError, isLoginComplete, isLoading, history, onRefresh]);
 
   const onToggle = () => {
     setOpen(!open);
