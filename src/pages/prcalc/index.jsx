@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import FileSaver from "file-saver";
@@ -96,6 +96,7 @@ export default function PRCalculationScreen() {
 
   const onExport = () => {
     var name = "PR Calculate";
+    if (state.dataTable.length === 0) return;
     const csv = StringUtils.convertDataToCsv(state.dataTable);
     const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     FileSaver.saveAs(csvData, `${name}.csv`);

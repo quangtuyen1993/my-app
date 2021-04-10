@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const StringUtils = {
   titleCase: (str) => {
     var splitStr = str.toLowerCase().split(" ");
@@ -32,7 +34,9 @@ const StringUtils = {
       var lint = `${index + 1} ,`;
       fields.forEach((f) => {
         if (f.toLocaleLowerCase().includes("datetime")) {
-          lint += element[f].replace("T", " ") + "";
+          var dateParser = moment(element[f])
+            .format("MM-DD-YYYY HH:mm:ss");
+          lint += dateParser + ",";
         } else {
           lint += element[f] + ",";
         }

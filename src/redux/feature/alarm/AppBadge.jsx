@@ -6,7 +6,7 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
 import { fetchAlarmRealtime } from "./alarm.slice";
@@ -73,24 +73,26 @@ const initState = {
   alarmNotifications: [],
   alarmCount: 0,
 };
-const AppBadge=({ handleClickOpen })=> {
+const AppBadge = ({ handleClickOpen, onRefresh }) => {
   const classes = useStyles();
   const { stationSelected } = useSelector((state) => state.stationReducer);
   const [state, setState] = useState(initState);
+  const fetchAlarm = useCallback(async () => {
+    console.log("fetchAlarmCount");
+    if (stationSelected.id === undefined) return;
+    var alarmCount = await AlarmService.alarmNotification(stationSelected.id);
+    setState((pre) => ({
+      ...pre,
+      alarmCount: alarmCount,
+    }));
+  }, [stationSelected.id]);
+  useEffect(() => {
+    fetchAlarm();
+  }, [fetchAlarm]);
 
   useEffect(() => {
-    const fetchAlarm = async () => {
-      if (stationSelected.id === undefined) return;
-      var alarmCount = await AlarmService.alarmNotification(stationSelected.id);
-      setState((pre) => ({
-        ...pre,
-        alarmCount: alarmCount,
-      }));
-    };
-    fetchAlarm();
-
-  }, [stationSelected.id]);
-
+    onRefresh && onRefresh(fetchAlarm);
+  }, [fetchAlarm, onRefresh]);
 
   return (
     <div>
@@ -129,5 +131,5 @@ const AppBadge=({ handleClickOpen })=> {
       </Tooltip>
     </div>
   );
-}
-export default React.memo(AppBadge)
+};
+export default React.memo(AppBadge);
