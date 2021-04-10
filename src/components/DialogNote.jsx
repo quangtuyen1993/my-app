@@ -15,7 +15,6 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SchedulerService from "../service/scheduler.service";
-import MDateTimePicker from "./MDateTimePicker";
 
 const initialState = {
   id: "",
@@ -34,7 +33,7 @@ export default function DialogNote({
 }) {
   const theme = useTheme();
   const [state, setState] = useState(initialState);
- 
+
   const { stationSelected } = useSelector((state) => state.stationReducer);
   const { id: accountId } = useSelector(
     (state) => state.authorReducer.userProfile
@@ -62,7 +61,6 @@ export default function DialogNote({
   //init update
   useEffect(() => {
     if (noteDefault === undefined) return;
-
     if (noteDefault.id === undefined) {
       setState((pre) => ({
         ...pre,
@@ -73,34 +71,36 @@ export default function DialogNote({
     setState((pre) => ({
       ...pre,
       id: noteDefault.id,
-    
       content: noteDefault.content,
       mode: "Update",
     }));
 
-    handleDateFromChange(moment.utc(noteDefault.startTime))
-    handleDateToChange(moment.utc(noteDefault.endTime))
-
+    handleDateFromChange(moment.utc(noteDefault.startTime));
+    handleDateToChange(moment.utc(noteDefault.endTime));
   }, [noteDefault]);
 
   const onInsertScheduler = async () => {
+    var dT = moment.utc(dateTo).format("yyyy-hh-DDThh:mm:ss");
+    var dF = moment.utc(dateFrom).format("yyyy-hh-DDThh:mm:ss");
     var data = await SchedulerService.insert({
       stationId: stationSelected.id,
       accountId: accountId,
-      startTime:dateFrom,
-      endTime: dateTo,
+      startTime: dF,
+      endTime: dT,
       content: state.content,
     });
     onComplete(data);
   };
 
   const onUpdateScheduler = async () => {
+    var dT = moment.utc(dateTo).format("yyyy-hh-DDThh:mm:ss");
+    var dF = moment.utc(dateFrom).format("yyyy-hh-DDThh:mm:ss");
     var data = await SchedulerService.update({
       id: state.id,
       stationId: stationSelected.id,
       accountId: accountId,
-      startTime:dateFrom,
-      endTime: dateTo,
+      startTime: dF,
+      endTime: dT,
       content: state.content,
     });
     onComplete(data);

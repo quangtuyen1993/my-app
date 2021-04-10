@@ -64,7 +64,7 @@ export default function SchedulerMaintain() {
   };
 
   const onDelete = async (item) => {
-    await SchedulerService.remove({id:item.id});
+    await SchedulerService.remove({ id: item.id });
     onFetchScheduler();
   };
 
@@ -132,7 +132,6 @@ export default function SchedulerMaintain() {
         <MTableMaterial
           // showSearch={true}
           isHover
-          rowsPerPage={5}
           addControlColumns={[renderControl]}
           dataSource={state.data}
           fieldArray={[
@@ -143,7 +142,6 @@ export default function SchedulerMaintain() {
             "content",
           ]}
         />
-        Scheduler Maintain
       </CardLayout>
       <DialogNote
         noteDefault={state.noteSelected}
