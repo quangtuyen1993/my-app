@@ -35,7 +35,7 @@ export default function WarningDialog({
 
   const submit = useCallback(() => {
     onSubmit(state.noteDefault);
-    onClose()
+    onClose();
   }, [onClose, onSubmit, state.noteDefault]);
 
   return (
@@ -71,7 +71,6 @@ export default function WarningDialog({
               </Box>
               <Box m={2}>
                 {content}
-                {state.noteDefault.id && state.noteDefault.id}
               </Box>
             </Box>
           </DialogContentText>

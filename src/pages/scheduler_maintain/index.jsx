@@ -208,7 +208,7 @@ export default function SchedulerMaintain() {
         noteDefault={state.noteSelected}
         open={state.openConfirm}
         title="Waring"
-        content="Are you sure delete item"
+        content="Are you sure delete this item"
         onSubmit={confirmSubmit}
         onClose={closeConfirm}
       />
