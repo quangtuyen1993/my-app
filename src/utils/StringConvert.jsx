@@ -1,5 +1,4 @@
 const StringUtils = {
-
   titleCase: (str) => {
     var splitStr = str.toLowerCase().split(" ");
     for (var i = 0; i < splitStr.length; i++) {
@@ -23,6 +22,21 @@ const StringUtils = {
         splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
     }
     return splitStr.join(" ");
+  },
+
+  convertDataToCsv: (array) => {
+    var filed = Object.keys(array[0]);
+    var csv = array
+      .map((item) => {
+        var line = "\n";
+        filed.forEach((f) => {
+          line += item[f].replaceAll(",", " ") + ",";
+        });
+        return ` ${line}`;
+      })
+      .join(",");
+    alert(csv);
+    return `${filed.join(",")} ${csv}`;
   },
   convertArrayToCSV: (objArray) => {
     // var array = typeof objArray != "object" ? JSON.parse(objArray) : objArray;

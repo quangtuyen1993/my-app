@@ -20,6 +20,7 @@ import MTableMaterial from "../../components/MTableMaterial";
 import TableApp from "../../components/TableApp";
 import PRService from "../../service/pr.service";
 import StringUtils from "../../utils/StringConvert";
+import FileSaver from "file-saver";
 
 export default function PRCalculationScreen() {
   const theme = useTheme();
@@ -74,6 +75,21 @@ export default function PRCalculationScreen() {
     }));
   };
 
+  const onExport = () => {
+    var arrayData = [];
+    var check = Array.isArray(state.results);
+    var name = "PR Calculate";
+    alert(JSON.stringify(state.results));
+
+    // if (!check) {
+    //   arrayData.push(state.results);
+    // } else {
+    //   arrayData = [...state.results];
+    // }
+    const csv = StringUtils.convertDataToCsv(state.results);
+    const csvData = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    FileSaver.saveAs(csvData, `${name}.csv`);
+  };
   return (
     <>
       <Container disableGutters maxWidth={false}>
@@ -143,7 +159,12 @@ export default function PRCalculationScreen() {
                       </Button>
                     </Grid>
                     <Grid item xs={6} sm={6} lg={6} md={6}>
-                      <Button color="primary" fullWidth variant="contained">
+                      <Button
+                        color="primary"
+                        onClick={onExport}
+                        fullWidth
+                        variant="contained"
+                      >
                         Export
                       </Button>
                     </Grid>
@@ -169,7 +190,7 @@ export default function PRCalculationScreen() {
                 <Grid item xs={12} sm={12} md={4} lg={4}>
                   <Card
                     style={{
-                      paddingTop: sm ? 0 : theme.spacing(9),
+                      marginTop: sm ? 0 : theme.spacing(9),
                     }}
                   >
                     <CardHeader
