@@ -26,7 +26,6 @@ const StyledTableCell = withStyles((theme) => ({
     border: `1px solid ${grey[300]}`,
   },
   head: {
-
     backgroundColor: theme.palette.secondary.main,
     color: theme.palette.common.white,
     textAlign: "center",
@@ -184,9 +183,8 @@ const MTableMaterial = ({
                 md={2}
                 lg={1}
               >
-              <Button color="secondary" variant="contained">
+                <Button color="secondary" variant="contained">
                   Refresh
-
                 </Button>
               </Grid>
             )}
@@ -225,13 +223,13 @@ const MTableMaterial = ({
               {addControlFirst &&
                 addControlFirst &&
                 state.additionalFields &&
-                state.additionalFields.map((field,index) => (
+                state.additionalFields.map((field, index) => (
                   <StyledTableCell width={`${state.percentW}%`} key={index}>
                     {StringUtils.convertCamelToTextNormal(field)}
                   </StyledTableCell>
                 ))}
 
-              {fieldArray.map((item,index) => (
+              {fieldArray.map((item, index) => (
                 <StyledTableCell width={`${state.percentW}%`} key={index}>
                   {StringUtils.convertCamelToTextNormal(item)}
                 </StyledTableCell>
@@ -239,7 +237,7 @@ const MTableMaterial = ({
 
               {!addControlFirst &&
                 state.additionalFields &&
-                state.additionalFields.map((item,index) => (
+                state.additionalFields.map((item, index) => (
                   <StyledTableCell width={`${state.percentW}%`} key={index}>
                     {StringUtils.convertCamelToTextNormal(item)}
                   </StyledTableCell>
@@ -255,9 +253,9 @@ const MTableMaterial = ({
                   style={{
                     backgroundColor: multiColor
                       ? getColorCell(dataRow.name)
-                      : (isHover
+                      : isHover
                       ? index % 2 === 0 && theme.palette.action.hover
-                      : "white"),
+                      : "white",
                   }}
                 >
                   {showIndex && (
@@ -282,7 +280,10 @@ const MTableMaterial = ({
                     ))}
                   {fieldArray.map((f) => (
                     <StyledTableCell size="small" key={f}>
-                      {dataRow[f]}
+                      {f.toLowerCase().includes("date") ||
+                      f.toLowerCase().includes("time")
+                        ? dataRow[f].replace("T", " ")
+                        : dataRow[f]}
                     </StyledTableCell>
                   ))}
                   {!addControlFirst &&

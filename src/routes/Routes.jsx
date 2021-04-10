@@ -40,6 +40,30 @@ export const RouterList = [
     ],
   },
   {
+    id: 99,
+    iconItem: IconApp.ACCOUNT,
+    name: "Account Manager",
+    linkTo: "/account",
+    path: "/account",
+    priority: PRIVATE,
+    component: (
+      <MainLayout>
+        <SystemInfoScreen />
+      </MainLayout>
+    ),
+    child: [
+      {
+        id: 1,
+        path: "/",
+        component: (
+          <MainLayout>
+            <AccountScreen />
+          </MainLayout>
+        ),
+      },
+    ],
+  },
+  {
     id: 2,
     iconItem: IconApp.DEVICE,
     name: "Devices",
@@ -108,7 +132,7 @@ export const RouterList = [
   {
     id: 4,
     iconItem: IconApp.TRENT,
-    name: "Power Trend",
+    name: "Trends",
     linkTo: "/trend",
     path: "/trend",
     priority: PRIVATE,
@@ -179,30 +203,6 @@ export const RouterList = [
         component: (
           <MainLayout>
             <SystemInfoScreen />
-          </MainLayout>
-        ),
-      },
-    ],
-  },
-  {
-    id: 99,
-    iconItem: IconApp.ACCOUNT,
-    name: "Account Manager",
-    linkTo: "/account",
-    path: "/account",
-    priority: PRIVATE,
-    component: (
-      <MainLayout>
-        <SystemInfoScreen />
-      </MainLayout>
-    ),
-    child: [
-      {
-        id: 1,
-        path: "/",
-        component: (
-          <MainLayout>
-            <AccountScreen />
           </MainLayout>
         ),
       },
