@@ -26,9 +26,9 @@ export default function EnergyTrend() {
   };
 
   useEffect(() => {
+    if (stationSelected.id === undefined) return;
     if (timer.current !== null) clearInterval(timer.current);
     const onFetchEnergyData = async () => {
-      if (stationSelected.id === undefined) return;
       var dateFormat = moment.utc(selectedDate).format("yyyy-MM-DD HH:mm:ss");
       var res = await EnergyService.onFetchData({
         time: dateFormat,
@@ -46,7 +46,9 @@ export default function EnergyTrend() {
       onFetchEnergyData();
     }, TIMER_TREND);
     return () => {
+      if (stationSelected.id === undefined) return;
       clearInterval(timer.current);
+      EnergyService.source().cancel("destroy")
     };
   }, [selectedDate, state.type, stationSelected.id]);
 

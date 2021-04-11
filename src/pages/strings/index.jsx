@@ -4,6 +4,7 @@ import Tree from "react-d3-tree";
 import { useSelector } from "react-redux";
 import CardLayout from "../../common/layouts/CardLayout";
 import MonitorService from "../../service/monitor.service";
+import AxiosAuthor from "../../utils/AxiosAuthor";
 
 export default function InverterStringScreen() {
   const [state, setState] = useState({
@@ -27,7 +28,6 @@ export default function InverterStringScreen() {
       }));
     };
     fetchMonitorString();
-
     timer.current = setInterval(() => {
       fetchMonitorString();
     }, 10000);

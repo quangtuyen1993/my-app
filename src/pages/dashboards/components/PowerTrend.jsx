@@ -7,7 +7,9 @@ import CardLayout from "../../../common/layouts/CardLayout";
 import GraphLineApp from "../../../components/GraphLineApp";
 import MDatePicker from "../../../components/MDatePicker";
 import { TIMER_TREND } from "../../../const/TimerUpdateConst";
-import HistoricalService from "../../../service/historycal.service";
+import HistoricalService, {
+  historySource,
+} from "../../../service/historycal.service";
 import DataTrendParser from "../../../utils/DataTrenParser";
 export default function PowerTrend() {
   const { sensorTable } = useSelector(
@@ -17,14 +19,16 @@ export default function PowerTrend() {
 
   const [state, setState] = useState({
     dataSet: [],
-    dateFrom: moment().startOf("day"),
-    dateTo: moment().endOf("day"),
+    dateFrom: "",
+    dateTo: "",
   });
 
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
     const onFetchData = async () => {
-      if (sensorTable === "") return;
+      if (sensorTable === "" || state.dateFrom === "" || state.dateTo === "")
+        return;
+
       var res = await HistoricalService.fetchData(
         state.dateFrom,
         state.dateTo,
@@ -42,7 +46,9 @@ export default function PowerTrend() {
     }, TIMER_TREND);
 
     return () => {
-      clearInterval(timer.current);
+      if (sensorTable === "" || state.dateFrom === "" || state.dateTo === "")
+        return;
+      HistoricalService.source().cancel();
     };
   }, [sensorTable, state.dateFrom, state.dateTo]);
 

@@ -37,7 +37,7 @@ export default function MDatePicker(props) {
       var dateTo = moment(selectedTo).format("yyyy-MM-DD HH:mm:ss");
       props.onRangeDateChange(dateFrom, dateTo);
     }
-  }, [ selectedFrom, selectedTo]);
+  }, [selectedFrom, selectedTo]);
 
   const onDateChangeFrom = (date, value) => {
     var dateFrom = DateUtils.setHourBeginOfDate(date);

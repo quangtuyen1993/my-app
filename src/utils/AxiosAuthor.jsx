@@ -1,6 +1,5 @@
 import axios from "axios";
 import { BASE_URL } from "../redux/URL";
-
 const AxiosAuthor = axios.create({
   baseURL: BASE_URL,
 });
@@ -16,5 +15,7 @@ AxiosAuthor.interceptors.response.use((response) => {
 export const refreshHeader = (jwtToken) => {
   AxiosAuthor.defaults.headers.common["Authorization"] = "Bearer " + jwtToken;
 };
+
+AxiosAuthor.CancelToken = axios.CancelToken;
 
 export default AxiosAuthor;
