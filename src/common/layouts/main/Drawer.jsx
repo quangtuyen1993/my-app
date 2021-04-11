@@ -1,3 +1,4 @@
+import { faThermometerThreeQuarters } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Box,
@@ -8,6 +9,7 @@ import {
   ListItemText,
   makeStyles,
   Typography,
+  useTheme,
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
@@ -16,7 +18,6 @@ import LogOutIcon from "../../../redux/feature/user/LogOutIcon";
 import { RouterList } from "../../../routes/Routes";
 
 const DrawerApp = ({ drawerWidth, open, onClose }) => {
-
   // const theme = useTheme();
   const useStyle = makeStyles((theme) => ({
     paper: {
@@ -57,7 +58,7 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
   }));
 
   const classes = useStyle();
-
+const theme=useTheme()
   return (
     <div>
       <Drawer
@@ -84,9 +85,15 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
               }}
               key={route.id}
             >
-              <ListItem button>
+              <ListItem button style={{paddingLeft:theme.spacing(1)}}>
                 <ListItemIcon>
-                  <Box paddingLeft={1.3}>
+                  <Box
+                    flex={1}
+                    display="flex"
+                    justifyContent="center"
+                    alignContent="center"
+                    alignItems="center"
+                  >
                     <FontAwesomeIcon
                       icon={route.iconItem}
                       style={{
@@ -102,7 +109,7 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
                   primary={
                     <Typography
                       variant="subtitle1"
-                      style={{ color: "#ffffff", fontWeight: "normal" }}
+                      style={{ color: "#ffffff", fontWeight: "normal",paddingLeft:theme.spacing(1) }}
                     >
                       {route.name}
                     </Typography>
