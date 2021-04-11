@@ -10,6 +10,7 @@ import PRCalculationScreen from "../pages/prcalc/index";
 import SchedulerScreen from "../pages/scheduler_maintain";
 import SystemInfoScreen from "../pages/system";
 import TrendScreen from "../pages/trendMainScreen";
+import InverterStringScreen from "../pages/strings"
 
 export const PRIVATE = "_private_";
 export const PUBLIC = "_public_";
@@ -59,6 +60,48 @@ export const RouterList = [
         component: (
           <MainLayout>
             <DeviceScreen />
+          </MainLayout>
+        ),
+      },
+      {
+        id: 3,
+        path: "/power_meter",
+        component: (
+          <MainLayout>
+            <PowerMeterDetail />
+          </MainLayout>
+        ),
+      },
+      {
+        id: 2,
+        path: "/inverter",
+        component: (
+          <MainLayout>
+            <DetailScreen />
+          </MainLayout>
+        ),
+      },
+    ],
+  },
+  {
+    id: 10,
+    iconItem: IconApp.DEVICE,
+    name: "Inverter Strings",
+    path: "/strings",
+    linkTo: "/strings",
+    priority: PRIVATE,
+    component: (
+      <MainLayout>
+        <DeviceScreen />
+      </MainLayout>
+    ),
+    child: [
+      {
+        id: 1,
+        path: "/",
+        component: (
+          <MainLayout>
+            <InverterStringScreen />
           </MainLayout>
         ),
       },
