@@ -22,11 +22,6 @@ export const RouterList = [
     name: "Overview",
     linkTo: "/home",
     path: "/home",
-    component: (
-      <MainLayout>
-        <Dashboard />
-      </MainLayout>
-    ),
     priority: PRIVATE,
     child: [
       {
@@ -48,11 +43,6 @@ export const RouterList = [
     path: "/device",
     linkTo: "/device",
     priority: PRIVATE,
-    component: (
-      <MainLayout>
-        <DeviceScreen />
-      </MainLayout>
-    ),
     child: [
       {
         id: 1,
@@ -85,16 +75,11 @@ export const RouterList = [
   },
   {
     id: 10,
-    iconItem: IconApp.DEVICE,
+    iconItem: IconApp.MONITOR,
     name: "Inverter Strings",
     path: "/strings",
     linkTo: "/strings",
     priority: PRIVATE,
-    component: (
-      <MainLayout>
-        <DeviceScreen />
-      </MainLayout>
-    ),
     child: [
       {
         id: 1,
@@ -132,11 +117,6 @@ export const RouterList = [
     linkTo: "/alarm",
     path: "/alarm",
     priority: PRIVATE,
-    component: (
-      <MainLayout>
-        <AlarmScreen />
-      </MainLayout>
-    ),
     child: [
       {
         id: 1,
@@ -175,7 +155,6 @@ export const RouterList = [
     linkTo: "/prcalculation",
     path: "/prcalculation",
     priority: PRIVATE,
-
     child: [
       {
         id: 1,
@@ -195,7 +174,6 @@ export const RouterList = [
     linkTo: "/scheduler",
     path: "/scheduler",
     priority: PRIVATE,
-
     child: [
       {
         id: 1,
@@ -215,11 +193,6 @@ export const RouterList = [
     linkTo: "/account",
     path: "/account",
     priority: PRIVATE,
-    component: (
-      <MainLayout>
-        <SystemInfoScreen />
-      </MainLayout>
-    ),
     child: [
       {
         id: 1,
@@ -239,7 +212,6 @@ export const RouterList = [
     linkTo: "/systemInfo",
     path: "/systemInfo",
     priority: PRIVATE,
-
     child: [
       {
         id: 1,
