@@ -40,3 +40,5 @@ export const URL_SCHEDULER = "/SchedulerTasks";
 export const URL_STATION_INFO = "/stations";
 
 
+export const URL_STRING_MONITOR = "/StringMonitor/GetInverterStrings";
+
