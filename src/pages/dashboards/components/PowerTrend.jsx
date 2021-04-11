@@ -21,25 +21,22 @@ export default function PowerTrend() {
     dateTo: moment().endOf("day"),
   });
 
-  const onFetchData = useCallback(async () => {
-    if (sensorTable === "") return;
-    var res = await HistoricalService.fetchData(
-      state.dateFrom,
-      state.dateTo,
-      sensorTable
-    );
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    setState((pre) => ({
-      ...pre,
-      dataSet: [...cols],
-    }));
-  }, [sensorTable, state.dateFrom, state.dateTo]);
-
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
-
+    const onFetchData = async () => {
+      if (sensorTable === "") return;
+      var res = await HistoricalService.fetchData(
+        state.dateFrom,
+        state.dateTo,
+        sensorTable
+      );
+      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+      setState((pre) => ({
+        ...pre,
+        dataSet: [...cols],
+      }));
+    };
     onFetchData();
-
     timer.current = setInterval(() => {
       onFetchData();
     }, TIMER_TREND);
@@ -47,7 +44,7 @@ export default function PowerTrend() {
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchData]);
+  }, [sensorTable, state.dateFrom, state.dateTo]);
 
   const handleChangeDate = (from, to) => {
     setState((pre) => {

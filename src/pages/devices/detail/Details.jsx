@@ -5,11 +5,10 @@ import {
   Container,
   fade,
   Grid,
-
   Typography
 } from "@material-ui/core";
 import moment from "moment";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useLocation, useNavigate } from "react-router";
 import IconApp from "../../../common/icons";
@@ -21,7 +20,6 @@ import { TIMER_TABLE, TIMER_TREND } from "../../../const/TimerUpdateConst";
 import DeviceService from "../../../service/device.service";
 import { CookieManger } from "../../../utils/CookieManager";
 import DataTrendParser from "../../../utils/DataTrenParser";
-
 
 export default function DetailScreen() {
   // const theme = useTheme();
@@ -85,63 +83,51 @@ export default function DetailScreen() {
     }));
   }, [location.state]);
 
-  const onFetchTableData = useCallback(async () => {
-    var mppt = [];
-    var phases = [];
-    var general = [];
-
-    var obj = await DeviceService.fetchInverterDetail(state.deviceId);
-    var fields = Object.keys(obj);
-    fields.forEach((f) => {
-      if (f === "tableName") {
-        setState((pre) => ({
-          ...pre,
-          tableName: obj[f],
-        }));
-      } else if (f.includes("mppt") || f.includes("mptt")) {
-        filterMPPT(f, obj, mppt);
-      } else if (
-        f.includes("ab", 0) ||
-        f.includes("bc", 0) ||
-        f.includes("ca", 0) ||
-        f.includes("phase")
-      ) {
-        filterPhase(f, obj, phases);
-      } else {
-        filterGeneral(f, obj, general);
-      }
-    });
-
-    var generalShow = [].concat(general).sort((a, b) => {
-      return a.type.priority > b.type.priority ? 1 : -1;
-    });
-
-    setState((pre) => ({
-      ...pre,
-      mttp: mppt,
-      phases: phases,
-      general: generalShow,
-    }));
-  }, [state.deviceId]);
-
-  const onFetchDataTrend = useCallback(async () => {
-    if (state.tableName === "") return;
-    var data = await DeviceService.fetchDataPowerMeterInverter({
-      fromDate: state.dateFrom,
-      toDate: state.dateTo,
-      tableName: state.tableName,
-    });
-    var cols = DataTrendParser.parserTrend(data.columns, data.rows);
-    setState((pre) => ({
-      ...pre,
-      dataTrend: cols,
-    }));
-  }, [state.dateFrom, state.dateTo, state.tableName]);
-
   useEffect(() => {
     if (state.deviceId === "" || state.deviceId === undefined) return;
+
     if (timer.current !== undefined) clearInterval(timer.current);
+    
+    const onFetchTableData = async () => {
+      var mppt = [];
+      var phases = [];
+      var general = [];
+      var obj = await DeviceService.fetchInverterDetail(state.deviceId);
+      var fields = Object.keys(obj);
+      fields.forEach((f) => {
+        if (f === "tableName") {
+          setState((pre) => ({
+            ...pre,
+            tableName: obj[f],
+          }));
+        } else if (f.includes("mppt") || f.includes("mptt")) {
+          filterMPPT(f, obj, mppt);
+        } else if (
+          f.includes("ab", 0) ||
+          f.includes("bc", 0) ||
+          f.includes("ca", 0) ||
+          f.includes("phase")
+        ) {
+          filterPhase(f, obj, phases);
+        } else {
+          filterGeneral(f, obj, general);
+        }
+      });
+
+      var generalShow = [].concat(general).sort((a, b) => {
+        return a.type.priority > b.type.priority ? 1 : -1;
+      });
+
+      setState((pre) => ({
+        ...pre,
+        mttp: mppt,
+        phases: phases,
+        general: generalShow,
+      }));
+    };
     onFetchTableData();
+
+
     timer.current = setInterval(() => {
       onFetchTableData();
     }, TIMER_TABLE);
@@ -149,11 +135,24 @@ export default function DetailScreen() {
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchTableData, state.deviceId]);
+  }, [state.deviceId]);
 
   useEffect(() => {
     if (state.deviceId === "" || state.deviceId === undefined) return;
     if (timer.current !== undefined) clearInterval(timer.current);
+    const onFetchDataTrend = async () => {
+      if (state.tableName === "") return;
+      var data = await DeviceService.fetchDataPowerMeterInverter({
+        fromDate: state.dateFrom,
+        toDate: state.dateTo,
+        tableName: state.tableName,
+      });
+      var cols = DataTrendParser.parserTrend(data.columns, data.rows);
+      setState((pre) => ({
+        ...pre,
+        dataTrend: cols,
+      }));
+    };
     onFetchDataTrend();
     timer.current = setInterval(() => {
       onFetchDataTrend();
@@ -162,7 +161,7 @@ export default function DetailScreen() {
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchDataTrend, state.deviceId]);
+  }, [state.dateFrom, state.dateTo, state.deviceId, state.tableName]);
 
   return (
     <Container disableGutters direction="row" maxWidth={false}>

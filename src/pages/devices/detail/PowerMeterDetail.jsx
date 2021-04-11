@@ -5,7 +5,7 @@ import {
   Grid,
   Typography
 } from "@material-ui/core";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import CardLayout from "../../../common/layouts/CardLayout";
@@ -26,10 +26,8 @@ export default function PowerMeterDetail() {
     activePower: [],
     reactivePower: [],
     general: [],
-    stationSelected:null
+    stationSelected: null,
   });
-
-
 
   useEffect(() => {
     if (state.stationSelected === null) {
@@ -66,27 +64,26 @@ export default function PowerMeterDetail() {
   }, [location.state]);
   //fetch data
 
-  const onFetchData = useCallback(async () => {
-    var pws = await DeviceService.fetchAllPowerMeterDetail(state.deviceId);
-    const {
-      voltage,
-      current,
-      activePower,
-      reactivePower,
-      general,
-    } = parserData(pws);
-    setState((pre) => ({
-      ...pre,
-      voltage: voltage,
-      current: current,
-      activePower: activePower,
-      reactivePower: reactivePower,
-      general: general,
-    }));
-  }, [state.deviceId]);
-
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
+    const onFetchData = async () => {
+      var pws = await DeviceService.fetchAllPowerMeterDetail(state.deviceId);
+      const {
+        voltage,
+        current,
+        activePower,
+        reactivePower,
+        general,
+      } = parserData(pws);
+      setState((pre) => ({
+        ...pre,
+        voltage: voltage,
+        current: current,
+        activePower: activePower,
+        reactivePower: reactivePower,
+        general: general,
+      }));
+    };
     onFetchData();
 
     timer.current = setInterval(() => {
@@ -95,7 +92,7 @@ export default function PowerMeterDetail() {
     return () => {
       clearInterval(timer.current);
     };
-  });
+  }, [state.deviceId]);
 
   return (
     <Container disableGutters direction="row" maxWidth={false}>

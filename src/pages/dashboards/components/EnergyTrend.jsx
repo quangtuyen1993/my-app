@@ -25,23 +25,22 @@ export default function EnergyTrend() {
     }));
   };
 
-  const onFetchEnergyData = useCallback(async () => {
-    if (stationSelected.id === undefined) return;
-    var dateFormat = moment.utc(selectedDate).format("yyyy-MM-DD HH:mm:ss");
-    var res = await EnergyService.onFetchData({
-      time: dateFormat,
-      type: state.type,
-      stationId: stationSelected.id,
-    });
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    setState((pre) => ({
-      ...pre,
-      data: cols,
-    }));
-  }, [selectedDate, state.type, stationSelected.id]);
-
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
+    const onFetchEnergyData = async () => {
+      if (stationSelected.id === undefined) return;
+      var dateFormat = moment.utc(selectedDate).format("yyyy-MM-DD HH:mm:ss");
+      var res = await EnergyService.onFetchData({
+        time: dateFormat,
+        type: state.type,
+        stationId: stationSelected.id,
+      });
+      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+      setState((pre) => ({
+        ...pre,
+        data: cols,
+      }));
+    };
     onFetchEnergyData();
     timer.current = setInterval(() => {
       onFetchEnergyData();
@@ -49,9 +48,8 @@ export default function EnergyTrend() {
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchEnergyData]);
+  }, [selectedDate, state.type, stationSelected.id]);
 
-  
   return (
     <CardLayout
       icon={IconApp.BOTH}

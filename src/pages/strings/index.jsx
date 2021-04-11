@@ -13,18 +13,19 @@ export default function InverterStringScreen() {
   const timer = useRef(null);
 
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const fetchMonitorString = useCallback(async () => {
-    if (stationSelected.id === undefined) return;
-    var data = await MonitorService.fetchData(stationSelected.id);
-    setState((pre) => ({
-      ...pre,
-      data: data,
-    }));
-  }, [stationSelected]);
+
   useEffect(() => {
     if (timer.current !== null) {
       clearInterval(timer.current);
     }
+    const fetchMonitorString = async () => {
+      if (stationSelected.id === undefined) return;
+      var data = await MonitorService.fetchData(stationSelected.id);
+      setState((pre) => ({
+        ...pre,
+        data: data,
+      }));
+    };
     fetchMonitorString();
 
     timer.current = setInterval(() => {
@@ -34,7 +35,7 @@ export default function InverterStringScreen() {
     return () => {
       clearInterval(timer.current);
     };
-  }, [fetchMonitorString]);
+  }, [stationSelected.id]);
 
   const useCenteredTree = (defaultTranslate = { x: 0, y: 0 }) => {
     const [translate, setTranslate] = useState(defaultTranslate);

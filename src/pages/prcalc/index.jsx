@@ -43,22 +43,22 @@ export default function PRCalculationScreen() {
     }));
   };
 
-  const getPrParam = useCallback(async () => {
-    if (stationSelected.id === undefined) return;
-    var res = await PRService.getPRParam({
-      stationId: stationSelected.id,
-    });
-    setState((pre) => ({
-      ...pre,
-      g_inc: res.ginc,
-      g_hor: res.gHor,
-      t_ref: res.tRef,
-    }));
-  }, [stationSelected.id]);
-
   useEffect(() => {
+    if (stationSelected.id === undefined) return;
+    const getPrParam = async () => {
+      if (stationSelected.id === undefined) return;
+      var res = await PRService.getPRParam({
+        stationId: stationSelected.id,
+      });
+      setState((pre) => ({
+        ...pre,
+        g_inc: res.ginc,
+        g_hor: res.gHor,
+        t_ref: res.tRef,
+      }));
+    };
     getPrParam();
-  }, [getPrParam]);
+  }, [stationSelected.id]);
 
   const onFetchData = async () => {
     if (stationSelected.id === undefined) return;

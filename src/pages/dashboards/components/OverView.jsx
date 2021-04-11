@@ -36,39 +36,41 @@ export default function Overview() {
     values: [1, 1, 1],
   });
 
-  const onFetchPR = useCallback(async () => {
-    if (stationSelected.id === undefined) return;
-    let day = await PRService.getPRofDay(stationSelected.id);
-    let month = await PRService.getPRofMonth(stationSelected.id);
-    day.name = "PR Day";
-    month.name = "PR Month";
-    var newList = [day, month];
-    setState((pre) => {
-      return {
-        ...pre,
-        listPr: newList,
-      };
-    });
-  }, [stationSelected.id]);
-
-  const onFetchData = useCallback(async () => {
-    if (stationSelected.id === undefined) return;
-    var response = await OverviewService.fetchOverview(stationSelected.id);
-    var dataNormal = [];
-    response.forEach((item) => {
-      let obj = createItem(item);
-      dataNormal.push(obj);
-    });
-    setState((pre) => ({
-      ...pre,
-      listItem: dataNormal,
-    }));
-  }, [stationSelected.id]);
-
   useEffect(() => {
     if (timer !== null) {
       clearInterval(timer.current);
     }
+    
+    const onFetchData = async () => {
+      if (stationSelected.id === undefined) return;
+      var response = await OverviewService.fetchOverview(stationSelected.id);
+      var dataNormal = [];
+      response.forEach((item) => {
+        let obj = createItem(item);
+        dataNormal.push(obj);
+      });
+      setState((pre) => ({
+        ...pre,
+        listItem: dataNormal,
+      }));
+    };
+
+    const onFetchPR = async () => {
+      if (stationSelected.id === undefined) return;
+      let day = await PRService.getPRofDay(stationSelected.id);
+      let month = await PRService.getPRofMonth(stationSelected.id);
+      day.name = "PR Day";
+      month.name = "PR Month";
+      var newList = [day, month];
+      setState((pre) => {
+        return {
+          ...pre,
+          listPr: newList,
+        };
+      });
+    };
+
+
     onFetchData();
     onFetchPR();
     timer.current = setInterval(async () => {
@@ -79,7 +81,7 @@ export default function Overview() {
     return () => {
       clearInterval(timer.current);
     };
-  }, [onFetchData, onFetchPR]);
+  }, [stationSelected.id]);
 
   const renderItem = (item, index) => {
     return (

@@ -26,7 +26,7 @@ export default function DeviceScreen() {
     alertState: {
       severity: "error",
       open: false,
-      message: "Open message was send to",
+      message: "Open ACB1 was send",
     },
     openConfirmDialog: false,
     itemSelected: {},
@@ -147,51 +147,46 @@ export default function DeviceScreen() {
     }));
   };
 
-  const onClose = () => {
-    setState((pre) => ({
-      ...pre,
-      password: '',
-      openConfirmDialog: false,
-      updatingPassword: false,
-    }));
-  };
-
-  const sendNotifyMCCB = useCallback(async () => {
-    try {
-      await DeviceService.mccbSendCommand({
-        stationId: stationSelected.id,
-        mccbAcbId: state.itemSelected.id,
-        password: state.password,
-      });
-      setState((pre) => ({
-        ...pre,
-        alertState: {
-          severity: "success",
-          open: true,
-          message: "Open message was send to",
-        },
-      }));
-    } catch {
-      setState((pre) => ({
-        ...pre,
-        alertState: {
-          severity: "error",
-          open: true,
-          message: "Send message open fail",
-        },
-      }));
-    }
-  }, [state.itemSelected, state.password, stationSelected.id]);
-
   useEffect(() => {
     if (state.updatingPassword) {
+      const sendNotifyMCCB = async () => {
+        try {
+          await DeviceService.mccbSendCommand({
+            stationId: stationSelected.id,
+            mccbAcbId: state.itemSelected.id,
+            password: state.password,
+          });
+          setState((pre) => ({
+            ...pre,
+            alertState: {
+              severity: "success",
+              open: true,
+              message: "Open was send",
+            },
+          }));
+        } catch {
+          setState((pre) => ({
+            ...pre,
+            alertState: {
+              severity: "error",
+              open: true,
+              message: "Sens open fail",
+            },
+          }));
+        }
+      };
       sendNotifyMCCB();
     }
     setState((pre) => ({
       ...pre,
       updatingPassword: false,
     }));
-  }, [sendNotifyMCCB, state.updatingPassword]);
+  }, [
+    state.itemSelected.id,
+    state.password,
+    state.updatingPassword,
+    stationSelected.id,
+  ]);
 
   const renderControl = (item) => {
     return (
@@ -219,7 +214,7 @@ export default function DeviceScreen() {
   return (
     <>
       <Container disableGutters direction="row" maxWidth={false}>
-        <div style={{ position: "fixed",zIndex:10000, right: 0 }}>
+        <div style={{ position: "fixed", zIndex: 10000, right: 0 }}>
           <Alert
             variant="filled"
             style={{
@@ -343,7 +338,6 @@ export default function DeviceScreen() {
         <ConfirmDialog
           // onChange={onChange}
           onSubmit={onSubmit}
-          onClose={onClose}
           value={state.password}
           name="password"
           open={state.openConfirmDialog}
