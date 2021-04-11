@@ -37,7 +37,6 @@ export default function MDatePicker(props) {
       var dateTo = moment(selectedTo).format("yyyy-MM-DD HH:mm:ss");
       props.onRangeDateChange(dateFrom, dateTo);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ selectedFrom, selectedTo]);
 
   const onDateChangeFrom = (date, value) => {

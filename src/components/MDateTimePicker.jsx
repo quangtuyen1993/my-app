@@ -2,7 +2,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { Grid } from "@material-ui/core";
 import {
   KeyboardDateTimePicker,
-  MuiPickersUtilsProvider
+  MuiPickersUtilsProvider,
 } from "@material-ui/pickers";
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -22,28 +22,31 @@ export default function MDateTimePicker(props) {
 
   const [typeFormat, setTypeFormat] = useState(TYPE_DATE);
 
-    useEffect(() => {
-      if (props.isSingleDate !== undefined) {
-        setIsSingleDate(props.isSingleDate);
-      }
-    }, [props.isSingleDate]);
+  useEffect(() => {
+    if (props.isSingleDate !== undefined) {
+      setIsSingleDate(props.isSingleDate);
+    }
+  }, [props.isSingleDate]);
 
-    useEffect(() => {
-      if (props.typeFormat !== undefined) {
-        setTypeFormat(props.typeFormat);
-      }
-    }, [props.typeFormat]);
+  useEffect(() => {
+    if (props.typeFormat !== undefined) {
+      setTypeFormat(props.typeFormat);
+    }
+  }, [props.typeFormat]);
 
-    useEffect(() => {
-      if (props.onRangeDateChange !== undefined) {
-        var dateFrom = moment(selectedFrom).format("yyyy-MM-DD HH:mm:ss");
-        var dateTo = moment(selectedTo).format("yyyy-MM-DD HH:mm:ss");
-        props.onRangeDateChange({name:props.name,value:{
-            dateFrom:dateFrom,
-            dateTo:dateTo
-        }});
-      }
-    }, [selectedFrom, selectedTo]);
+  useEffect(() => {
+    if (props.onRangeDateChange !== undefined) {
+      var dateFrom = moment(selectedFrom).format("yyyy-MM-DD HH:mm:ss");
+      var dateTo = moment(selectedTo).format("yyyy-MM-DD HH:mm:ss");
+      props.onRangeDateChange({
+        name: props.name,
+        value: {
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+        },
+      });
+    }
+  }, [selectedFrom, selectedTo]);
 
   const onDateChangeFrom = (date, value) => {
     handleDateFromChange(date, value);
@@ -52,14 +55,9 @@ export default function MDateTimePicker(props) {
   const onDateChangeTo = (date, value) => {
     if (isSingleDate) {
       onDateChangeFrom(date, value);
-      handleDateToChange(date, value);
     }
+    handleDateToChange(date, value);
   };
-
-
- 
-
-
 
   const renderFromDate = () => {
     if (!isSingleDate) {
