@@ -8,7 +8,6 @@ import {
   ListItemText,
   makeStyles,
   Typography,
-  useTheme,
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
@@ -17,7 +16,8 @@ import LogOutIcon from "../../../redux/feature/user/LogOutIcon";
 import { RouterList } from "../../../routes/Routes";
 
 const DrawerApp = ({ drawerWidth, open, onClose }) => {
-  const theme = useTheme();
+
+  // const theme = useTheme();
   const useStyle = makeStyles((theme) => ({
     paper: {
       background: theme.palette.secondary.main,

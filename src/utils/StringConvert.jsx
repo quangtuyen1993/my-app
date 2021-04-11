@@ -27,15 +27,13 @@ const StringUtils = {
   },
 
   convertDataToCsv: (array) => {
-    // console.log(array)
     var fields = Object.keys(array[0]);
     var str = "";
     array.forEach((element, index) => {
       var lint = `${index + 1} ,`;
       fields.forEach((f) => {
         if (f.toLocaleLowerCase().includes("datetime")) {
-          var dateParser = moment(element[f])
-            .format("MM-DD-YYYY HH:mm:ss");
+          var dateParser = moment(element[f]).format("MM-DD-YYYY HH:mm:ss");
           lint += dateParser + ",";
         } else {
           lint += element[f] + ",";
@@ -85,7 +83,6 @@ const StringUtils = {
     return header + "\r\n" + str;
   },
   numberFromString: (str) => {
-    var regex = /\d/g;
     var numS = str.match(/(\d)/g);
     var result = numS.join("");
     return result;

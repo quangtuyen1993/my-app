@@ -8,10 +8,7 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
-  TableCell,
-  TableRow,
-  withStyles,
+  ListItemText
 } from "@material-ui/core";
 import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -20,54 +17,8 @@ import CardLayout from "../../common/layouts/CardLayout";
 import DialogApp from "../../components/DialogApp";
 import MTableMaterial from "../../components/MTableMaterial";
 import ClientService from "../../service/client.service";
-const users = [
-  {
-    id: 1,
-    username: "test1",
-    role: "Admin",
-  },
-  {
-    id: 2,
-    username: "admin",
-    role: "Admin",
-  },
-  {
-    id: 3,
-    username: "livanhung",
-    role: "Admin",
-  },
-  {
-    id: 4,
-    username: "nguyenhung",
-    role: "Admin",
-  },
-];
-const StyledTableCell = withStyles((theme) => ({
-  root: {
-    border: "1px solid white",
-  },
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-    textAlign: "center",
-  },
-  body: {
-    fontSize: 14,
-    textAlign: "center",
-  },
-}))(TableCell);
 
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    "&:nth-of-type(odd)": {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
-}))(TableRow);
 
-function round5(x) {
-  return Math.ceil(x / 5) * 5;
-}
 
 export default function AccountScreen(props) {
   const [state, setState] = useState({
@@ -89,12 +40,10 @@ export default function AccountScreen(props) {
     }));
   };
 
-  const onDelete = async (user) => {
-    console.log(user);
-    var data = await ClientService.removeUser({ id: user.id });
-    console.log(data);
-    onFetchUser();
-  };
+  // const onDelete = async (user) => {
+  //   var data = await ClientService.removeUser({ id: user.id });
+  //   onFetchUser();
+  // };
 
   const onClose = () => {
     setState((pre) => ({
@@ -112,8 +61,7 @@ export default function AccountScreen(props) {
   }, []);
 
   const onChangePassword = async (newUser) => {
-    var data = await ClientService.changePassword(newUser);
-    console.log(data);
+    await ClientService.changePassword(newUser);
   };
 
   const onSubmit = (newUser) => {
@@ -230,7 +178,6 @@ export default function AccountScreen(props) {
             <FontAwesomeIcon icon={IconApp.UPDATE} />
           </IconButton>
         </Box>
-      
       </React.Fragment>
     );
   }, []);

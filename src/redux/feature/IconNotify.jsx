@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Box, Grid, makeStyles, Tooltip } from "@material-ui/core";
+import { Avatar, Box, makeStyles, Tooltip } from "@material-ui/core";
 import React from "react";
 import IconApp from "../../common/icons";
 const useStyles = makeStyles((theme) => ({}));

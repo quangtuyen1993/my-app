@@ -1,17 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  Badge,
-  Grid,
-  makeStyles,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Badge, Grid, makeStyles, Tooltip } from "@material-ui/core";
 import clsx from "clsx";
-import { fetchAlarmRealtime } from "./alarm.slice";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import IconApp from "../../../common/icons";
-import AlarmService from "../../../service/alarm.service";
+import { fetchAlarmCount } from "./alarm.slice";
 const useStyles = makeStyles((theme) => ({
   chip: {
     backgroundColor: theme.palette.secondary.main,
@@ -19,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.secondary.light,
       icon: {
-        color: "white !importain",
+        color: "white",
       },
     },
   },
@@ -69,30 +62,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const initState = {
-  alarmNotifications: [],
-  alarmCount: 0,
-};
-const AppBadge = ({ handleClickOpen, onRefresh }) => {
+
+const AppBadge = ({ handleClickOpen }) => {
   const classes = useStyles();
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const [state, setState] = useState(initState);
-  const fetchAlarm = useCallback(async () => {
-    console.log("fetchAlarmCount");
-    if (stationSelected.id === undefined) return;
-    var alarmCount = await AlarmService.alarmNotification(stationSelected.id);
-    setState((pre) => ({
-      ...pre,
-      alarmCount: alarmCount,
-    }));
-  }, [stationSelected.id]);
-  useEffect(() => {
-    fetchAlarm();
-  }, [fetchAlarm]);
+  const { alarmCount } = useSelector((state) => state.alarmReducer);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    onRefresh && onRefresh(fetchAlarm);
-  }, [fetchAlarm, onRefresh]);
+    if (stationSelected.id === undefined) return;
+    dispatch(fetchAlarmCount({ stationSelected: stationSelected.id }));
+  }, [dispatch, stationSelected.id]);
 
   return (
     <div>
@@ -109,20 +89,17 @@ const AppBadge = ({ handleClickOpen, onRefresh }) => {
               }}
               overlap="circle"
               className={classes.chip}
-              badgeContent={state.alarmCount}
+              badgeContent={alarmCount}
               color="error"
             >
               <FontAwesomeIcon
                 className={clsx([
                   classes.icon,
                   {
-                    [classes.animatedItem]: state.alarmCount > 0,
+                    [classes.animatedItem]: alarmCount > 0,
                   },
                 ])}
                 icon={IconApp.ALARM}
-                style={{
-                  fontSize: "px",
-                }}
                 color="white"
               />
             </Badge>

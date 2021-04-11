@@ -25,7 +25,6 @@ export default function SchedulerMaintain() {
   const onFetchScheduler = useCallback(async () => {
     if (stationSelected.id === undefined) return;
     var res = await SchedulerService.fetchAll(stationSelected.id);
-    console.log(res);
     setState((pre) => ({
       ...pre,
       data: res.data,

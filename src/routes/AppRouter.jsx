@@ -3,8 +3,7 @@ import {
   BrowserRouter as Router,
   Navigate,
   Route,
-  Routes,
-  useLocation,
+  Routes
 } from "react-router-dom";
 import DefaultLayout from "../common/layouts/DefaultLayout";
 import MainLayout from "../common/layouts/main/MainLayout";

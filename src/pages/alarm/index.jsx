@@ -1,18 +1,18 @@
 import { Box, Button, Container, Grid } from "@material-ui/core";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
 import MDateTimePicker from "../../components/MDateTimePicker";
 import MTableMaterial from "../../components/MTableMaterial";
-import { fetchAlarmRealtime } from "../../redux/feature/alarm/alarm.slice";
+import {
+  fetchAlarmCount
+} from "../../redux/feature/alarm/alarm.slice";
 import AlarmService from "../../service/alarm.service";
 
 export default function AlarmScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const { alarmNotification } = useSelector((state) => state.alarmReducer);
   const dispatch = useDispatch();
   const timer = useRef(null);
   const [state, setState] = useState({
@@ -25,8 +25,6 @@ export default function AlarmScreen() {
       dateTo: moment().endOf("day"),
     },
   });
-
-  
 
   const handleChangeDate = ({ name, value }) => {
     setState((pre) => {
@@ -45,7 +43,7 @@ export default function AlarmScreen() {
       ...pre,
       alarmRealTime: data,
     }));
-  }, [stationSelected]);
+  }, [stationSelected.id]);
 
   const fetchHistoricalData = useCallback(async () => {
     if (stationSelected.id === undefined) return;
@@ -87,13 +85,13 @@ export default function AlarmScreen() {
         item.incommingTime.replace("T", " "),
         "comment"
       );
+      dispatch(fetchAlarmCount({ stationSelected: stationSelected.id }));
       if (data.success) {
         refreshAlarmRealtime();
         fetchHistoricalData();
-        dispatch(fetchAlarmRealtime(stationSelected.id))
       }
     },
-    [fetchHistoricalData, refreshAlarmRealtime, stationSelected.id]
+    [dispatch, fetchHistoricalData, refreshAlarmRealtime, stationSelected.id]
   );
 
   const ackAlarmAll = async () => {
@@ -101,8 +99,6 @@ export default function AlarmScreen() {
     if (data.success) {
       refreshAlarmRealtime();
       fetchHistoricalData();
-      dispatch(fetchAlarmRealtime(stationSelected.id))
-
     }
   };
 

@@ -11,10 +11,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import { Label, Lock, Person, SupervisorAccount } from "@material-ui/icons";
+import { Lock, Person, SupervisorAccount } from "@material-ui/icons";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+// eslint-disable-next-line no-unused-vars
 const useStyles = makeStyles((theme) => ({
   form: {
     display: "flex",
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const initialState = {
-  id:"",
+  id: "",
   username: "",
   email: "",
   password: "",
@@ -64,7 +65,7 @@ export default function DialogApp({
 
   const onHandleSubmit = (data) => {
     onSubmit({
-      id:userDefault.id,
+      id: userDefault.id,
       username: userDefault.username,
       role: userDefault.role,
       password: data.password,

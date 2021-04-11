@@ -3,6 +3,8 @@ import AlarmService from "../../../service/alarm.service";
 
 const init = {
   alarmNotifications: [],
+  alarmCount: 0,
+  message:""
 };
 
 const fetchAlarmRealtime = createAsyncThunk(
@@ -14,6 +16,13 @@ const fetchAlarmRealtime = createAsyncThunk(
     return res;
   }
 );
+const fetchAlarmCount = createAsyncThunk(
+  "alarmRedux",
+  async (data, thunkApi) => {
+    var count = await AlarmService.alarmNotification(data.stationSelected);
+    return count;
+  }
+);
 
 export const alarmSlice = createSlice({
   name: "alarm",
@@ -22,10 +31,20 @@ export const alarmSlice = createSlice({
   extraReducers: {
     [fetchAlarmRealtime.fulfilled]: (state, action) => ({
       ...state,
-      alarmNotifications:[...action.payload],
+      alarmNotifications: [...action.payload],
+    }),
+    [fetchAlarmCount.fulfilled]: (state, action) => ({
+      ...state,
+      alarmCount: action.payload,
+      message:""
+    }),
+    [fetchAlarmCount.rejected]: (state, action) => ({
+      ...state,
+      alarmCount: 0,
+      message:"Alarm error"
     }),
   },
 });
 
-export { fetchAlarmRealtime };
+export { fetchAlarmRealtime, fetchAlarmCount };
 export default alarmSlice.reducer;

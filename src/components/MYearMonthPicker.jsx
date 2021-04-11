@@ -5,14 +5,14 @@ import {
   FormLabel,
   Grid,
   Radio,
-  RadioGroup,
+  RadioGroup
 } from "@material-ui/core";
 import {
   KeyboardDatePicker,
-  MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 export const YEAR = "year";
 export const MONTH = "month";

@@ -11,6 +11,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
 import React from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import AppBadge from "../../../redux/feature/alarm/AppBadge";
 import Station from "../../../redux/feature/station/Station";
 import ColorsApp from "../../colors";
@@ -19,7 +20,6 @@ const useStyle = makeStyles((theme) => ({
   root: {
     // display: "flex",
     zIndex: theme.zIndex.drawer + 1,
- 
   },
 
   appBarUnShift: {
@@ -29,7 +29,7 @@ const useStyle = makeStyles((theme) => ({
     }),
   },
 
-  appBarShift:{
+  appBarShift: {
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -40,6 +40,7 @@ const useStyle = makeStyles((theme) => ({
 export default function Header({ drawerWidth, onToggleDrawer, open }) {
   const classes = useStyle({ drawerWidth });
   const theme = useTheme();
+  const navigate = useNavigate();
   const { username } = useSelector((state) => state.authorReducer.userProfile);
   return (
     <>
@@ -87,7 +88,11 @@ export default function Header({ drawerWidth, onToggleDrawer, open }) {
             <Station device={10} />
           </Box>
           <Box mr={2}>
-            <AppBadge  />
+            <AppBadge
+              handleClickOpen={() => {
+                navigate("/alarm");
+              }}
+            />
           </Box>
 
           <Box>

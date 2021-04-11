@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, Typography, useTheme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { grey } from "@material-ui/core/colors";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Box, Container, Typography, useTheme } from "@material-ui/core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconApp from "../common/icons";
+import React, { useCallback, useEffect, useState } from "react";
 import ColorsApp from "../common/colors";
-import { grey } from "@material-ui/core/colors";
+import IconApp from "../common/icons";
 
 export default function WarningDialog({
   title,

@@ -5,12 +5,9 @@ import {
   Container,
   fade,
   Grid,
-  LinearProgress,
-  Typography,
-  useTheme,
-  withStyles,
+
+  Typography
 } from "@material-ui/core";
-import { blue, red, yellow } from "@material-ui/core/colors";
 import moment from "moment";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -24,24 +21,10 @@ import { TIMER_TABLE, TIMER_TREND } from "../../../const/TimerUpdateConst";
 import DeviceService from "../../../service/device.service";
 import { CookieManger } from "../../../utils/CookieManager";
 import DataTrendParser from "../../../utils/DataTrenParser";
-const BorderLinearProgress = withStyles((theme) => ({
-  root: {
-    height: 10,
-    borderRadius: 5,
-    padding: 10,
-  },
-  colorPrimary: {
-    backgroundColor:
-      theme.palette.grey[theme.palette.type === "light" ? 200 : 700],
-  },
-  bar: {
-    borderRadius: 5,
-    backgroundColor: "#1a90ff",
-  },
-}))(LinearProgress);
+
 
 export default function DetailScreen() {
-  const theme = useTheme();
+  // const theme = useTheme();
   const timer = useRef(null);
   const { stationSelected } = useSelector((state) => state.stationReducer);
 

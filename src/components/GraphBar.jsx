@@ -1,5 +1,4 @@
 import { fade } from "@material-ui/core";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { getColorTrend } from "../common/colors";

@@ -1,8 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
-import { red, grey } from "@material-ui/core/colors";
+import { grey } from "@material-ui/core/colors";
 import { fade, makeStyles } from "@material-ui/core/styles";
-import { id } from "date-fns/locale";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import ColorsApp from "../../../common/colors";

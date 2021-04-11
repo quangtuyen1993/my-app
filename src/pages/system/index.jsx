@@ -1,5 +1,5 @@
 import { Container, Grid } from "@material-ui/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   GoogleMap,
   Marker,
@@ -30,7 +30,6 @@ const MyMapComponent = withScriptjs(
 
 export default function SystemInfoScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const googleRef = useRef(null);
   const [state, setState] = useState({
     LAT: 10.715632448971512,
     LNG: 106.93676260189989,
@@ -47,15 +46,7 @@ export default function SystemInfoScreen() {
       lng: 0.0,
     },
   });
-  function handleLoad(map) {
-    googleRef.current = map;
-  }
 
-  function handleCenter() {
-    if (!googleRef.current) return;
-    const newPos = googleRef.current.getCenter().toJSON();
-    setState(newPos);
-  }
 
   useEffect(() => {
     if (stationSelected.id === undefined) return;
@@ -83,7 +74,6 @@ export default function SystemInfoScreen() {
       var bodyFooter = [];
       bodyFooter.push(pvInfoModel.stC_Description);
       bodyFooter.push(pvInfoModel.noC_Description);
-      console.log(data);
       setState((pre) => ({
         ...pre,
         stationInfo: data,

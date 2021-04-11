@@ -2,7 +2,7 @@ import { fade } from "@material-ui/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import { LIST_COLOR, getColorTrend } from "../common/colors";
+import {  getColorTrend } from "../common/colors";
 
 const initialState = {
   yAxisLabel: [],

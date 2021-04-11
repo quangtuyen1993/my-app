@@ -2,7 +2,6 @@ import { Box, Typography } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { LIST_COLOR_ACCENT } from "../common/colors";
-import StringUtils from "../utils/StringConvert";
 
 const initState = {
   max: 100,

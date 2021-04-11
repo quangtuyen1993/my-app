@@ -15,10 +15,10 @@ import {
   TextField,
   Typography,
   useTheme,
-  withStyles,
+  withStyles
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
-import { ExpandLess, PlusOne, Search } from "@material-ui/icons";
+import { ExpandLess, Search } from "@material-ui/icons";
 import Pagination from "@material-ui/lab/Pagination";
 import React, { Fragment, useEffect, useState } from "react";
 import { getColorCell } from "../common/colors";

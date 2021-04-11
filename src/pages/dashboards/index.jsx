@@ -4,19 +4,14 @@ import OverView from "./components/OverView.jsx";
 import PowerTrend from "./components/PowerTrend.jsx";
 import Weather from "./components/Weather.jsx";
 
-var list = [
-  OverView,
-   Weather, 
-   PowerTrend, 
-   EnergyTrend
-  ];
+const list = [OverView, Weather, PowerTrend, EnergyTrend];
 
 function DashBoard(props) {
   return (
     <Container disableGutters maxWidth={false}>
       {list.map((item, index) => (
         <Box mb={2} key={index}>
-          {item.call()}
+          {item(props)}
         </Box>
       ))}
     </Container>

@@ -26,6 +26,7 @@ import {
   faCogs,
   faUserCog,
   faUserMinus,
+  // eslint-disable-next-line no-unused-vars
   faCog,
   faKey,
   faPersonBooth,

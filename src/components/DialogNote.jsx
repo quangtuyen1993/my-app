@@ -16,7 +16,6 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import SchedulerService from "../service/scheduler.service";
-import ConfirmDialog from "./ConfirmDialog";
 
 const initialState = {
   id: "",
@@ -107,7 +106,6 @@ export default function DialogNote({
   const onUpdateScheduler = async () => {
     if (dateTo - dateFrom < 0) {
       var message = "End Date must be greater than Start Date";
-      alert("wrong", dateTo + "\t" + dateFrom);
       setState((pre) => ({
         ...pre,
         message: message,
@@ -116,7 +114,6 @@ export default function DialogNote({
     } else {
       var dT = moment.utc(dateTo).format("yyyy-MM-DDThh:mm:ss");
       var dF = moment.utc(dateFrom).format("yyyy-MM-DDThh:mm:ss");
-      alert(dF + dT);
       var data = await SchedulerService.update({
         id: state.id,
         stationId: stationSelected.id,

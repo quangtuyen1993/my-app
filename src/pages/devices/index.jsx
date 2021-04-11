@@ -1,19 +1,14 @@
 import {
   Box,
-  Button,
   Chip,
   Container,
   Grid,
-  Typography,
-  useMediaQuery,
-  useTheme,
+
 } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
-import ConfirmDialog from "../../components/ConfirmDialog";
 import TableApp from "../../components/TableApp";
 import { TIMER_TABLE } from "../../const/TimerUpdateConst";
 import DeviceService from "../../service/device.service";
@@ -21,10 +16,11 @@ import DeviceService from "../../service/device.service";
 export default function DeviceScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
   const { userProfile } = useSelector((state) => state.authorReducer);
-  const theme = useTheme();
+
+  // const theme = useTheme();
   const timer = useRef(null);
 
-  const smDown = useMediaQuery(theme.breakpoints.down("sm"));
+  // const smDown = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [state, setState] = useState({
     Inverters: [],

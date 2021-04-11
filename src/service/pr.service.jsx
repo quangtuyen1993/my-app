@@ -36,7 +36,6 @@ const PRService = {
     var res = await AxiosAuthor.post(URL_PR_PARAM, {
       StationId: stationId,
     });
-    console.log(res.data);
     return res.data;
   },
 };

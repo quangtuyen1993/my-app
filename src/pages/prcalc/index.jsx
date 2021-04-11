@@ -37,7 +37,6 @@ export default function PRCalculationScreen() {
   });
 
   const handleInputChange = (e) => {
-    console.log(e.target);
     setState((pre) => ({
       ...pre,
       [e.target.name]: e.target.value,
@@ -49,7 +48,6 @@ export default function PRCalculationScreen() {
     var res = await PRService.getPRParam({
       stationId: stationSelected.id,
     });
-    console.log(res);
     setState((pre) => ({
       ...pre,
       g_inc: res.ginc,

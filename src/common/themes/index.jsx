@@ -1,6 +1,6 @@
 import { createMuiTheme } from "@material-ui/core/styles";
 
-import { deepPurple, indigo, grey, red } from "@material-ui/core/colors";
+import {  indigo, grey, red } from "@material-ui/core/colors";
 
 export const theme = createMuiTheme({
   typography: {

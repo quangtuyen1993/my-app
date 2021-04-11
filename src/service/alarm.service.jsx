@@ -43,7 +43,6 @@ const AlarmService = {
     var data = await AxiosAuthor.post(URL_ALARM_COUNT, {
       stationId: stationId,
     });
-    console.log(data)
     return data.data.count;
   },
 };

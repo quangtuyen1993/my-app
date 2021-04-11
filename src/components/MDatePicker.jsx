@@ -1,11 +1,10 @@
-import { KeyboardDatePicker } from "@material-ui/pickers";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { Grid } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import moment from "moment";
-import DateUtils from "../utils/DateUtils";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import DateUtils from "../utils/DateUtils";
 
 export const TYPE_DATE = "dd/MM/yyyy";
 export const TYPE_HOUR_DATE = "dd/MM/yyyy HH:mm:ss";
@@ -38,7 +37,8 @@ export default function MDatePicker(props) {
       var dateTo = moment(selectedTo).format("yyyy-MM-DD HH:mm:ss");
       props.onRangeDateChange(dateFrom, dateTo);
     }
-  }, [selectedFrom, selectedTo]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ selectedFrom, selectedTo]);
 
   const onDateChangeFrom = (date, value) => {
     var dateFrom = DateUtils.setHourBeginOfDate(date);

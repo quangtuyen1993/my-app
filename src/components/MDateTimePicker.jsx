@@ -1,12 +1,12 @@
 import DateFnsUtils from "@date-io/date-fns";
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import {
   KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
+  MuiPickersUtilsProvider
 } from "@material-ui/pickers";
 import moment from "moment";
 import PropTypes from "prop-types";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const TYPE_DATE = "dd/MM/yyyy";
 export const TYPE_HOUR_DATE = "dd/MM/yyyy HH:mm:ss";
