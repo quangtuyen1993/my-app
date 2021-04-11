@@ -1,14 +1,10 @@
-import {
-  Box,
-  Chip,
-  Container,
-  Grid,
-
-} from "@material-ui/core";
-import { useEffect, useRef, useState } from "react";
+import { Box, Chip, Container, Grid } from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
+import ConfirmDialog from "../../components/ConfirmDialog";
 import TableApp from "../../components/TableApp";
 import { TIMER_TABLE } from "../../const/TimerUpdateConst";
 import DeviceService from "../../service/device.service";
@@ -16,9 +12,9 @@ import DeviceService from "../../service/device.service";
 export default function DeviceScreen() {
   const { stationSelected } = useSelector((state) => state.stationReducer);
   const { userProfile } = useSelector((state) => state.authorReducer);
-
   // const theme = useTheme();
   const timer = useRef(null);
+  const timeOut = useRef(null);
 
   // const smDown = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -27,15 +23,50 @@ export default function DeviceScreen() {
     MCCB_ABC: [],
     Power_meters: [],
     Sensors: [],
-    // isOpenAdminDialog: false,
-    // isLoadingItem: false,
-    // itemSelected: {},
+    alertState: {
+      severity: "error",
+      open: false,
+      message: "Open ACB1 was send",
+    },
+    openConfirmDialog: false,
+    itemSelected: {},
+    updatingPassword: false,
   });
 
+  useEffect(() => {
+    if (state.alertState.open) {
+      timeOut.current = setTimeout(() => {
+        setState((pre) => ({
+          ...pre,
+          alertState: {
+            ...pre.alertState,
+            open: false,
+          },
+        }));
+      }, 5000);
 
-  const onAlertStatus=(item)=>{
-    console.log(item)
-  }
+      return () => {
+        clearTimeout(timeOut.current);
+      };
+    }
+  }, [state.alertState]);
+
+  const chooseItem = (item) => {
+    if (timeOut.current !== null) {
+      clearTimeout(timeOut.current);
+    }
+    setState((pre) => {
+      return {
+        ...pre,
+        itemSelected: item,
+        openConfirmDialog: true,
+        alertState: {
+          ...pre.alertState,
+          open: false,
+        },
+      };
+    });
+  };
 
   useEffect(() => {
     if (state.isLoadingItem)
@@ -50,7 +81,6 @@ export default function DeviceScreen() {
     if (timer.current !== null) {
       clearInterval(timer.current);
     }
-
     const onFetchData = async () => {
       if (stationSelected.id === undefined) return;
       var inverters = await DeviceService.fetchAllInverterDevice(
@@ -108,6 +138,52 @@ export default function DeviceScreen() {
     };
   }, [stationSelected]);
 
+  const onSubmit = (password) => {
+    setState((pre) => ({
+      ...pre,
+      password: password,
+      openConfirmDialog: false,
+      updatingPassword: true,
+    }));
+  };
+
+  const sendNotifyMCCB = useCallback(async () => {
+    try {
+      await DeviceService.mccbSendCommand({
+        stationId: stationSelected.id,
+        mccbAcbId: state.itemSelected.id,
+        password: state.password,
+      });
+      setState((pre) => ({
+        ...pre,
+        alertState: {
+          severity: "success",
+          open: true,
+          message: "Open was send",
+        },
+      }));
+    } catch {
+      setState((pre) => ({
+        ...pre,
+        alertState: {
+          severity: "error",
+          open: true,
+          message: "Sens open fail",
+        },
+      }));
+    }
+  }, [state.itemSelected, state.password, stationSelected.id]);
+
+  useEffect(() => {
+    if (state.updatingPassword) {
+      sendNotifyMCCB();
+    }
+    setState((pre) => ({
+      ...pre,
+      updatingPassword: false,
+    }));
+  }, [sendNotifyMCCB, state.updatingPassword]);
+
   const renderControl = (item) => {
     return (
       <Box
@@ -119,7 +195,7 @@ export default function DeviceScreen() {
         mr={2}
       >
         <Chip
-          onClick={() => onAlertStatus(item)}
+          onClick={() => chooseItem(item)}
           size="small"
           color="secondary"
           style={{
@@ -130,9 +206,22 @@ export default function DeviceScreen() {
       </Box>
     );
   };
+
   return (
     <>
       <Container disableGutters direction="row" maxWidth={false}>
+        <div style={{ position: "fixed",zIndex:10000, right: 0 }}>
+          <Alert
+            variant="filled"
+            style={{
+              display: state.alertState.open ? "inline-flex" : "none",
+            }}
+            severity={state.alertState.severity}
+          >
+            {state.alertState.message} {state.itemSelected.name}
+          </Alert>
+        </div>
+
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Grid container spacing={2}>
@@ -242,6 +331,13 @@ export default function DeviceScreen() {
             </Grid>
           </Grid>
         </Grid>
+        <ConfirmDialog
+          // onChange={onChange}
+          onSubmit={onSubmit}
+          value={state.password}
+          name="password"
+          open={state.openConfirmDialog}
+        />
       </Container>
     </>
   );

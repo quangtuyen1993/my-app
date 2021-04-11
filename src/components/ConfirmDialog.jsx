@@ -1,10 +1,9 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Container,
   Grid,
-  InputAdornment,
+
   TextField,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { grey } from "@material-ui/core/colors";
@@ -13,35 +12,23 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import React, { useCallback, useEffect, useState } from "react";
-import IconApp from "../common/icons";
+import React, { useState } from "react";
 
-export default function ConfirmDialog({
-  title,
-  content,
-  onSubmit,
-  onClose,
-  open,
-  noteDefault,
-}) {
+export default function ConfirmDialog({ onSubmit, onClose, open, name }) {
+  const theme = useTheme();
   const [state, setState] = useState({
-    noteDefault: {},
+    password: "",
   });
 
-  const theme = useTheme();
-  useEffect(() => {
+  const handleChange = (e) => {
     setState((pre) => ({
       ...pre,
-      noteDefault: noteDefault,
+      [e.target.name]: e.target.value,
     }));
-  }, [noteDefault]);
-
-  useEffect(() => {}, [onSubmit, state.noteDefault]);
-
-  const submit = useCallback(() => {
-    onSubmit(state.noteDefault);
-    onClose();
-  }, [onClose, onSubmit, state.noteDefault]);
+  };
+  const handleSubmit = () => {
+    onSubmit(state.password);
+  };
 
   return (
     <Container>
@@ -64,36 +51,18 @@ export default function ConfirmDialog({
               container
               direction="column"
               spacing={2}
-              style={{ marginTop: theme.spacing() }}
+              style={{ marginTop: theme.spacing(1) }}
             >
               <Grid item>
                 <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FontAwesomeIcon icon={IconApp.SECURITY} />
-                      </InputAdornment>
-                    ),
-                  }}
+                  placeholder="Please enter your password"
+                  name="password"
+                  onChange={handleChange}
+                  value={state.value}
                   type="password"
-                  fullWidth
                   variant="outlined"
+                  fullWidth
                   label="Password"
-                />
-              </Grid>
-              <Grid item>
-                <TextField
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FontAwesomeIcon icon={IconApp.CONFIRM} />
-                      </InputAdornment>
-                    ),
-                  }}
-                  type="password"
-                  variant="outlined"
-                  fullWidth
-                  label="Confirm Password"
                 />
               </Grid>
             </Grid>
@@ -101,7 +70,7 @@ export default function ConfirmDialog({
         </DialogContent>
         <DialogActions style={{ background: grey[300] }}>
           <Button
-            onClick={submit}
+            onClick={handleSubmit}
             variant="contained"
             color="primary"
             autoFocus

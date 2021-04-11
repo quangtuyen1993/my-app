@@ -42,3 +42,5 @@ export const URL_STATION_INFO = "/stations";
 
 export const URL_STRING_MONITOR = "/StringMonitor/GetInverterStrings";
 
+export const URL_MCCB_ACB_SEND_NOTIFY = "/MccbAcbs/SendCommand/";
+

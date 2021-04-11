@@ -6,6 +6,7 @@ import {
   URL_POWER_METER,
   URL_POWER_METER_DETAIL,
   URL_SENSOR,
+  URL_MCCB_ACB_SEND_NOTIFY,
 } from "../redux/URL";
 import AxiosAuthor from "../utils/AxiosAuthor";
 
@@ -52,7 +53,7 @@ const DeviceService = {
     return response.data;
   },
 
-  fetchDataPowerMeterInverter: async ({fromDate, toDate, tableName}) => {
+  fetchDataPowerMeterInverter: async ({ fromDate, toDate, tableName }) => {
     var data = await AxiosAuthor.post(URL_HISTORICAL, {
       fromTime: fromDate,
       toTime: toDate,
@@ -61,5 +62,23 @@ const DeviceService = {
     });
     return data.data;
   },
+
+  mccbSendCommand: async ({ stationId, mccbAcbId, password }) => {
+    try {
+      console.log(password);
+      var data = await AxiosAuthor.post(URL_MCCB_ACB_SEND_NOTIFY, {
+        StationId: stationId,
+        MccbAcbId: mccbAcbId,
+        Password: password,
+      });
+
+      if (data.status !== 200) {
+        throw new Error("Not Found");
+      }
+    } catch (e) {
+      throw e;
+    }
+  },
 };
+
 export default DeviceService;

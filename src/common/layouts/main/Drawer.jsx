@@ -80,42 +80,54 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
         <List>
           {RouterList.map((route, index) =>
             route.role === "Admin" ? (
-              userProfile.role==="Admin" && (
-                <ListItem key={route.id} button style={{ paddingLeft: theme.spacing(1) }}>
-                  <ListItemIcon>
-                    <Box
-                      flex={1}
-                      display="flex"
-                      justifyContent="center"
-                      alignContent="center"
-                      alignItems="center"
-                    >
-                      <FontAwesomeIcon
-                        icon={route.iconItem}
-                        style={{
-                          fontSize: "24",
-                          textAlign: "center",
-                          color: "#ffffff",
-                        }}
-                      />
-                    </Box>
-                  </ListItemIcon>
-                  <ListItemText
-                    disableTypography
-                    primary={
-                      <Typography
-                        variant="subtitle1"
-                        style={{
-                          color: "#ffffff",
-                          fontWeight: "normal",
-                          paddingLeft: theme.spacing(1),
-                        }}
+              userProfile.role === "Admin" && (
+                <Link
+                  style={{ textDecoration: "none" }}
+                  to={route.linkTo}
+                  onClick={() => {
+                    onClose();
+                  }}
+                  key={route.id}
+                >
+                  <ListItem
+                    button
+                    style={{ paddingLeft: theme.spacing(1) }}
+                  >
+                    <ListItemIcon>
+                      <Box
+                        flex={1}
+                        display="flex"
+                        justifyContent="center"
+                        alignContent="center"
+                        alignItems="center"
                       >
-                        {route.name}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
+                        <FontAwesomeIcon
+                          icon={route.iconItem}
+                          style={{
+                            fontSize: "24",
+                            textAlign: "center",
+                            color: "#ffffff",
+                          }}
+                        />
+                      </Box>
+                    </ListItemIcon>
+                    <ListItemText
+                      disableTypography
+                      primary={
+                        <Typography
+                          variant="subtitle1"
+                          style={{
+                            color: "#ffffff",
+                            fontWeight: "normal",
+                            paddingLeft: theme.spacing(1),
+                          }}
+                        >
+                          {route.name}
+                        </Typography>
+                      }
+                    />
+                  </ListItem>
+                </Link>
               )
             ) : (
               <Link
