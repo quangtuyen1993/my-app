@@ -26,7 +26,7 @@ export default function DeviceScreen() {
     alertState: {
       severity: "error",
       open: false,
-      message: "Open ACB1 was send",
+      message: "Open message was send to",
     },
     openConfirmDialog: false,
     itemSelected: {},
@@ -147,6 +147,15 @@ export default function DeviceScreen() {
     }));
   };
 
+  const onClose = () => {
+    setState((pre) => ({
+      ...pre,
+      password: '',
+      openConfirmDialog: false,
+      updatingPassword: false,
+    }));
+  };
+
   const sendNotifyMCCB = useCallback(async () => {
     try {
       await DeviceService.mccbSendCommand({
@@ -159,7 +168,7 @@ export default function DeviceScreen() {
         alertState: {
           severity: "success",
           open: true,
-          message: "Open was send",
+          message: "Open message was send to",
         },
       }));
     } catch {
@@ -168,7 +177,7 @@ export default function DeviceScreen() {
         alertState: {
           severity: "error",
           open: true,
-          message: "Sens open fail",
+          message: "Send message open fail",
         },
       }));
     }
@@ -334,6 +343,7 @@ export default function DeviceScreen() {
         <ConfirmDialog
           // onChange={onChange}
           onSubmit={onSubmit}
+          onClose={onClose}
           value={state.password}
           name="password"
           open={state.openConfirmDialog}

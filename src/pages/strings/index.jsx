@@ -79,7 +79,7 @@ export default function InverterStringScreen() {
               <div
                 id="treeWrapper"
                 ref={containerRef}
-                style={{ width: "100%", height: "100%", minHeight: "700px" }}
+                style={{ width: "100%", height: "100%", minHeight: "400px" }}
               >
                 <Tree
                   data={state.data}
@@ -89,7 +89,7 @@ export default function InverterStringScreen() {
                   orientation={"vertical"}
                   depthFactor={"50"}
                   pathFunc={"step"}
-                  zoom={1}
+                  zoom={0.65}
                   renderCustomNodeElement={renderRectSvgNode}
                 />
               </div>
