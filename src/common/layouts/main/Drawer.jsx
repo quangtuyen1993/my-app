@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import clsx from "clsx";
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import LogOutIcon from "../../../redux/feature/user/LogOutIcon";
 import { RouterList } from "../../../routes/Routes";
@@ -58,7 +59,8 @@ const DrawerApp = ({ drawerWidth, open, onClose }) => {
   }));
 
   const classes = useStyle();
-const theme=useTheme()
+  const { userProfile } = useSelector((state) => state.authorReducer);
+  const theme = useTheme();
   return (
     <div>
       <Drawer
@@ -76,48 +78,92 @@ const theme=useTheme()
       >
         <div className={classes.toolbar} />
         <List>
-          {RouterList.map((route, index) => (
-            <Link
-              style={{ textDecoration: "none" }}
-              to={route.linkTo}
-              onClick={() => {
-                onClose();
-              }}
-              key={route.id}
-            >
-              <ListItem button style={{paddingLeft:theme.spacing(1)}}>
-                <ListItemIcon>
-                  <Box
-                    flex={1}
-                    display="flex"
-                    justifyContent="center"
-                    alignContent="center"
-                    alignItems="center"
-                  >
-                    <FontAwesomeIcon
-                      icon={route.iconItem}
-                      style={{
-                        fontSize: "24",
-                        textAlign: "center",
-                        color: "#ffffff",
-                      }}
-                    />
-                  </Box>
-                </ListItemIcon>
-                <ListItemText
-                  disableTypography
-                  primary={
-                    <Typography
-                      variant="subtitle1"
-                      style={{ color: "#ffffff", fontWeight: "normal",paddingLeft:theme.spacing(1) }}
+          {RouterList.map((route, index) =>
+            route.role === "Admin" ? (
+              userProfile.role==="Admin" && (
+                <ListItem key={route.id} button style={{ paddingLeft: theme.spacing(1) }}>
+                  <ListItemIcon>
+                    <Box
+                      flex={1}
+                      display="flex"
+                      justifyContent="center"
+                      alignContent="center"
+                      alignItems="center"
                     >
-                      {route.name}
-                    </Typography>
-                  }
-                />
-              </ListItem>
-            </Link>
-          ))}
+                      <FontAwesomeIcon
+                        icon={route.iconItem}
+                        style={{
+                          fontSize: "24",
+                          textAlign: "center",
+                          color: "#ffffff",
+                        }}
+                      />
+                    </Box>
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography
+                        variant="subtitle1"
+                        style={{
+                          color: "#ffffff",
+                          fontWeight: "normal",
+                          paddingLeft: theme.spacing(1),
+                        }}
+                      >
+                        {route.name}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              )
+            ) : (
+              <Link
+                style={{ textDecoration: "none" }}
+                to={route.linkTo}
+                onClick={() => {
+                  onClose();
+                }}
+                key={route.id}
+              >
+                <ListItem button style={{ paddingLeft: theme.spacing(1) }}>
+                  <ListItemIcon>
+                    <Box
+                      flex={1}
+                      display="flex"
+                      justifyContent="center"
+                      alignContent="center"
+                      alignItems="center"
+                    >
+                      <FontAwesomeIcon
+                        icon={route.iconItem}
+                        style={{
+                          fontSize: "24",
+                          textAlign: "center",
+                          color: "#ffffff",
+                        }}
+                      />
+                    </Box>
+                  </ListItemIcon>
+                  <ListItemText
+                    disableTypography
+                    primary={
+                      <Typography
+                        variant="subtitle1"
+                        style={{
+                          color: "#ffffff",
+                          fontWeight: "normal",
+                          paddingLeft: theme.spacing(1),
+                        }}
+                      >
+                        {route.name}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </Link>
+            )
+          )}
           <LogOutIcon />
         </List>
       </Drawer>

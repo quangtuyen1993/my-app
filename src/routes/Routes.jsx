@@ -193,6 +193,7 @@ export const RouterList = [
     linkTo: "/account",
     path: "/account",
     priority: PRIVATE,
+    role:"Admin",
     child: [
       {
         id: 1,
