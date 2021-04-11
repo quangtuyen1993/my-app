@@ -89,7 +89,7 @@ export default function InverterStringScreen() {
                   orientation={"vertical"}
                   depthFactor={"50"}
                   pathFunc={"step"}
-                  zoom={1}
+                  zoom={0.65}
                   renderCustomNodeElement={renderRectSvgNode}
                 />
               </div>
