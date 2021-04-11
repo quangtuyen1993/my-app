@@ -146,6 +146,12 @@ export default function DeviceScreen() {
       updatingPassword: true,
     }));
   };
+  const onClose = () => {
+    setState((pre) => ({
+      ...pre,
+      openConfirmDialog: false,
+    }));
+  };
 
   useEffect(() => {
     if (state.updatingPassword) {
@@ -337,6 +343,7 @@ export default function DeviceScreen() {
         </Grid>
         <ConfirmDialog
           // onChange={onChange}
+          onClose={onClose}
           onSubmit={onSubmit}
           value={state.password}
           name="password"
