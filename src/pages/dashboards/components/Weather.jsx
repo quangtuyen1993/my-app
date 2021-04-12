@@ -10,23 +10,6 @@ import DeviceService from "../../../service/device.service";
 import { TIMER_TREND } from "../../../const/TimerUpdateConst";
 
 const title = "Weather";
-// var list = [
-//   {
-//     type: "Radiation",
-//     value: "0 W/m2",
-//     name: "Radiation",
-//   },
-//   {
-//     type: "Wind",
-//     value: "3.7 m/s",
-//     name: "Wind Speed",
-//   },
-//   {
-//     type: "Temp",
-//     value: "26.2 °C",
-//     name: "Cell Temp",
-//   },
-// ];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,34 +33,30 @@ const Weather = () => {
   const [state, setState] = useState({
     dataSource: [],
   });
-
   const { stationSelected } = useSelector((state) => state.stationReducer);
-
-  const fetchSensor = useCallback(async () => {
-    if (stationSelected.id !== undefined)
-      var res = await DeviceService.fetchAllSensor(stationSelected.id);
-    setState((pre) => ({
-      ...pre,
-      dataSource: res,
-    }));
-  }, [stationSelected.id]);
-
-  useEffect(() => {
-    fetchSensor();
-  }, [fetchSensor]);
 
   //call timer
   useEffect(() => {
     if (timer.current !== null) {
       clearInterval(timer.current);
     }
+    const fetchSensor = async () => {
+      if (stationSelected.id !== undefined)
+        var res = await DeviceService.fetchAllSensor(stationSelected.id);
+      setState((pre) => ({
+        ...pre,
+        dataSource: res,
+      }));
+    };
+    fetchSensor();
+
     timer.current = setInterval(() => {
       fetchSensor();
     }, TIMER_TREND);
     return () => {
       clearInterval(timer.current);
     };
-  }, [fetchSensor]);
+  }, [stationSelected.id]);
 
   const createSensor = ({ name, status, value, unit }) => {
     var icon = "";

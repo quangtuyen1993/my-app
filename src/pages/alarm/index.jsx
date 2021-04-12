@@ -1,14 +1,14 @@
 import { Box, Button, Container, Grid } from "@material-ui/core";
+import { KeyboardReturnOutlined } from "@material-ui/icons";
+import { isAsyncThunkAction } from "@reduxjs/toolkit";
 import moment from "moment";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
 import MDateTimePicker from "../../components/MDateTimePicker";
 import MTableMaterial from "../../components/MTableMaterial";
-import {
-  fetchAlarmCount
-} from "../../redux/feature/alarm/alarm.slice";
+import { fetchAlarmCount } from "../../redux/feature/alarm/alarm.slice";
 import AlarmService from "../../service/alarm.service";
 
 export default function AlarmScreen() {
@@ -21,8 +21,8 @@ export default function AlarmScreen() {
     alarmRealTime: [],
     alarmHistorical: [],
     historical: {
-      dateFrom: moment().startOf("day"),
-      dateTo: moment().endOf("day"),
+      dateFrom: "",
+      dateTo: "",
     },
   });
 
@@ -34,71 +34,89 @@ export default function AlarmScreen() {
       };
     });
   };
-  const refreshAlarmRealtime = useCallback(async () => {
+
+  const refreshData = async () => {
+
     if (stationSelected.id === undefined) return;
-    var data = await AlarmService.fetchRealTime({
+    
+    var realTime = await AlarmService.fetchRealTime({
       stationId: stationSelected.id,
     });
-    setState((pre) => ({
-      ...pre,
-      alarmRealTime: data,
-    }));
-  }, [stationSelected.id]);
 
-  const fetchHistoricalData = useCallback(async () => {
-    if (stationSelected.id === undefined) return;
-
-    var data = await AlarmService.fetchHistorical({
+    var history = await AlarmService.fetchHistorical({
       stationId: stationSelected.id,
       fromTime: state.historical.dateFrom,
       toTime: state.historical.dateTo,
     });
-
+    
     setState((pre) => ({
       ...pre,
-      alarmHistorical: data,
+      alarmHistorical: history,
+      alarmRealTime: realTime,
+
     }));
-  }, [state.historical.dateFrom, state.historical.dateTo, stationSelected]);
+  };
 
   useEffect(() => {
+    if (stationSelected.id === undefined) return;
+    const refreshAlarmRealtime = async () => {
+      var data = await AlarmService.fetchRealTime({
+        stationId: stationSelected.id,
+      });
+      setState((pre) => ({
+        ...pre,
+        alarmRealTime: data,
+      }));
+    };
     refreshAlarmRealtime();
-    fetchHistoricalData();
-  }, [fetchHistoricalData, refreshAlarmRealtime, stationSelected.id]);
-
-  //timer
-  useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
     timer.current = setInterval(() => {
       refreshAlarmRealtime();
     }, 10000);
     return () => {
+      if (stationSelected.id === undefined) return;
       clearInterval(timer.current);
+      AlarmService.source().cancel();
     };
-  }, [fetchHistoricalData, refreshAlarmRealtime]);
+  }, [stationSelected.id]);
 
-  const ackAlarm = useCallback(
-    async (item) => {
-      var data = await AlarmService.ackAlarm(
-        stationSelected.id,
-        item.name,
-        item.alarmType,
-        item.incommingTime.replace("T", " "),
-        "comment"
-      );
-      dispatch(fetchAlarmCount({ stationSelected: stationSelected.id }));
-      if (data.success) {
-        refreshAlarmRealtime();
-        fetchHistoricalData();
-      }
-    },
-    [dispatch, fetchHistoricalData, refreshAlarmRealtime, stationSelected.id]
-  );
+  useEffect(() => {
+    const { dateFrom, dateTo } = state.historical;
+    if (dateFrom === "" || dateTo === "" || stationSelected.id === undefined)
+      return;
+    const fetchHistoricalData = async () => {
+      if (stationSelected.id === undefined) return;
+      var data = await AlarmService.fetchHistorical({
+        stationId: stationSelected.id,
+        fromTime: dateFrom,
+        toTime: dateTo,
+      });
+      setState((pre) => ({
+        ...pre,
+        alarmHistorical: data,
+      }));
+    };
+    fetchHistoricalData();
+  }, [state.historical, stationSelected.id]);
+
+  const ackAlarm = async (item) => {
+    var data = await AlarmService.ackAlarm(
+      stationSelected.id,
+      item.name,
+      item.alarmType,
+      item.incommingTime.replace("T", " "),
+      "comment"
+    );
+    dispatch(fetchAlarmCount({ stationSelected: stationSelected.id }));
+    if (data.success) {
+      refreshData();
+    }
+  };
 
   const ackAlarmAll = async () => {
     var data = await AlarmService.ackAllAlarm(stationSelected.id);
     if (data.success) {
-      refreshAlarmRealtime();
-      fetchHistoricalData();
+      refreshData();
     }
   };
 
@@ -177,7 +195,7 @@ export default function AlarmScreen() {
                 </Grid>
               </Grid>
               <MTableMaterial
-                refresh={fetchHistoricalData}
+                refresh={refreshData}
                 askAll={ackAlarmAll}
                 addControlFirst={true}
                 showSearch={true}

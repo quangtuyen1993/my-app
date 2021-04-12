@@ -1,3 +1,4 @@
+import axios from "axios";
 import {
   URL_ALARM_ACK,
   URL_ALARM_ALL,
@@ -8,10 +9,14 @@ import {
 import AxiosAuthor from "../utils/AxiosAuthor";
 
 const AlarmService = {
+  source:()=> axios.CancelToken.source(),
   fetchRealTime: async ({ stationId }) => {
     var data = await AxiosAuthor.post(URL_ALARM_REALTIME, {
       stationId: stationId,
-    });
+    },{
+      cancelToken:AlarmService.source().token
+    }
+    );
     return data.data;
   },
   fetchHistorical: async ({ stationId, fromTime, toTime }) => {
@@ -19,6 +24,8 @@ const AlarmService = {
       fromTime: fromTime,
       toTime: toTime,
       stationId: stationId,
+    },{
+      cancelToken:AlarmService.source().token
     });
     return data.data;
   },
@@ -29,6 +36,8 @@ const AlarmService = {
       alarmType: alarmType,
       incommingTime: incommingTime,
       comment: comment,
+    },{
+      cancelToken:AlarmService.source().token
     });
     return data.data;
   },
@@ -36,6 +45,8 @@ const AlarmService = {
   ackAllAlarm: async (stationId) => {
     var data = await AxiosAuthor.post(URL_ALARM_ALL, {
       stationId: stationId,
+    },{
+      cancelToken:AlarmService.source().token
     });
     return data.data;
   },

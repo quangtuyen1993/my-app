@@ -7,7 +7,9 @@ import CardLayout from "../../../common/layouts/CardLayout";
 import GraphLineApp from "../../../components/GraphLineApp";
 import MDatePicker from "../../../components/MDatePicker";
 import { TIMER_TREND } from "../../../const/TimerUpdateConst";
-import HistoricalService from "../../../service/historycal.service";
+import HistoricalService, {
+  historySource,
+} from "../../../service/historycal.service";
 import DataTrendParser from "../../../utils/DataTrenParser";
 export default function PowerTrend() {
   const { sensorTable } = useSelector(
@@ -17,37 +19,38 @@ export default function PowerTrend() {
 
   const [state, setState] = useState({
     dataSet: [],
-    dateFrom: moment().startOf("day"),
-    dateTo: moment().endOf("day"),
+    dateFrom: "",
+    dateTo: "",
   });
-
-  const onFetchData = useCallback(async () => {
-    if (sensorTable === "") return;
-    var res = await HistoricalService.fetchData(
-      state.dateFrom,
-      state.dateTo,
-      sensorTable
-    );
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    setState((pre) => ({
-      ...pre,
-      dataSet: [...cols],
-    }));
-  }, [sensorTable, state.dateFrom, state.dateTo]);
 
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
+    const onFetchData = async () => {
+      if (sensorTable === "" || state.dateFrom === "" || state.dateTo === "")
+        return;
 
+      var res = await HistoricalService.fetchData(
+        state.dateFrom,
+        state.dateTo,
+        sensorTable
+      );
+      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+      setState((pre) => ({
+        ...pre,
+        dataSet: [...cols],
+      }));
+    };
     onFetchData();
-
     timer.current = setInterval(() => {
       onFetchData();
     }, TIMER_TREND);
 
     return () => {
-      clearInterval(timer.current);
+      if (sensorTable === "" || state.dateFrom === "" || state.dateTo === "")
+        return;
+      HistoricalService.source().cancel();
     };
-  }, [onFetchData]);
+  }, [sensorTable, state.dateFrom, state.dateTo]);
 
   const handleChangeDate = (from, to) => {
     setState((pre) => {

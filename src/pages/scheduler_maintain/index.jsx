@@ -1,13 +1,13 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, Button, Container, IconButton } from "@material-ui/core";
 import { indigo, red } from "@material-ui/core/colors";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
-import WarningDialog from "../../components/WarningDialog";
 import DialogNote from "../../components/DialogNote";
 import MTableMaterial from "../../components/MTableMaterial";
+import WarningDialog from "../../components/WarningDialog";
 import SchedulerService from "../../service/scheduler.service";
 
 export default function SchedulerMaintain() {
@@ -22,19 +22,28 @@ export default function SchedulerMaintain() {
     openConfirm: false,
   });
 
-  const onFetchScheduler = useCallback(async () => {
+  const onRefresh = async () => {
     if (stationSelected.id === undefined) return;
     var res = await SchedulerService.fetchAll(stationSelected.id);
     setState((pre) => ({
       ...pre,
       data: res.data,
     }));
-  }, [stationSelected.id]);
+  };
 
   useEffect(() => {
+    const onFetchScheduler = async () => {
+      if (stationSelected.id === undefined) return;
+      var res = await SchedulerService.fetchAll(stationSelected.id);
+      setState((pre) => ({
+        ...pre,
+        data: res.data,
+      }));
+    };
+
     onFetchScheduler();
     return () => {};
-  }, [onFetchScheduler]);
+  }, [stationSelected.id]);
 
   const onClose = () => {
     setState((pre) => ({
@@ -66,9 +75,10 @@ export default function SchedulerMaintain() {
 
   const onDelete = async (item) => {
     await SchedulerService.remove({ id: item.id });
-    onFetchScheduler();
+    onRefresh();
   };
 
+  
   const openConfirm = (item) => {
     if (!checkAuthor(item)) return;
     setState((pre) => ({
@@ -187,12 +197,7 @@ export default function SchedulerMaintain() {
             isHover
             addControlColumns={[renderControl]}
             dataSource={state.data}
-            fieldArray={[
-              "createByUser",
-              "startTime",
-              "endTime",
-              "content",
-            ]}
+            fieldArray={["createByUser", "startTime", "endTime", "content"]}
           />
         </Box>
       </CardLayout>
@@ -200,7 +205,7 @@ export default function SchedulerMaintain() {
         noteDefault={state.noteSelected}
         open={state.open}
         handleClose={onClose}
-        onComplete={onFetchScheduler}
+        onComplete={onRefresh}
       />
       <WarningDialog
         noteDefault={state.noteSelected}

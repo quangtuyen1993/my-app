@@ -18,8 +18,6 @@ import DialogApp from "../../components/DialogApp";
 import MTableMaterial from "../../components/MTableMaterial";
 import ClientService from "../../service/client.service";
 
-
-
 export default function AccountScreen(props) {
   const [state, setState] = useState({
     open: false,
@@ -52,14 +50,6 @@ export default function AccountScreen(props) {
     }));
   };
 
-  const onFetchUser = useCallback(async () => {
-    var data = await ClientService.fetchAll();
-    setState((pre) => ({
-      ...pre,
-      users: data,
-    }));
-  }, []);
-
   const onChangePassword = async (newUser) => {
     await ClientService.changePassword(newUser);
   };
@@ -69,8 +59,15 @@ export default function AccountScreen(props) {
   };
 
   useEffect(() => {
+    const onFetchUser = async () => {
+      var data = await ClientService.fetchAll();
+      setState((pre) => ({
+        ...pre,
+        users: data,
+      }));
+    };
     onFetchUser();
-  }, [onFetchUser]);
+  }, []);
 
   const { userProfile } = useSelector((state) => state.authorReducer);
 

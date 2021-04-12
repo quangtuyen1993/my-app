@@ -1,10 +1,5 @@
-import {
-  Container,
-  Grid,
-
-  TextField,
-  useTheme
-} from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { InputAdornment, TextField, useTheme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import { grey } from "@material-ui/core/colors";
 import Dialog from "@material-ui/core/Dialog";
@@ -13,6 +8,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import React, { useState } from "react";
+import IconApp from "../common/icons";
 
 export default function ConfirmDialog({ onSubmit, onClose, open, name }) {
   const theme = useTheme();
@@ -31,42 +27,29 @@ export default function ConfirmDialog({ onSubmit, onClose, open, name }) {
   };
 
   return (
-    <Container>
-      <Dialog
-        fullWidth
-        maxWidth={"xs"}
-        open={open}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle
-          style={{ backgroundColor: theme.palette.primary.main }}
-          id="alert-dialog-title"
-        >
+    <React.Fragment>
+      <Dialog fullWidth maxWidth={"xs"} open={open}>
+        <DialogTitle style={{ backgroundColor: theme.palette.primary.main }}>
           Confirm Password
         </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            <Grid
-              container
-              direction="column"
-              spacing={2}
-              style={{ marginTop: theme.spacing(1) }}
-            >
-              <Grid item>
-                <TextField
-                  placeholder="Please enter your password"
-                  name="password"
-                  onChange={handleChange}
-                  value={state.value}
-                  type="password"
-                  variant="outlined"
-                  fullWidth
-                  label="Password"
-                />
-              </Grid>
-            </Grid>
-          </DialogContentText>
+        <DialogContent style={{ padding: theme.spacing(2) }}>
+          <TextField
+            placeholder="Please enter your password"
+            name="password"
+            onChange={handleChange}
+            value={state.value}
+            type="password"
+            fullWidth
+            variant="outlined"
+            label="Password"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <FontAwesomeIcon icon={IconApp.SECURITY} />
+                </InputAdornment>
+              ),
+            }}
+          />
         </DialogContent>
         <DialogActions style={{ background: grey[300] }}>
           <Button
@@ -82,6 +65,6 @@ export default function ConfirmDialog({ onSubmit, onClose, open, name }) {
           </Button>
         </DialogActions>
       </Dialog>
-    </Container>
+    </React.Fragment>
   );
 }

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { URL_HISTORICAL } from "../redux/URL";
 import AxiosAuthor from "../utils/AxiosAuthor";
 
@@ -8,14 +9,21 @@ const EntityTable = Object.freeze({
 });
 
 const HistoricalService = {
+  source:()=> axios.CancelToken.source(),
   fetchData: async (fromDate, toDate, tableName) => {
-    var data = await AxiosAuthor.post(URL_HISTORICAL, {
-      fromTime: fromDate,
-      toTime: toDate,
-      tableName: tableName,
-      columns: [EntityTable.POWER, EntityTable.RADIATION, EntityTable.TEMP],
-    });
-    return data.data;
+    var res = await AxiosAuthor.post(
+      URL_HISTORICAL,
+      {
+        fromTime: fromDate,
+        toTime: toDate,
+        tableName: tableName,
+        columns: [EntityTable.POWER, EntityTable.RADIATION, EntityTable.TEMP],
+      },
+      {
+        cancelToken: HistoricalService.source().token,
+      }
+    );
+    return res.data;
   },
   fetchJustPower: async (fromDate, toDate, tableName) => {
     var data = await AxiosAuthor.post(URL_HISTORICAL, {

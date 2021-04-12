@@ -4,6 +4,7 @@ import Tree from "react-d3-tree";
 import { useSelector } from "react-redux";
 import CardLayout from "../../common/layouts/CardLayout";
 import MonitorService from "../../service/monitor.service";
+import AxiosAuthor from "../../utils/AxiosAuthor";
 
 export default function InverterStringScreen() {
   const [state, setState] = useState({
@@ -13,20 +14,20 @@ export default function InverterStringScreen() {
   const timer = useRef(null);
 
   const { stationSelected } = useSelector((state) => state.stationReducer);
-  const fetchMonitorString = useCallback(async () => {
-    if (stationSelected.id === undefined) return;
-    var data = await MonitorService.fetchData(stationSelected.id);
-    setState((pre) => ({
-      ...pre,
-      data: data,
-    }));
-  }, [stationSelected]);
+
   useEffect(() => {
     if (timer.current !== null) {
       clearInterval(timer.current);
     }
+    const fetchMonitorString = async () => {
+      if (stationSelected.id === undefined) return;
+      var data = await MonitorService.fetchData(stationSelected.id);
+      setState((pre) => ({
+        ...pre,
+        data: data,
+      }));
+    };
     fetchMonitorString();
-
     timer.current = setInterval(() => {
       fetchMonitorString();
     }, 10000);
@@ -34,7 +35,7 @@ export default function InverterStringScreen() {
     return () => {
       clearInterval(timer.current);
     };
-  }, [fetchMonitorString]);
+  }, [stationSelected.id]);
 
   const useCenteredTree = (defaultTranslate = { x: 0, y: 0 }) => {
     const [translate, setTranslate] = useState(defaultTranslate);

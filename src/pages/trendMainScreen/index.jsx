@@ -1,12 +1,14 @@
 import { Container, Grid } from "@material-ui/core";
 import moment from "moment";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
 import GraphLineApp from "../../components/GraphLineApp";
 import MDateTimePicker from "../../components/MDateTimePicker";
+import { TIMER_TREND } from "../../const/TimerUpdateConst";
 import HistoricalService from "../../service/historycal.service";
+import AxiosAuthor from "../../utils/AxiosAuthor";
 import DataTrendParser from "../../utils/DataTrenParser";
 export default function TrendMainScreen() {
   const [state, setState] = useState({
@@ -23,105 +25,165 @@ export default function TrendMainScreen() {
   );
   const [dateState, setDateState] = useState({
     powerTrend: {
-      dateFrom: moment().startOf("day"),
-      dateTo: moment().endOf("day"),
+      dateFrom: "",
+      dateTo: "",
     },
 
     radiation: {
-      dateFrom: moment().startOf("day"),
-      dateTo: moment().endOf("day"),
+      dateFrom: "",
+      dateTo: "",
     },
     temp: {
-      dateFrom: moment().startOf("day"),
-      dateTo: moment().endOf("day"),
+      dateFrom: "",
+      dateTo: "",
     },
     pRHistory: {
-      dateFrom: moment().startOf("day"),
-      dateTo: moment().endOf("day"),
+      dateFrom: "",
+      dateTo: "",
     },
     summary: {
-      dateFrom: moment().startOf("day"),
-      dateTo: moment().endOf("day"),
+      dateFrom: "",
+      dateTo: "",
     },
   });
 
   //power trend
-  const fetchPowerTrend = useCallback(async () => {
-    if (sensorTable === "") return;
-    var res = await HistoricalService.fetchJustPower(
-      dateState.powerTrend.dateFrom,
-      dateState.powerTrend.dateTo,
-      sensorTable
-    );
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    setState((pre) => ({
-      ...pre,
-      powerTrend: cols[0],
-    }));
-  }, [dateState.powerTrend.dateFrom, dateState.powerTrend.dateTo, sensorTable]);
+
+  const powerTrendTimer = useRef(null);
   useEffect(() => {
+    const { dateFrom, dateTo } = dateState.powerTrend;
+    if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+    const fetchPowerTrend = async () => {
+      var res = await HistoricalService.fetchJustPower(
+        dateState.powerTrend.dateFrom,
+        dateState.powerTrend.dateTo,
+        sensorTable
+      );
+      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+      setState((pre) => ({
+        ...pre,
+        powerTrend: cols[0],
+      }));
+    };
     fetchPowerTrend();
-  }, [fetchPowerTrend]);
+
+    if (powerTrendTimer.current !== null)
+      clearInterval(powerTrendTimer.current);
+    powerTrendTimer.current = setInterval(() => {
+      fetchPowerTrend();
+    }, TIMER_TREND);
+
+    return () => {
+      if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+      clearInterval(powerTrendTimer.current);
+      HistoricalService.source().cancel();
+    };
+  }, [dateState.powerTrend, sensorTable]);
 
   //power fetchPowerRadiation
-  const fetchPowerRadiation = useCallback(async () => {
-    if (sensorTable === "") return;
-    var res = await HistoricalService.fetchJustRadiation(
-      dateState.radiation.dateFrom,
-      dateState.radiation.dateTo,
-      sensorTable
-    );
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    setState((pre) => ({
-      ...pre,
-      radiation: cols[0],
-    }));
-  }, [dateState.radiation.dateFrom, dateState.radiation.dateTo, sensorTable]);
-
+  const fetchPowerRadiationTimer = useRef(null);
   useEffect(() => {
+    const { dateFrom, dateTo } = dateState.radiation;
+    if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+    const fetchPowerRadiation = async () => {
+      var res = await HistoricalService.fetchJustRadiation(
+        dateState.radiation.dateFrom,
+        dateState.radiation.dateTo,
+        sensorTable
+      );
+      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+      setState((pre) => ({
+        ...pre,
+        radiation: cols[0],
+      }));
+    };
     fetchPowerRadiation();
-  }, [fetchPowerRadiation]);
+    if (fetchPowerRadiationTimer.current !== null)
+      clearInterval(fetchPowerRadiationTimer.current);
+    fetchPowerRadiationTimer.current = setInterval(() => {
+      fetchPowerRadiation();
+    }, TIMER_TREND);
+
+    return () => {
+      if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+      clearInterval(fetchPowerRadiationTimer.current);
+      HistoricalService.source().cancel();
+    };
+  }, [
+    dateState.radiation,
+    dateState.radiation.dateFrom,
+    dateState.radiation.dateTo,
+    sensorTable,
+  ]);
 
   //power fetchTemp
-  const fetchTemp = useCallback(async () => {
-    console.info("power trend")
-
-    if (sensorTable === "") return;
-
-    var res = await HistoricalService.fetchJustTemp(
-      dateState.temp.dateFrom,
-      dateState.temp.dateTo,
-      sensorTable
-    );
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    setState((pre) => ({
-      ...pre,
-      temp: cols[0],
-    }));
-  }, [dateState.temp.dateFrom, dateState.temp.dateTo, sensorTable]);
-
+  const fetchTempTimer = useRef(null);
   useEffect(() => {
+    const { dateFrom, dateTo } = dateState.temp;
+    if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+    const fetchTemp = async () => {
+      var res = await HistoricalService.fetchJustTemp(
+        dateState.temp.dateFrom,
+        dateState.temp.dateTo,
+        sensorTable
+      );
+      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+      setState((pre) => ({
+        ...pre,
+        temp: cols[0],
+      }));
+    };
     fetchTemp();
-  }, [fetchTemp]);
+    if (fetchTempTimer.current !== null) clearInterval(fetchTempTimer.current);
+    fetchTempTimer.current = setInterval(() => {
+      fetchTemp();
+    }, TIMER_TREND);
+    return () => {
+      if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+      clearInterval(fetchTempTimer.current);
+      HistoricalService.source().cancel();
+    };
+  }, [
+    dateState.temp,
+    dateState.temp.dateFrom,
+    dateState.temp.dateTo,
+    sensorTable,
+  ]);
 
-  //power fetchTemp
-  const fetchSummary = useCallback(async () => {
-    if (sensorTable === "") return;
-    var res = await HistoricalService.fetchData(
-      dateState.summary.dateFrom,
-      dateState.summary.dateTo,
-      sensorTable
-    );
-    var cols = DataTrendParser.parserTrend(res.columns, res.rows);
-    setState((pre) => ({
-      ...pre,
-      summary: cols,
-    }));
-  }, [dateState.summary.dateFrom, dateState.summary.dateTo, sensorTable]);
-
+  const fetchSummaryTimer = useRef(null);
   useEffect(() => {
+    const { dateFrom, dateTo } = dateState.summary;
+    if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+    const fetchSummary = async () => {
+      var res = await HistoricalService.fetchData(
+        dateState.summary.dateFrom,
+        dateState.summary.dateTo,
+        sensorTable
+      );
+      var cols = DataTrendParser.parserTrend(res.columns, res.rows);
+      setState((pre) => ({
+        ...pre,
+        summary: cols,
+      }));
+    };
+
     fetchSummary();
-  }, [fetchSummary]);
+    if (fetchSummaryTimer.current !== null)
+      clearInterval(fetchSummaryTimer.current);
+    fetchSummaryTimer.current = setInterval(() => {
+      fetchSummary();
+    }, TIMER_TREND);
+    return () => {
+      if (sensorTable === "" || dateFrom === "" || dateTo === "") return;
+      clearInterval(fetchSummaryTimer.current);
+      HistoricalService.source().cancel();
+    };
+  }, [
+    dateState.summary,
+    dateState.summary.dateFrom,
+    dateState.summary.dateTo,
+    sensorTable,
+  ]);
 
   const handleChangeDate = ({ name, value }) => {
     setDateState((pre) => {

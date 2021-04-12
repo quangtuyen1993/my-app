@@ -43,23 +43,21 @@ export default function LoginScreen(props) {
     (state) => state.authorReducer
   );
 
-  const dispatchToHome = useCallback(() => {
-    history("/home");
-  }, [history]);
 
   //call when login start
   // run a once time
+
   useEffect(() => {
     dispatch(refreshLogin());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // call when login success
   useEffect(() => {
     if (isSuccess) {
-      dispatchToHome();
+    history("/home");
+      
     }
-  }, [isSuccess, dispatchToHome]);
+  }, [isSuccess, history]);
 
   const onSubmit = (data) => {
     dispatch(onLogin(data));
