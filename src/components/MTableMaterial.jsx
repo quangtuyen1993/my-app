@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     border: props.noneBorder ? "0x white" : `1px solid ${grey[300]}`,
   }),
 }));
+
 const MTableMaterial = ({
   dataSource,
   fieldArray,
@@ -109,6 +110,7 @@ const MTableMaterial = ({
     var mPerPage = rowsPerPage ? rowsPerPage : dataSource.length;
     var startIndex = (state.page - 1) * mPerPage;
     var endIndex = state.page * mPerPage;
+    if (dataSource === undefined) return;
     var dataFilter = dataSource.filter((item) => {
       if (state.search === "") return true;
       return fieldArray.find((f) => {
