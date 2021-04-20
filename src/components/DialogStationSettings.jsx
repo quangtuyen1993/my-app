@@ -68,8 +68,8 @@ export default function DialogStationSettings({
       stations: [...stations],
     }));
   };
+
   const onUpdateStation = async () => {
-    console.log(JSON.stringify(state.stations))
     await StationService.updateStationAvailable(state.stations);
     onClose();
   };
