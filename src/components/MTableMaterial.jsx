@@ -197,7 +197,7 @@ const MTableMaterial = ({
                 xs={6}
                 sm={6}
                 md={3}
-                lg={1}
+                lg={2}
               >
                 <Button fullWidth color="secondary" variant="contained">
                   Refresh
@@ -214,7 +214,7 @@ const MTableMaterial = ({
                 xs={6}
                 sm={6}
                 md={3}
-                lg={1}
+                lg={2}
               >
                 <Button fullWidth color="secondary" variant="contained">
                   Ack all
