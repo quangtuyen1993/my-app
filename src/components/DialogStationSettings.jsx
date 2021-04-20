@@ -14,15 +14,15 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import { useTheme } from "@material-ui/core/styles";
 import { Person, SupervisorAccount } from "@material-ui/icons";
 import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MTableMaterial from "../components/MTableMaterial";
+import { fetchStation } from "../redux/feature/station/station.slice";
 import StationService from "../service/station.service";
 // eslint-disable-next-line no-unused-vars
 
 const initState = {
   stations: [],
-  open: false,
-  accountId: "",
 };
 export default function DialogStationSettings({
   userDefault,
@@ -30,7 +30,13 @@ export default function DialogStationSettings({
   open,
 }) {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { userProfile } = useSelector((state) => state.authorReducer);
   const [state, setState] = useState(initState);
+
+  const refreshStation = () => {
+    if (userDefault.id === userProfile.id) dispatch(fetchStation());
+  };
 
   useEffect(() => {
     setState((pre) => ({
@@ -71,6 +77,7 @@ export default function DialogStationSettings({
 
   const onUpdateStation = async () => {
     await StationService.updateStationAvailable(state.stations);
+    refreshStation();
     onClose();
   };
 

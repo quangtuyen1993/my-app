@@ -63,6 +63,10 @@ export default function AccountScreen() {
     onChangePassword(newUser);
   };
 
+
+
+
+
   useEffect(() => {
     const onFetchUser = async () => {
       var data = await ClientService.fetchAll();
