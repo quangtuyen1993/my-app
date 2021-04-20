@@ -3,7 +3,7 @@ import {
   CardContent,
   Container,
   Grid,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
@@ -67,6 +67,7 @@ export default function PowerMeterDetail() {
   useEffect(() => {
     if (timer.current !== null) clearInterval(timer.current);
     const onFetchData = async () => {
+      if (state.stationSelected === null) return;
       var pws = await DeviceService.fetchAllPowerMeterDetail(state.deviceId);
       const {
         voltage,
