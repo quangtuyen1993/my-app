@@ -87,6 +87,7 @@ export default function AccountScreen() {
   };
 
   useEffect(() => {
+    console.log("fetchAll")
     const onFetchUser = async () => {
       var data = await ClientService.fetchAll();
       setState((pre) => ({
