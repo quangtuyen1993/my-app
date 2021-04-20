@@ -75,6 +75,7 @@ export default function DialogApp({
   };
 
   useEffect(() => {
+    if (userDefault === null) return;
     reset(userDefault);
   }, [reset, userDefault]);
 
@@ -100,7 +101,7 @@ export default function DialogApp({
               <Grid spacing={2} container direction="column">
                 <Grid item>
                   <TextField
-                    value={userDefault.username}
+                    value={userDefault ? userDefault.username : ""}
                     label="Username"
                     fullWidth
                     name="username"
@@ -118,7 +119,7 @@ export default function DialogApp({
 
                 <Grid item>
                   <TextField
-                    value={userDefault.role}
+                    value={userDefault ? userDefault.role : ""}
                     label="Role"
                     fullWidth
                     name="role"

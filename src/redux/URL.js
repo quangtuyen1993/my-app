@@ -29,8 +29,6 @@ export const URL_PR_PARAM = "prparameters/GetCurrentPrParameter";
 
 export const URL_CLIENT = "/Accounts";
 
-
-
 export const URL_ENERGY = "/Energy/GetEnergy";
 
 export const URL_SCHEDULER_TASK = "/SchedulerTasks/GetSchedulerTaskOfStation";
@@ -39,8 +37,10 @@ export const URL_SCHEDULER = "/SchedulerTasks";
 
 export const URL_STATION_INFO = "/stations";
 
-
 export const URL_STRING_MONITOR = "/StringMonitor/GetInverterStrings";
 
 export const URL_MCCB_ACB_SEND_NOTIFY = "/MccbAcbs/SendCommand/";
 
+export const URL_STATIONS_USERS ="/Stations/GetAvailableStations";
+
+export const URL_STATIONS_USERS_UPDATE ="/Stations/UpdateAccountStations";

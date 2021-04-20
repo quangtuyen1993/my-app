@@ -15,7 +15,7 @@ import {
   TextField,
   Typography,
   useTheme,
-  withStyles
+  withStyles,
 } from "@material-ui/core";
 import { grey } from "@material-ui/core/colors";
 import { ExpandLess, Search } from "@material-ui/icons";
@@ -196,10 +196,10 @@ const MTableMaterial = ({
                 item
                 xs={6}
                 sm={6}
-                md={2}
+                md={3}
                 lg={1}
               >
-                <Button color="secondary" variant="contained">
+                <Button fullWidth color="secondary" variant="contained">
                   Refresh
                 </Button>
               </Grid>
@@ -213,11 +213,11 @@ const MTableMaterial = ({
                 item
                 xs={6}
                 sm={6}
-                md={2}
+                md={3}
                 lg={1}
               >
                 <Button fullWidth color="secondary" variant="contained">
-                  <Typography variant="subtitle2">Ack all</Typography>
+                  Ack all
                 </Button>
               </Grid>
             )}
@@ -229,7 +229,6 @@ const MTableMaterial = ({
       {/* <Grid item> */}
       <Box mt={2} overflow="auto">
         <Table style={{ border: "1px rgba(0,0,0,0.4) solid" }}>
-          
           <TableHead>
             <StyledTableRow>
               {showIndex && (
@@ -385,7 +384,6 @@ const MTableMaterial = ({
                 </Fragment>
               ))}
           </TableBody>
-      
         </Table>
       </Box>
       {/* </Grid> */}

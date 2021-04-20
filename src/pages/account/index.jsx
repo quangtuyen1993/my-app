@@ -2,51 +2,56 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Grid,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
 } from "@material-ui/core";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import IconApp from "../../common/icons";
 import CardLayout from "../../common/layouts/CardLayout";
-import DialogApp from "../../components/DialogApp";
+import DialogConfigPassword from "../../components/DialogApp";
+import DialogStationSettings from "../../components/DialogStationSettings";
 import MTableMaterial from "../../components/MTableMaterial";
 import ClientService from "../../service/client.service";
 
-export default function AccountScreen(props) {
-  const [state, setState] = useState({
-    open: false,
-    users: [],
-    userChange: {},
-    fields: [],
-    widthPercent: 10,
-    userSelected: {
-      username: "",
-    },
-  });
+const initState = {
+  openPasswordSettings: false,
+  openStationSettings: false,
+  users: [],
+  userChange: {},
+  fields: [],
+  widthPercent: 10,
+  userSelected: null,
+};
 
-  const onOpen = (user) => {
+export default function AccountScreen() {
+  const [state, setState] = useState(initState);
+
+  const onOpenPasswordSettings = (user) => {
     setState((pre) => ({
       ...pre,
-      open: true,
+      openPasswordSettings: true,
       userSelected: user,
     }));
   };
 
-  // const onDelete = async (user) => {
-  //   var data = await ClientService.removeUser({ id: user.id });
-  //   onFetchUser();
-  // };
-
-  const onClose = () => {
+  const onOpenStationSettings = (user) => {
     setState((pre) => ({
       ...pre,
-      open: false,
+      openStationSettings: true,
+      userSelected: user,
+    }));
+  };
+
+  const onClosePasswordDialog = () => {
+    setState((pre) => ({
+      ...pre,
+      openPasswordSettings: false,
     }));
   };
 
@@ -54,7 +59,7 @@ export default function AccountScreen(props) {
     await ClientService.changePassword(newUser);
   };
 
-  const onSubmit = (newUser) => {
+  const onSubmitPassword = (newUser) => {
     onChangePassword(newUser);
   };
 
@@ -69,6 +74,28 @@ export default function AccountScreen(props) {
     onFetchUser();
   }, []);
 
+  const onCloseStationDialog = () => {
+    setState((pre) => ({
+      ...pre,
+      openStationSettings: false,
+      userSelected: null,
+    }));
+  };
+
+  const onSubmitStation = (newUser) => {
+    onChangePassword(newUser);
+  };
+
+  useEffect(() => {
+    const onFetchUser = async () => {
+      var data = await ClientService.fetchAll();
+      setState((pre) => ({
+        ...pre,
+        users: data,
+      }));
+    };
+    onFetchUser();
+  }, []);
   const { userProfile } = useSelector((state) => state.authorReducer);
 
   const renderUserControl = () => {
@@ -139,7 +166,7 @@ export default function AccountScreen(props) {
                     dense
                     button
                     onClick={() =>
-                      onOpen({
+                      onOpenPasswordSettings({
                         id: userProfile.id,
                         username: userProfile.username,
                         role: userProfile.role,
@@ -167,17 +194,34 @@ export default function AccountScreen(props) {
     );
   };
 
-  const controls = useCallback((user, index) => {
+  const controls = (user, index) => {
     return (
       <React.Fragment key={index}>
-        <Box flex={1}>
-          <IconButton onClick={() => onOpen(user)}>
-            <FontAwesomeIcon icon={IconApp.UPDATE} />
-          </IconButton>
+        <Box m={1} flex={1}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            startIcon={<FontAwesomeIcon icon={IconApp.UPDATE} />}
+            onClick={() => onOpenPasswordSettings(user)}
+          >
+            Password
+          </Button>
+        </Box>
+        <Box m={1} flex={1}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            startIcon={<FontAwesomeIcon icon={IconApp.BROADCAST_TOWER} />}
+            onClick={() => onOpenStationSettings(user)}
+          >
+            Station
+          </Button>
         </Box>
       </React.Fragment>
     );
-  }, []);
+  };
 
   return (
     <Container maxWidth={false}>
@@ -191,16 +235,22 @@ export default function AccountScreen(props) {
           <MTableMaterial
             dataSource={state.users}
             fieldArray={["id", "username", "role"]}
-            addControlColumns={[{ name: "Controls", component: controls }]}
+            addControlColumns={[{ name: "Configs", component: controls }]}
           />
         </CardLayout>
       </Box>
 
-      <DialogApp
+      <DialogConfigPassword
         userDefault={state.userSelected}
-        open={state.open}
-        onSubmit={onSubmit}
-        handleClose={() => onClose()}
+        open={state.openPasswordSettings}
+        onSubmit={onSubmitPassword}
+        handleClose={() => onClosePasswordDialog()}
+      />
+      <DialogStationSettings
+        userDefault={state.userSelected}
+        open={state.openStationSettings}
+        onSubmit={onSubmitStation}
+        handleClose={() => onCloseStationDialog()}
       />
     </Container>
   );
